@@ -5,7 +5,7 @@ from PySide2 import QtCore
 from PySide2 import QtWidgets
 from shiboken2 import wrapInstance 
 
-from lib.mayaLogger import MayaLogger
+from lib.maya_utils import MayaLogger
 
 def get_maya_main_window():
     """Returns the Maya main window widget as a Python object.
@@ -25,4 +25,3 @@ class PlayBlastPlusLogger(MayaLogger):
     Set up a custom script logger
     """
     LOGGER_NAME = "PlayBlastPlusLogger"
-    
