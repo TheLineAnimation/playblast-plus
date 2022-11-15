@@ -5,12 +5,12 @@ Let's face it, Maya's playblast isn't the best. (And that's saying something as 
 This script standardises the playblast output to allow animators an easy way to create a rolling,
 local playblast to review thier work. 
 
-Compatible with OpenPype, specifically the `review` intance to ensure settings parity, 
-but allow custom preview settings.
+Compatible with the OpenPype reiew workflow - specifically the `review` instance to ensure settings parity, 
+but allow custom preview settings on a local level.
 
 <img align="right" src="https://cloud.githubusercontent.com/assets/2439881/18627536/c1a6b4e4-7e5b-11e6-9c69-047bd5cbbce5.jpg"/>
 
-Why bother? 
+### Why bother? 
 
 As an animator, you don't always want to submit a playblast for project review. 
 There might be a number of iterations you need to perform before you are 
@@ -25,6 +25,7 @@ Playblast Plus is in debt to the great coding work from the following sources -
 
 - [maya-capture-gui]() by Roy Nieterau (Colorbleed) - I could have used Big Roy's front-end, 
     but I wanted to at least try to learn something for myself. Used the tokenised string parsing, this is a very elegant way of performing function based string substituation. 
+
 - [Chris-Zurbrig]() Chris's FFMPEG in production course is responsible for the FFMPEG encoding of the
     script. Maya's codec support is woeful and this wouldn't be possible without it. 
 
