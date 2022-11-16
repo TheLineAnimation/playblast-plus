@@ -10,6 +10,7 @@ but allow custom preview settings on a local level.
 
 <img align="right" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
 
+
 ### Why bother? 
 
 As an animator, you don't always want to submit a playblast for project review. 
@@ -19,12 +20,10 @@ ready to let those keyframes fly, like little tweened starlings flocking in an a
 Playblast Plus is in debt to the great coding work from the following sources - 
 
 - [maya-capture](https://github.com/abstractfactory/maya-capture). The core module is being used as is, 
-    and contains pretty much all the playblasting functionality you'd need. 
+    and contains pretty much all the playblasting functionality you'd need. Current version - 2.1.0
 
-    Current version - (2, 1, 0)
-
-- [maya-capture-gui]() by Roy Nieterau (Colorbleed) - I could have used Big Roy's front-end, 
-    but I wanted to at least try to learn something for myself. Used the tokenised string parsing, this is a very elegant way of performing function based string substituation. 
+- [maya-capture-gui]() by Roy Nieterau (Colorbleed)
+    I could have used Big Roy's front-end, but I wanted to at least try to learn something for myself. Used the tokenised string parsing, this is a very elegant way of performing function based string substituation. 
 
 - [Chris-Zurbrig]() Chris's FFMPEG in production course is responsible for the FFMPEG encoding of the
     script. Maya's codec support is woeful and this wouldn't be possible without it. 
@@ -49,7 +48,7 @@ To install, download this and place the PlayblastPlus folder in a directory on y
 
 <br>
 
-### Usage
+### Usage (WIP but keeping the MD formatting stuff for later)
 
 To show the interface in Maya run:
 
