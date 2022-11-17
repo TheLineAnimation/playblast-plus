@@ -1,5 +1,6 @@
 {
-    "ffmpeg_path":"",
-    "studio_template_location":"",
-    "Default_token":""
+    "ffmpeg_path": "./bin",
+    "studio_templates": "",
+    "default_token": "",
+    "openpype": true
 }
