@@ -1,6 +1,12 @@
-{
-    "ffmpeg_path": "./bin",
-    "studio_templates": "",
+{ 
+    "studio_templates": "./templates/studio",
     "default_token": "",
-    "openpype": true
+    "openpype": true,
+    "ffmpeg":{
+        "path": "./bin",
+        "input_args":"-apply_trc gamma22", 
+        "ouput_args":"-pix_fmt yuv420p -b:v :40M -minrate: 40M -maxrate: 40M -bufsize: 40M -intra" 
+    }        
 }
+
+

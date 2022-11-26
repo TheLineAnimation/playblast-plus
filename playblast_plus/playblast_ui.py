@@ -7,7 +7,9 @@ from shiboken2 import wrapInstance
 
 from hosts.maya.logger import MayaLogger
 
-def get_maya_main_window():
+from typing import Union
+
+def get_maya_main_window() -> Union[int,long]:
     """Returns the Maya main window widget as a Python object.
     Updated to handle Python 3 int/long casting
     Returns:

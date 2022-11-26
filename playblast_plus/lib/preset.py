@@ -1,25 +1,27 @@
 import json
 from pathlib import Path
 
-import content_management
+from . import content_management
 
 def load_json(filepath : str) -> dict: 
     with open(filepath) as f:
         json_dict = json.load(f)
         return json_dict
 
-def load_json_templates(template_paths : list[str]) -> list[dict]:
+def load_templates(template_paths : list[str]) -> list[dict]:
     json_templates = []
+    print (f'template paths {template_paths}')
     for location in template_paths:
         if location:
-            search_path = Path (location) / "*.json"
+            location = Path (location).resolve() 
+            print (f'location {location}')
 
-            for json_file in Path.glob(search_path):               
+            for json_file in location.glob('*.json'):               
                 template = load_json(json_file)
                 json_templates.append(template)
     return json_templates
 
-def get_template_locations(studio_path) -> list[str]:
+def get_project_locations(studio_path : str) -> list[str]:
     template_paths = [studio_path]
     # check if there are any project templates
     if content_management.open_pype_enabled():

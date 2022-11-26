@@ -73,14 +73,14 @@ def get_playblast_dir():
                 open_pype_task = os.getenv("AVALON_TASK")             
     open_pype_shot = os.getenv("AVALON_ASSET") 
     open_pype_project = os.getenv("AVALON_PROJECT")            
-    open_pype_work_dir = os.getenv("AVALON_WORKDIR")
-    
+    open_pype_work_dir = os.getenv("AVALON_WORKDIR"
     MAYA_APP_DIR
 
     """
 
     from pathlib import Path
-    playblast_dir = Path (os.getenv('AVALON_WORKDIR', cmds.workspace( q=True, dir=True ))) / 'playblasts'
+    playblast_dir = Path (os.getenv('AVALON_WORKDIR', 
+                            cmds.workspace( q=True, dir=True ))) / 'playblasts'
     playblast_dir.mkdir(parents=True, exist_ok=True)
     return str(playblast_dir)
 
