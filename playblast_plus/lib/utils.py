@@ -1,17 +1,39 @@
 import json
 from pathlib import Path
+from typing import Union #, dict, list
+import re 
 
-from typing import Union, str, dict, list
 
-class ParsingUtils:
+
+class Parsing:
+    """
+    Functions to process file strings for certain operations.
+    """
+
     @staticmethod
-    def load_json_from_file(file: str) -> dict: 
+    def load_json_from_file(file: str) -> dict:
+        """Parses a JSON file from the location specified 
+
+        Args:
+            file (str): Path to the file. This should have been validated
+                        before calling this function.
+
+        Returns:
+            dict: The JSON data parsed into a dictionary
+        """
         with open(file, 'r') as myfile:
             data=myfile.read()
         return json.loads(data)
 
     @staticmethod
     def get_templates(dir: str) -> list:
+        """Scans a driectory for JSON files
+
+        Args:
+            dir (str): Root folder location to search for files. Not recursive.
+        Returns:
+            list: A list of JSON files
+        """
         _enum_items = []  
         template_dir = Path(dir)
         if template_dir.exists():
@@ -21,21 +43,6 @@ class ParsingUtils:
                 for t in template_files:
                     _enum_items.append((t.stem, t.stem, ""))        
         return _enum_items
-
-               
-    @classmethod
-    def get_version_string(cls, vStr: str , up: bool = True) -> str:
-        if vStr!= None:
-            vNumber =  vStr.lstrip('v')
-            vInt = int(vNumber)
-            print (vInt)
-            if up:
-                vInt +=1
-            else:
-                vInt -=1
-            return f'v{vInt:03d}'
-        else:
-            return cls.versionDefault
 
     @staticmethod
     def create_ffmpeg_input(img_start: Path) -> str:
@@ -60,14 +67,30 @@ class ParsingUtils:
                 return str(img_start.parent / ffpmeg_input)
 
 
-class FolderUtils:  
+class FolderOps:  
     """
+    Static class containing useful file operations
     """  
-    # str : versionStr = 'v'
-    # str : versionDefault = f'{versionStr}{1:03d}'
+    
+    VERSION_STR :str = 'v'
+    VERSION_DEFAULT:str = f'{VERSION_STR}{1:03d}'
+    EXTENSION_DEFAULT:str = '.png'
         
     @classmethod
-    def get_version_folders(cls, rootDir: str, latest: bool = True) -> Union[str,None]:         
+    def get_version_folders(cls, rootDir: str, latest: bool = True) -> Union[str,None]:
+        """_summary_
+
+        Args:
+            rootDir (str): The roor directory as a string
+            latest (bool, optional): Returns a string of the last version
+                                     folder found. Defaults to True.
+
+        Returns:
+            Union[str,None]: Returns the version folder string or none if no
+                             folders are found. This version string can then be 
+                             used with FolderUtils.nextVersion()
+
+        """
         versionDirs = []   
         vDefault = f'v{1:03d}'   
         p = Path(rootDir)
@@ -86,10 +109,31 @@ class FolderUtils:
                 return None
         else:
             return None
+             
+    @classmethod
+    def next_version(cls, vStr: str , up: bool = True) -> str:
+        """Takes a version string and returns the next version 
+           as a string - e.g. 'v005' returns 'v006'.
+
+        Args:
+            vStr (str): The version number (from a folder name)
+            up (bool, optional): Decides if the value returned is a version up 
+            from the last folder supplied. Defaults to True.
+
+        Returns:
+            str: _description_
+        """
+        if vStr!= None:
+            vNumber =  vStr.lstrip('v')
+            vInt = int(vNumber)
+            vInt +=1
+            return f'v{vInt:03d}'
+        else:
+            return cls.VERSION_DEFAULT
 
 
     @classmethod
-    def getImageSequence(dir: str, ext: str ='png') -> Path:
+    def getImageSequence(cls, dir: str, ext: str) -> Path:
         """
         Looked into being able to glob multiple filetpyes, then decided after the
         code looked confusing that it really wasn't necessary. You'll always set
@@ -103,21 +147,23 @@ class FolderUtils:
         Returns:
             Path: The first image in the found sequence
         """
+        if not ext:
+            ext = cls.EXTENSION_DEFAULT
+
         dirPath = Path(dir)
         if dirPath.exists():
-            sequence = dirPath.glob(f'*.{ext}')   
+            sequence = dirPath.glob(f'*{ext}')  
             return next(sequence)
 
 
-from pathlib import Path
-import re 
 
+# if __name__ == '__main___':
+#     test_directory = r"C:\Users\pete\OneDrive\Desktop\UNIQUE ORGANISATION SYSTEM\SENDS_CLIENT_10052022\Thresh\pb"
+#     img_seq_start = FolderUtils.getImageSequence(test_directory,ext=".jpg")
 
-if __name__ == '__main___':
-    test_directory = r"C:\Users\pete\OneDrive\Desktop\UNIQUE ORGANISATION SYSTEM\SENDS_CLIENT_10052022\Thresh\pb"
-    img_seq_start = FolderUtils.getImageSequence(test_directory,ext="jpg")
+#     print (img_seq_start)
 
-    if img_seq_start:
-        ffmpeg_input_string = ParsingUtils.create_ffmpeg_input(img_seq_start)
-        print ( ffmpeg_input_string )
+#     if img_seq_start:
+#         ffmpeg_input_string = ParsingUtils.create_ffmpeg_input(img_seq_start)
+#         print ( ffmpeg_input_string )
 
