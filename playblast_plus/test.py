@@ -41,5 +41,5 @@ if img_seq_start:
                             framerate=24, 
                             crf=21, 
                             preset="ultrafast", 
-                            audio_path=None
+                            audio_path=r"C:\Users\pete\OneDrive\Documents\Files\Rigs\Frameworks\AdvancedSkeleton5\Install\AdvancedSkeleton5Files\div\sound\exampleVoice.wav"
                         )

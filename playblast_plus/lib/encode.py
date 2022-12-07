@@ -17,7 +17,10 @@ Otherwise there will be issues with black frames
 FFMPEG_PATH = settings.get_ffmpeg_path()
 FFPROBE_PATH = settings.get_ffprobe_path()
 
-# print ( f'ffmpeg_path {ffmpeg_path}\\ffmpeg.exe')
+"""
+    TO DO - MAKE THE F-STRINGS DYNAMIC BASED AROUND ARG CONDITIONS
+    and replace the string concatenation
+"""
 
 def extract_middle_image(source_path, output_path):
 
@@ -44,27 +47,20 @@ def mp4_from_image_sequence(image_seq_path,
                             post_open=True
                         ):
 
-    # ffmpeg_cmd = f'"{FFMPEG_PATH}"'
-    # ffmpeg_cmd += ' -y'
-    # ffmpeg_cmd += f' -framerate {framerate}'
-    # ffmpeg_cmd += f' -i "{image_seq_path}"'
-
-    # if audio_path:
-    #     ffmpeg_cmd += f' -i "{audio_path}"'
-    # if audio_path:
-    #     ffmpeg_cmd += f' -c:a aac -filter_complex "[1:0] apad" -shortest'
-
-    # ffmpeg_cmd += f' {settings.get_ffmpeg_input_args()}'
-    # ffmpeg_cmd += f' "{output_path}"'
-
-
+    audio_input = f' -i "{audio_path}" ' if audio_path else f''
+    audio_params = (
+        f' -c:a aac -filter_complex "[1:0] apad" -shortest ' 
+        if audio_path else f''
+    )
 
     ffmpeg_cmd = (
-        f'{FFMPEG_PATH} -y '
+        f'{FFMPEG_PATH} '
         f'-framerate {framerate} '
+        f'-y ' # overwrite
         f'-i "{image_seq_path}" '
-
+        f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
+        f'{audio_params}'
         f'"{output_path}"'
     )
 
@@ -78,3 +74,4 @@ def mp4_from_image_sequence(image_seq_path,
         import os
         os.startfile(output_path)
         # subprocess.run(['open', f'"{output_path}"'])
+
