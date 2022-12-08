@@ -4,7 +4,8 @@ from lib import settings
 from pathlib import Path
 
 """
-Full credit goes to Chris Zurbrigg for this code 
+Full credit goes to Chris Zurbrigg for this code, updated to use f-strings 
+for FFMPEG process command. 
 
 Correct Argument List -
 -y -framerate 24 -i [INPUTFILE]_%04d.png -c:v libx264 -pix_fmt yuv420p 
@@ -60,6 +61,7 @@ def mp4_from_image_sequence(image_seq_path,
         f'-i "{image_seq_path}" '
         f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
+        f'-pix_fmt yuv420p '
         f'{audio_params}'
         f'"{output_path}"'
     )
