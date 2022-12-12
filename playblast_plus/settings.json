@@ -4,7 +4,7 @@
     "openpype": false,
     "ffmpeg":{
         "path": "./bin",
-        "input_args":"-c:v libx264 -crf 21 -preset ultrafast", 
+        "input_args":"-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p", 
         "output_args":"" 
     }        
 }

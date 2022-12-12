@@ -25,7 +25,7 @@ print (settings.open_pype_enabled())
 # print ( f'ffmpeg_path {ffmpeg_path}\\ffmpeg.exe')
 
 
-test_directory = r"C:\Users\pete\OneDrive\Desktop\UNIQUE ORGANISATION SYSTEM\SENDS_CLIENT_10052022\Thresh\pb\underscore"
+test_directory = r"C:\Users\pete\OneDrive\Desktop\UNIQUE ORGANISATION SYSTEM\SENDS_CLIENT_10052022\Thresh\pb"
 img_seq_start = utils.FolderOps.getImageSequence(test_directory,ext=".jpg")
 
 # print (img_seq_start)
@@ -36,10 +36,16 @@ if img_seq_start:
 
     output_path = test_directory + '\local_playblast.mp4'
 
-    encode.mp4_from_image_sequence(ffmpeg_input_string, 
+    encode.mp4_from_image_sequence(ffmpeg_input_string,
                             output_path, 
                             framerate=24, 
                             crf=21, 
                             preset="ultrafast", 
-                            audio_path=r"C:\Users\pete\OneDrive\Documents\Files\Rigs\Frameworks\AdvancedSkeleton5\Install\AdvancedSkeleton5Files\div\sound\exampleVoice.wav"
+                            # audio_path=r"C:\Users\pete\OneDrive\Documents\Files\Rigs\Frameworks\AdvancedSkeleton5\Install\AdvancedSkeleton5Files\div\sound\exampleVoice.wav"
+                            post_open=False
                         )
+
+    thumbnail = utils.Parsing.create_ffmpeg_still_frame_output(output_path, "middle_frame_test")
+    print (thumbnail)
+
+    # encode.extract_middle_image(output_path, thumbnail)

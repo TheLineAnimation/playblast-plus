@@ -39,9 +39,8 @@ class Parsing:
         if template_dir.exists():
             template_files = template_dir.glob('*.json')            
             if template_files:
-                _enum_items.clear()
                 for t in template_files:
-                    _enum_items.append((t.stem, t.stem, ""))        
+                    _enum_items.append((t.stem, t))        
         return _enum_items
 
     @staticmethod
@@ -66,6 +65,29 @@ class Parsing:
                                 f'%0{pad_length}d')
                 return str(img_start.parent / ffpmeg_input)
 
+    @staticmethod
+    def create_ffmpeg_still_frame_output(input_file: str, 
+                                   filename: str, 
+                                   padding: int = 4, 
+                                   ext: str = '.png') -> str:
+        """Takes a movie file input and returns a still frame based on 
+            the input name 
+
+        Args:
+            img_start (Path): Path object to the first image sequence
+
+        Returns:
+            str: A new, formated path string containing the 
+                ffmpeg padding characters.
+        """
+        image_root = Path(input_file)
+
+        if not ext.startswith('.'):
+            ext = f'.{ext}'
+
+        if image_root.exists():
+            filename = f'{image_root.stem}_%0{padding}d{ext}'
+            return image_root.parent / filename
 
 class FolderOps:  
     """
@@ -77,7 +99,8 @@ class FolderOps:
     EXTENSION_DEFAULT:str = '.png'
         
     @classmethod
-    def get_version_folders(cls, rootDir: str, latest: bool = True) -> Union[str,None]:
+    def get_version_folders(cls, rootDir: str, 
+                            latest: bool = True) -> Union[str,None]:
         """_summary_
 
         Args:
@@ -87,8 +110,8 @@ class FolderOps:
 
         Returns:
             Union[str,None]: Returns the version folder string or none if no
-                             folders are found. This version string can then be 
-                             used with FolderUtils.nextVersion()
+                             folders are found. This version string can then 
+                             be used with FolderUtils.nextVersion()
 
         """
         versionDirs = []   
@@ -111,14 +134,12 @@ class FolderOps:
             return None
              
     @classmethod
-    def next_version(cls, vStr: str , up: bool = True) -> str:
+    def next_version(cls, vStr: str ) -> str:
         """Takes a version string and returns the next version 
            as a string - e.g. 'v005' returns 'v006'.
 
         Args:
             vStr (str): The version number (from a folder name)
-            up (bool, optional): Decides if the value returned is a version up 
-            from the last folder supplied. Defaults to True.
 
         Returns:
             str: _description_
@@ -135,10 +156,9 @@ class FolderOps:
     @classmethod
     def getImageSequence(cls, dir: str, ext: str) -> Path:
         """
-        Looked into being able to glob multiple filetpyes, then decided after the
-        code looked confusing that it really wasn't necessary. You'll always set
-        the format in the Maya playblast so it's not needed. This is a simple glob
-        call via Pathlib. 
+        Looked into being able to glob multiple filetpyes, then decided after 
+        the code looked confusing as you'll always set the format in the Maya 
+        playblast. This is a simple globcall via Pathlib. 
 
         Args:
             dir (str): Root directory of the file sequence 
@@ -154,16 +174,3 @@ class FolderOps:
         if dirPath.exists():
             sequence = dirPath.glob(f'*{ext}')  
             return next(sequence)
-
-
-
-# if __name__ == '__main___':
-#     test_directory = r"C:\Users\pete\OneDrive\Desktop\UNIQUE ORGANISATION SYSTEM\SENDS_CLIENT_10052022\Thresh\pb"
-#     img_seq_start = FolderUtils.getImageSequence(test_directory,ext=".jpg")
-
-#     print (img_seq_start)
-
-#     if img_seq_start:
-#         ffmpeg_input_string = ParsingUtils.create_ffmpeg_input(img_seq_start)
-#         print ( ffmpeg_input_string )
-
