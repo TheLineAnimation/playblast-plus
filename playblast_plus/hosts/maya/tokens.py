@@ -7,7 +7,7 @@ The tokens can be registered using `register_token`
 
 """
 import maya.cmds as cmds
-import maya_scene_data as maya_scene
+from . import maya_scene
 
 _registered_tokens = dict()
 
@@ -35,16 +35,13 @@ def format_tokens(string, options):
 
     return string
 
-
 def register_token(token, func, label=""):
     assert token.startswith("<") and token.endswith(">")
     assert callable(func)
     _registered_tokens[token] = {"func": func, "label": label}
 
-
 def list_tokens():
     return _registered_tokens.copy()
-
 
 # this is an example function which retrieves the name of the current user
 def get_user_name():
@@ -64,25 +61,6 @@ def get_work_dir():
 
     import os
     return os.getenv('AVALON_WORKDIR', "FALLBACK")
-    
-def get_playblast_dir():
-    
-    """
-    open_pype_server_root = os.getenv("OPENPYPE_PROJECT_ROOT_WORK") 
-    open_pype_project = os.getenv("AVALON_PROJECT")
-                open_pype_task = os.getenv("AVALON_TASK")             
-    open_pype_shot = os.getenv("AVALON_ASSET") 
-    open_pype_project = os.getenv("AVALON_PROJECT")            
-    open_pype_work_dir = os.getenv("AVALON_WORKDIR"
-    MAYA_APP_DIR
-
-    """
-
-    from pathlib import Path
-    playblast_dir = Path (os.getenv('AVALON_WORKDIR', 
-                            cmds.workspace( q=True, dir=True ))) / 'playblasts'
-    playblast_dir.mkdir(parents=True, exist_ok=True)
-    return str(playblast_dir)
 
 # register default tokens
 # scene based tokens
@@ -106,7 +84,7 @@ register_token("<user>",
                 label="Insert current user's name")
                
 register_token("<playblast_dir>",
-                lambda options: get_playblast_dir(),
+                lambda options: maya_scene.get_playblast_dir(),
                 label="Insert current working directory")
 
 

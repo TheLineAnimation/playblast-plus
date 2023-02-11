@@ -7,7 +7,7 @@ The tokens can be registered using `register_token`
 
 """
 import maya.cmds as cmds
-import maya_scene_data as maya_scene
+import maya_scene as maya_scene
 
 _registered_tokens = dict()
 

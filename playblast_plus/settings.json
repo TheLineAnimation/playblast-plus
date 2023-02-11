@@ -1,11 +1,13 @@
 { 
     "studio_templates": "./templates/studio",
-    "default_token": "",
-    "openpype": false,
+    "project_template_subpath": "tools/pipeline/playblast/templates",
+    "default_token": "<scene>_<camera>_<user>",
+    "openpype": true,
     "ffmpeg":{
         "path": "./bin",
         "input_args":"-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p", 
-        "output_args":"" 
+        "output_args":"" ,
+        "burnin": "-vf \"drawtext=font=Consolas: fontsize=24: fontcolor=white: text=\"%{{frame_num}}\": r=24: x=(w-tw-20): y=h-lh-20: box=1: boxcolor=black"
     }        
 }
 

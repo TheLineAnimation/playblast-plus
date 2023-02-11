@@ -1,6 +1,6 @@
 import subprocess
 
-from lib import settings
+from . import settings
 from pathlib import Path
 
 """
@@ -41,7 +41,8 @@ def mp4_from_image_sequence(image_seq_path: str,
                             output_path: str, 
                             framerate: int = 24, 
                             audio_path: str = None,
-                            post_open: bool = False
+                            post_open: bool = False,
+                            add_burnin: bool = False
                         ):
     """_summary_
 
@@ -51,7 +52,19 @@ def mp4_from_image_sequence(image_seq_path: str,
         framerate (int, optional): _description_. Defaults to 24.
         audio_path (_type_, optional): _description_. Defaults to None.
         post_open (bool, optional): _description_. Defaults to False.
+
+
+    get total frames
+    ffprobe -v error -select_streams v:0 -count_packets \
+        -show_entries stream=nb_read_packets -of csv=p=0 input.mp4
+
     """
+    if add_burnin:
+        burnin = f'-vf "drawtext=font=Consolas: fontsize=24: fontcolor=white: \
+        text=\'%{{frame_num}}\': r=24: x=(w-tw-20): \
+        y=h-lh-20: box=1: boxcolor=black"'
+    else:
+        burnin = ''        
 
     audio_input = f' -i "{audio_path}" ' if audio_path else f''
     audio_params = (
@@ -63,7 +76,9 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'{FFMPEG_PATH} '
         f'-framerate {framerate} '
         f'-y ' # overwrite
+        f'-loglevel quiet ' 
         f'-i "{image_seq_path}" '
+        f'{burnin} '
         f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
         # f'-pix_fmt yuv420p '

@@ -2,8 +2,7 @@ import json
 from pathlib import Path
 from typing import Union #, dict, list
 import re 
-
-
+import subprocess
 
 class Parsing:
     """
@@ -49,6 +48,8 @@ class Parsing:
 
         Args:
             img_start (Path): Path object to the first image sequence
+            (this is for a non-Maya sequence where you give it the first frame 
+            of a sequence)
 
         Returns:
             str: A new, formated path string containing the 
@@ -64,6 +65,28 @@ class Parsing:
                 ffpmeg_input = file_name.replace(file_sequence_padding, 
                                 f'%0{pad_length}d')
                 return str(img_start.parent / ffpmeg_input)
+
+    @staticmethod
+    def playblast_output_to_ffmpeg_input(img: str) -> str:
+        """_summary_
+
+        Args:
+            img (str): Str object of a hashed file sequence
+            This is for the return string from a Maya playblast
+
+        Returns:
+            str: A new, formated path string containing the 
+                ffmpeg padding characters.
+        """
+        if img:
+            # if name matches a regex pattern with a number of digits
+            m = re.search(r"(\#{3,})", img)
+            if m :
+                file_sequence_padding = m.group()
+                pad_length = len(file_sequence_padding)
+                ffpmeg_input = img.replace(file_sequence_padding, 
+                                f'%0{pad_length}d')
+                return str(ffpmeg_input)
 
     @staticmethod
     def create_ffmpeg_still_frame_output(input_file: str, 
@@ -97,6 +120,21 @@ class FolderOps:
     VERSION_STR :str = 'v'
     VERSION_DEFAULT:str = f'{VERSION_STR}{1:03d}'
     EXTENSION_DEFAULT:str = '.png'
+
+    @staticmethod
+    def explore(dir:str) -> bool:
+        # subprocess.run(['open', f'"{dir}"'])
+        subprocess.Popen(f'explorer  "{dir}"')
+
+    @classmethod
+    def purge_contents(cls, root:str) -> int:
+        dir = Path(root)
+        if dir.exists():
+            for child in dir.iterdir():
+                if child.is_file():
+                    child.unlink()
+                else:
+                    cls.purge_contents(child)
         
     @classmethod
     def get_version_folders(cls, rootDir: str, 
