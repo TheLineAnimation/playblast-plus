@@ -127,12 +127,16 @@ class FolderOps:
         subprocess.Popen(f'explorer  "{dir}"')
 
     @classmethod
-    def purge_contents(cls, root:str) -> int:
+    def purge_contents(cls, root:str, images_only: bool = False, image_ext: str ='.png') -> int:
         dir = Path(root)
         if dir.exists():
             for child in dir.iterdir():
                 if child.is_file():
-                    child.unlink()
+                    if images_only:
+                        if child.suffix == image_ext:
+                            child.unlink() 
+                    else:
+                        child.unlink()
                 else:
                     cls.purge_contents(child)
         
@@ -142,7 +146,7 @@ class FolderOps:
         """_summary_
 
         Args:
-            rootDir (str): The roor directory as a string
+            rootDir (str): The root directory as a string
             latest (bool, optional): Returns a string of the last version
                                      folder found. Defaults to True.
 

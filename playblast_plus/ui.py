@@ -64,7 +64,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.setWindowTitle("")
         self.setObjectName(UI_NAME)
         
-        # self.setMaximumWidth(250)
+        self.setMinimumWidth(250)
         
         self._TEMPLATES = {}
         self._SETTINGS = settings.get_config()
@@ -139,7 +139,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         # Add widgets to the layout
         # ToolHeader is a custom label widget imported from lib.widgets
-        header = widgets.ToolHeader('pbp_header', 'Playblast ')        
+        header = widgets.ToolHeader('pbp_header', 'Playblast Plus ')        
         cam_frame = QtWidgets.QFrame()
         cam_frame.setFrameStyle(6)
         
@@ -471,6 +471,9 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                     # check the mp4 has written and is a file
                     if self.validate_output(mp4_output):
                         self.set_clipboard_data(mp4_output)
+                        
+                if not self.images_box.isChecked():
+                    utils.FolderOps.purge_contents(output_path, images_only=True)
 
             else:
                 cmds.warning ("Please create a valid camera.", )
