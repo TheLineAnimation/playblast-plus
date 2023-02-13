@@ -1,15 +1,27 @@
-{ 
+{
     "studio_templates": "./templates/studio",
     "project_template_subpath": "tools/pipeline/playblast/templates",
-    "default_token": "<scene>_<camera>_<user>",
-    "wireframe_override_color":[0.1,0.1,0.1],
-    "openpype": true, 
-    "ffmpeg":{
+    "wireframe_override_color": [
+        0.1,
+        0.1,
+        0.1
+    ],
+    "last_playblast": "",
+    "openpype": true,
+    "ffmpeg": {
         "path": "./bin",
-        "input_args":"-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p", 
-        "output_args":"" ,
+        "input_args": "-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p",
+        "output_args": "",
         "burnin": "-vf \"drawtext=font=Consolas: fontsize=24: fontcolor=white: text=\"%{{frame_num}}\": r=24: x=(w-tw-20): y=h-lh-20: box=1: boxcolor=black"
-    }        
+    },
+    "ui": {
+        "toggle_overrides": true,
+        "toggle_copy": true,
+        "toggle_keep": false,
+        "set_imageplane": false,
+        "set_wire": true,
+        "set_half": false,
+        "output_token": "<scene>_<camera>_<user>",
+        "last_camera": "persp1"
+    }
 }
-
-

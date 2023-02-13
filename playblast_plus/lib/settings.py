@@ -6,8 +6,8 @@ from .. import PLAYBLAST_PLUS_MODULE_ROOT
 
 Decided to opt for a getter method on this module to avoid restarting 
 or reloading any host's python environment. It might be poor form to load the
-config dict for each setting, but you could simply use the get_config() method to
-retrieve the dictionary and grab the keys you want. 
+config dict for each setting, but you could simply use the get_config() method 
+directly to retrieve the dictionary and grab the keys you want.
 
 # Removed - 
 # CONFIG = utils.Parsing.load_json_from_file(PLAYBLAST_PLUS_MODULE_ROOT / 
@@ -19,6 +19,9 @@ Returns:
 
 def get_config() -> dict:
     return utils.Parsing.load_json_from_file(PLAYBLAST_PLUS_MODULE_ROOT / 
+                                          'settings.json')
+def save_config(data: dict) -> bool:
+    return utils.Parsing.save_json_to_file( data , PLAYBLAST_PLUS_MODULE_ROOT / 
                                           'settings.json')
 
 def get_ffmpeg_path() -> str :

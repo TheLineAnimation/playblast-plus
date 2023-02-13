@@ -54,15 +54,6 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     """
     
     # CLASS LEVEL GLOBALS
-    ICON_SIZE = QtCore.QSize (28, 28)
-    LIST_ICONS = {
-        "anim": QtGui.QIcon(":bezierCurve.svg"),
-        "camera":QtGui.QIcon(":camera.svg"),
-        "light":QtGui.QIcon(":pointLight.open.svg"),
-        "model": QtGui.QIcon(":polyIcosahedron.svg"),
-        "pipeline": QtGui.QIcon(":meshVarGroup.svg"),
-        "render": QtGui.QIcon(":anisotropic.svg")
-        }
     WF_OVERRIDE_LAYER_NAME = 'pbp_Wireframe_Override'
     
     def __init__(self, name, parent=None):
@@ -75,11 +66,13 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # sets title and object name
         self.setWindowTitle("")
         self.setObjectName(UI_NAME)
+        self.setWindowFlags(QtCore.Qt.Tool)
         
         self.setMinimumWidth(250)
         
         self._TEMPLATES = {}
-        self._SETTINGS = settings.get_config()
+
+     
         self._CAMERAS = maya_scene.get_scene_cameras()
         self._OP_ENABLED = False
 
@@ -96,11 +89,15 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # connects signals
         self._connect_signals()
         
-
-        # populate the UI with data
+        # Get the scene cameras first, we will need to see 
+        # if the last camera used can be set automatically
         self.camera_list.clear()
         self.camera_list.addItems([c.replace('Shape','') for c in self._CAMERAS])
-        self.tokens_field.setText(self._SETTINGS['default_token'])
+
+        # populate the UI with data
+        self._SETTINGS = self._load_settings()
+
+        self.tokens_field.setText(self._SETTINGS['ui']['output_token'])
         self.template_paths = preset.get_project_locations (str(module_root /self._SETTINGS['studio_templates'] ))
         self._TEMPLATES = preset.load_templates ( self.template_paths )
         self.current_playblast_directory = maya_scene.get_playblast_dir()
@@ -108,12 +105,14 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # to identify the different presets, they are stored within a dictionary, 
         # so the first key is the name identifier
         template_names = [list(k.keys())[0] for k in self._TEMPLATES]
-        PlayBlastPlusLogger.info(template_names)
+        # PlayBlastPlusLogger.info(template_names)
         self.template_list.addItems( template_names)
-        
         self.toggle_ui_state()
         
-
+    def dockCloseEventTriggered (self):
+        self._save_settings()
+        print('Window closed')
+        
     def _connect_signals(self):
         """ Connects widget signals to functionalities
         """
@@ -182,13 +181,11 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         frame = QtWidgets.QFrame()
         frame.setFrameStyle(7)
         frame_layout = QtWidgets.QVBoxLayout(frame)
-        frame_layout.setMargin(2)
-        frame_layout.setSpacing(2)
+        frame_layout.setMargin(4)
+        frame_layout.setSpacing(4)
 
         main_layout = QtWidgets.QGridLayout(frame)
-        
-        main_layout.setMargin(2)
-        main_layout.setSpacing(2)
+
 
         # bold font for the heading labels
         custom_font = QtGui.QFont()
@@ -198,32 +195,30 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # ToolHeader is a custom label widget imported from lib.widgets
         header = widgets.ToolHeader('pbp_header', 'Playblast Plus ')  
  
-        cam_formlayout = QtWidgets.QGridLayout() 
+        cam_formlayout = QtWidgets.QGridLayout()
+        cam_formlayout.setMargin(0)
+
         self.template_list = QtWidgets.QComboBox()
-        cam_formlayout.addWidget(self.template_list)        
+        cam_formlayout.addWidget(self.template_list)    
+            
         self.camera_list = QtWidgets.QComboBox()
 
+        self.folder_icon = QtWidgets.QLabel()
+        self.folder_icon.setPixmap(QtGui.QPixmap(":/folder-open.png"))
+        self.folder_icon.setMaximumWidth(16)
         
-        # IF UI ICONS ARE NEEDED - cast Maya icons to qpixmap
-        # # x resolution
-        # pixmap = QtGui.QPixmap("{}/x_res.png".format(self.resource_path))
-        # x_res = QtWidgets.QLabel()
-        # x_res.setPixmap(pixmap)
-        # x_res.setMaximumWidth(32)
-  
-        # # y resolution
-        # pixmap = QtGui.QPixmap("{}/y_res.png".format(self.resource_path))
-        # y_res = QtWidgets.QLabel()
-        # y_res.setPixmap(pixmap)
-        # y_res.setMaximumWidth(32)
-
-        # # z resolution
-        # pixmap = QtGui.QPixmap("{}/z_res.png".format(self.resource_path))
-        # self.z_res = QtWidgets.QLabel()
-        # self.z_res.setPixmap(pixmap)
-        # self.z_res.setMaximumWidth(32)
-
+        self.imageplane_icon = QtWidgets.QLabel()
+        self.imageplane_icon.setPixmap(QtGui.QPixmap(":/ImagePlane.png"))
+        self.imageplane_icon.setMaximumWidth(16)
         
+        self.half_res_icon = QtWidgets.QLabel()
+        self.half_res_icon.setPixmap(QtGui.QPixmap(":/imageDisplay.png"))
+        self.half_res_icon.setMaximumWidth(16)
+        
+        self.wireframe_icon = QtWidgets.QLabel()
+        self.wireframe_icon.setPixmap(QtGui.QPixmap(":/WireFrameOnShaded.png"))
+        self.wireframe_icon.setMaximumWidth(16)
+
         self.tokens_field = QtWidgets.QLineEdit()
         
         style = ("QLineEdit{"
@@ -239,12 +234,13 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                  "font: bold 12px;"
                  "color: rgb(220, 250, 250);"
                  "height: 40px;"
-                 "background-color: rgb(85, 160, 20);"
+                 "background-color: rgb(103, 163, 217);"
                  "border:1px solid black;"
                  "border-radius:4px;}"
                  "QPushButton:pressed{"
-                 "background-color: rgb(200, 120, 40);"
+                 "background-color: rgb(44, 189, 218);"
                  "}"
+                 
                  )
         self.playblast_button = QtWidgets.QPushButton("PLAYBLAST")
         self.playblast_button.setStyleSheet(style)
@@ -261,12 +257,12 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                  "font: bold 12px;"
                  "color: rgb(220, 250, 250);"
                  "height: 40px;"
-                 "background-color: rgb(200, 120, 40);"
+                 "background-color: rgb(197, 104, 141);"
                  "border:1px solid black;"
                  "border-radius:4px;}"
                  "}"
                  "QPushButton:pressed{"
-                 "background-color: rgb(200, 120, 40);"
+                 "background-color: rgb(197, 104, 141);"
                  )
         self.capture_button = QtWidgets.QPushButton("SNAP")
         self.capture_button.setStyleSheet(style)
@@ -280,35 +276,29 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
         overrides_layout = QtWidgets.QGridLayout(overrides_frame)
         overrides_layout.setColumnStretch(1,4)
-        
-        overrides_label = QtWidgets.QPushButton("Template Overrides")
-        overrides_label.setCheckable(True)  
-        overrides_label.setFont(custom_font)
 
-        style = ("QPushButton{"
-         "font: 10px;"
-         "color: rgb(220, 250, 250);"
-         "height: 25px;"
-         # "background-color: rgb(250, 60, 80);"
-         # "border:1px solid black;"
-         # "border-radius:4px;}"
-         "}"
-         "QPushButton::checked{background:rgb(255, 0, 0);"
-         )
-        overrides_label.setStyleSheet(style)
-        
         self.wireframe_box = QtWidgets.QCheckBox("Show Wireframe")
         self.wireframe_box.setChecked(False)
         
         self.show_imgplane_box = QtWidgets.QCheckBox("Show Image Plane")
-        self.show_imgplane_box.setChecked(True)
+        self.show_imgplane_box.setChecked(False)
         
         self.half_res_box = QtWidgets.QCheckBox("Half Res")
-        self.half_res_box.setChecked(True)
+        self.half_res_box.setChecked(False)
 
-        overrides_layout.addWidget(self.show_imgplane_box, 1,1,1,5,QtCore.Qt.AlignLeft)
-        overrides_layout.addWidget(self.half_res_box,2,1,1,5,QtCore.Qt.AlignLeft)
-        overrides_layout.addWidget(self.wireframe_box,3,1,1,5,QtCore.Qt.AlignLeft)
+        overrides_label = QtWidgets.QLabel("Template Overrides")
+        overrides_label.setFont(custom_font)
+        
+        overrides_layout.addWidget(overrides_label, 0,0,1,5)
+        
+        overrides_layout.addWidget(self.imageplane_icon, 1,0,1,1)
+        overrides_layout.addWidget(self.show_imgplane_box, 1,1,1,1)
+ 
+        overrides_layout.addWidget(self.wireframe_icon,2,0,1,1)
+        overrides_layout.addWidget(self.wireframe_box,2,1,1,1)
+        
+        overrides_layout.addWidget(self.half_res_icon,3,0,1,1)
+        overrides_layout.addWidget(self.half_res_box,3,1,1,1)
 
         # addWidget(widget, fromRow, fromColumn, rowSpan, columnSpan, alignment) 
         locations_label = QtWidgets.QLabel("Output Name")
@@ -337,6 +327,39 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         frame_layout.addWidget(overrides_frame)    
         frame_layout.addWidget(edit_frame)
         frame_layout.addWidget(capture_frame)
+        
+    def _save_settings(self):
+        ui_dict = self._SETTINGS['ui']
+        ui_dict['toggle_overrides'] = self.template_override_setting.isChecked() 
+        ui_dict['toggle_copy'] = self.copy_to_clipboard_setting.isChecked()
+        ui_dict['toggle_keep'] = self.keep_images_setting.isChecked()
+        ui_dict['set_imageplane'] = self.show_imgplane_box.isChecked()
+        ui_dict['set_wire'] = self.wireframe_box.isChecked() 
+        ui_dict['set_half'] = self.half_res_box.isChecked()
+        ui_dict['output_token'] = self.tokens_field.text()
+        ui_dict['last_camera'] = self.camera_list.currentText()
+        
+        settings.save_config(self._SETTINGS)
+        
+    def _load_settings(self):
+        
+        settings_dict = settings.get_config()
+        self.template_override_setting.setChecked(settings_dict['ui']['toggle_overrides'])
+        self.copy_to_clipboard_setting.setChecked(settings_dict['ui']['toggle_copy'])
+        self.keep_images_setting.setChecked(settings_dict['ui']['toggle_keep'])
+        self.show_imgplane_box.setChecked(settings_dict['ui']['set_imageplane'])
+        self.wireframe_box.setChecked(settings_dict['ui']['set_wire']) 
+        self.half_res_box.setChecked(settings_dict['ui']['set_half'])
+        self.tokens_field.setText(settings_dict['ui']['output_token'])
+
+        index = self.camera_list.findText(settings_dict['ui']['last_camera'], QtCore.Qt.MatchFixedString)
+        print (index)
+        if index >= 0:
+            self.camera_list.setCurrentIndex(index)
+        
+        
+        
+        return settings_dict 
 
     def get_render_resolution(self,multiplier=1.0):
         w = maya.cmds.getAttr("defaultResolution.width")
@@ -348,12 +371,13 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         return (w,h)
 
     def set_display_layer(self):
-        geo = cmds.listRelatives(cmds.ls(geometry=True), p=True, path=True)
-        wfGroup = cmds.createDisplayLayer(geo, n = self.WF_OVERRIDE_LAYER_NAME)
-        
-        wf_col = self._SETTINGS['wireframe_override_color']
-        PlayBlastPlusLogger.info(f'wf_col {wf_col}')
+        # just in case a file has been saved with the layer present and not remove by the script
+        if self.WF_OVERRIDE_LAYER_NAME in cmds.ls(typ='displayLayer'):
+            cmds.delete(self.WF_OVERRIDE_LAYER_NAME)
 
+        geo = cmds.listRelatives(cmds.ls(geometry=True), p=True, path=True)
+        wfGroup = cmds.createDisplayLayer(geo, n=self.WF_OVERRIDE_LAYER_NAME)
+        wf_col = self._SETTINGS['wireframe_override_color']
         cmds.setAttr("{}.color".format(wfGroup), True)
         cmds.setAttr("{}.overrideRGBColors".format(wfGroup), True)
         cmds.setAttr("{}.overrideColorRGB".format(wfGroup), wf_col[0], wf_col[1], wf_col[2])
@@ -399,7 +423,12 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def toggle_ui_state(self):
         for elem in [self.wireframe_box,
                     self.show_imgplane_box,
-                    self.half_res_box]:
+                    self.half_res_box,
+                    self.imageplane_icon,
+                    self.half_res_icon,
+                    self.wireframe_icon
+                    ]:
+
             elem.setEnabled(self.template_override_setting.isChecked())
 
     def validate_output_path(self,file_path):   
@@ -518,6 +547,8 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 OpenMaya.MGlobal.displayWarning("Please create a valid camera.") 
         else:
             OpenMaya.MGlobal.displayError(f'The filename specified is wrong - {output_name}') 
+            
+
 
 def kill_ui(name):
     """ Deletes an already created widget

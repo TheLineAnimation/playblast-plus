@@ -20,9 +20,21 @@ class Parsing:
         Returns:
             dict: The JSON data parsed into a dictionary
         """
-        with open(file, 'r') as myfile:
-            data=myfile.read()
+        with open(file, 'r') as f:
+            data=f.read()
         return json.loads(data)
+    
+    @staticmethod
+    def save_json_to_file( data: dict, file: str):
+        """Saves a JSON file to the location specified 
+
+        Args:
+            data (dict): _description_
+            file (str): location of the file. 
+        """
+      
+        with open(file, 'w',encoding='utf-8') as f:
+            json.dump( data , f, ensure_ascii=False, indent=4)
 
     @staticmethod
     def get_templates(dir: str) -> list:
