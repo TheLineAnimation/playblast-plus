@@ -2,7 +2,8 @@
     "studio_templates": "./templates/studio",
     "project_template_subpath": "tools/pipeline/playblast/templates",
     "default_token": "<scene>_<camera>_<user>",
-    "openpype": true,
+    "wireframe_override_color":[0.1,0.1,0.1],
+    "openpype": true, 
     "ffmpeg":{
         "path": "./bin",
         "input_args":"-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p", 

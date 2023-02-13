@@ -92,7 +92,8 @@ class Parsing:
     def create_ffmpeg_still_frame_output(input_file: str, 
                                    filename: str, 
                                    padding: int = 4, 
-                                   ext: str = '.png') -> str:
+                                   ext: str = '.png'
+                                   ) -> str:
         """Takes a movie file input and returns a still frame based on 
             the input name 
 
@@ -126,23 +127,33 @@ class FolderOps:
         # subprocess.run(['open', f'"{dir}"'])
         subprocess.Popen(f'explorer  "{dir}"')
 
-    @classmethod
-    def purge_contents(cls, root:str, images_only: bool = False, image_ext: str ='.png') -> int:
-        dir = Path(root)
-        if dir.exists():
-            for child in dir.iterdir():
-                if child.is_file():
-                    if images_only:
-                        if child.suffix == image_ext:
-                            child.unlink() 
-                    else:
-                        child.unlink()
-                else:
-                    cls.purge_contents(child)
-        
+    @staticmethod
+    def purge_contents( root:str,  
+                        ext: str = '.*',
+                        skip_folder: str = ""
+                        ):
+        """Removes files from the directory. 
+            Designed to be used in 2 ways :
+            1. Remove everything 
+            2. Remove a filetype (pass an extension to target)
+            3. If you want to keep capture images, pass the folder name
+
+        Args:
+            root (str): The base path to scan for files
+            ext (str, optional): The extension to remove. Defaults to '.*'.
+            skip_folder (str, optional): Folder name to skip. Defaults to "".
+        """
+        for f in Path(root).rglob(f'*{ext}'):
+            try:
+                if f.parent.name != skip_folder:
+                    f.unlink()
+            except OSError as e:
+                print(f"Error:{f} : {e.strerror}")
+
     @classmethod
     def get_version_folders(cls, rootDir: str, 
-                            latest: bool = True) -> Union[str,None]:
+                            latest: bool = True
+                            ) -> Union[str,None]:
         """_summary_
 
         Args:
