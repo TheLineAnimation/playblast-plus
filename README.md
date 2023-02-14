@@ -34,11 +34,9 @@ So this is more of a Dr.Frankenstein script, made from parts created by people w
 
 ### Features
 
-- Configurable viewport settings to switch between different preview settings 
-- Tokenized path output to control filenames and paths without the need to set one.
-- Callbacks to allow custom encoding prior to opening viewer.
-- Configure project override templates to allow alternate options (like wireframe previews and snapshots) 
-- Utilises [OpenPype](https://openpype.io) environment
+- Transcodes the Maya playblast into MP4 (Uses [FFMpeg](https://ffmpeg.org/))
+- Template overrides for common requirements, like show wireframe and image planes
+- Tokenized path output to control filenames and paths.
 
 <br>
 
@@ -48,89 +46,19 @@ To install, download this and place the PlayblastPlus folder in a directory on y
 
 <br>
 
-### Usage (WIP but keeping the MD formatting stuff for later)
+### Usage
 
 To show the interface in Maya run:
 
 ```python
-import playblast_plus
-capture_gui.main()
+import playblast_plus.ui
+playblast_plus.ui.run()
 ```
 
 <br>
 
-### Advanced
+### To-Do
 
-#### Callbacks
-Register a pre-view callback to allow a custom conversion or overlays on the 
-resulting footage in your pipeline (e.g. through FFMPEG)
-
-```python
-import capture_gui
-
-# Use Qt.py to be both compatible with PySide and PySide2 (Maya 2017+)
-from capture_gui.vendor.Qt import QtCore
-
-def callback(options):
-    """Implement your callback here"""
-
-    print("Callback before launching viewer..")
-
-    # Debug print all options for example purposes
-    import pprint
-    pprint.pprint(options)
-
-    filename = options['filename']
-    print("Finished callback for video {0}".format(filename))
-
-
-app = capture_gui.main(show=False)
-
-# Use QtCore.Qt.DirectConnection to ensure the viewer waits to launch until
-# your callback has finished. This is especially important when using your
-# callback to perform an extra encoding pass over the resulting file.
-app.viewer_start.connect(callback, QtCore.Qt.DirectConnection)
-
-# Show the app manually
-app.show()
-```
-
-#### Register preset paths
-
-Register a preset path that will be used by the capture gui to load default presets from.
-
-```python
-import capture_gui.presets
-import capture_gui
-
-path = "path/to/directory"
-capture_gui.presets.register_path(path)
-
-# After registering capture gui will automatically load
-# the presets found in all registered preset paths
-capture_gui.main()
-```
-
-#### Register tokens and translators
-
-Register a token and translator that will be used to translate any tokens
-in the given filename.
-
-```python
-import capture.tokens
-import capture_gui
-
-# this is an example function which retrieves the name of the current user
-def get_user_name():
-    import getpass
-    return getpass.getuser()
-
-# register the token <User> and pass the function which should be called
-# when this token is present.
-# The label is for the right mouse button menu's readability.
-capture.tokens.register_token("<User>",
-                              lambda options : get_user_name(),
-                              label="Insert current user's name")
-```
+- Tidy up the project template idea, feels redundant now.
 
 ### Known issues
