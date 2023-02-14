@@ -5,11 +5,9 @@ Let's face it, Maya's playblast isn't the best. (And that's saying something as 
 This script standardises the playblast output to allow animators an easy way to create a rolling,
 local playblast to review thier work. 
 
-Compatible with the OpenPype reiew workflow - specifically the `review` instance to ensure settings parity, 
-but allow custom preview settings on a local level.
-
 <img align="right" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
 
+<br>
 
 ### Why bother? 
 
