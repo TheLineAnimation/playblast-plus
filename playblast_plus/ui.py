@@ -31,9 +31,6 @@ from playblast_plus.lib import settings as settings
 from playblast_plus.lib import preset as preset
 from playblast_plus.lib import encode as encode
 
-# to implement openpype review link
-from playblast_plus.lib import content_management
-
 from playblast_plus.hosts.maya import capture as capture
 from playblast_plus.hosts.maya import tokens as tokens
 from playblast_plus.hosts.maya import maya_scene as maya_scene
@@ -103,11 +100,13 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self._SETTINGS = self._load_settings()
 
         self.tokens_field.setText(self._SETTINGS['ui']['output_token'])
-        self.template_paths = preset.get_project_locations (
-                                        str(module_root / 
-                                        self._SETTINGS['studio_templates'] ))
         
-        self._TEMPLATES = preset.load_templates ( self.template_paths )
+        # self.template_paths = preset.get_project_locations (
+        #                                 str(module_root / 
+        #                                 self._SETTINGS['studio_templates'] ))
+        
+        self._TEMPLATES = preset.load_templates ( [str(module_root / 
+                                          self._SETTINGS['studio_templates'] )] )
         self.current_playblast_directory = maya_scene.get_playblast_dir()
         
         # to identify the different presets, they are stored within a 
@@ -585,8 +584,6 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         else:
             OpenMaya.MGlobal.displayError(
                 f'The filename specified is wrong - {output_name}') 
-            
-
 
 def kill_ui(name):
     """ Deletes an already created widget
@@ -616,14 +613,21 @@ def kill_ui(name):
     qt_object.deleteLater()
     del(qt_object)
 
-
 def run(*args):  # @unusedVariable
-    """ Opens the Cache Manager UI
+    """ 
+    Opens the Playblast Plus UI
     """
-    # UI WIDGET NAME
-    
-    tool = PlayblastPlusUI(UI_NAME)
-    tool.show(dockable=True)
-    PlayBlastPlusLogger.info("playblastPlus Running...")
-
-run()
+    # Worth checking FFMpeg is installed correctly on the local system
+    ffmpeg_path = settings.get_ffmpeg_path()
+    if Path(ffmpeg_path).exists():
+        tool = PlayblastPlusUI(UI_NAME)
+        tool.show(dockable=True)
+        PlayBlastPlusLogger.info("playblastPlus Running...")
+    else:
+        OpenMaya.MGlobal.displayError(
+                f'FFMpeg is not installed in the directory specified : {ffmpeg_path}') 
+        OpenMaya.MGlobal.displayWarning(
+                f'Install to this location or edit the following file to point at your install : {settings.filepath()}')
+        
+if __name__ == "__main__":
+    run()

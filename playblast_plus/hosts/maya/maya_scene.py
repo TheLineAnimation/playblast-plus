@@ -66,60 +66,25 @@ def get_current_camera():
                                     parent=True,
                                     fullPath=True)[0] 
                                     
-def get_playblast_dir(local=True):
+def get_playblast_dir(workspace:bool = False) -> str:
     """Returns the playblast directory so that a filename can be specified.
 
     Args:
-        local (bool, optional): Decides if the playblast is local to the 
-        Maya install or the workspace location. Defaults to True.
+        workspace (bool, optional): Decides if the playblast is local to the 
+        Maya install or the workspace location. Defaults to False.
 
     Returns:
-        _type_: _description_
-
-    USEFUL ENV VARS
-    ---------------
-    open_pype_server_root = os.getenv("OPENPYPE_PROJECT_ROOT_WORK") 
-    open_pype_project = os.getenv("AVALON_PROJECT")
-    open_pype_task = os.getenv("AVALON_TASK")             
-    open_pype_shot = os.getenv("AVALON_ASSET") 
-    open_pype_project = os.getenv("AVALON_PROJECT")            
-    open_pype_work_dir = os.getenv("AVALON_WORKDIR")
-    MAYA_APP_DIR
+        string: A folder location string
     """
 
     from pathlib import Path
 
-    if local:
-        playblast_root = cmds.internalVar(uad=True)
+    if workspace:
+        playblast_dir = Path (cmds.workspace( q=True, dir=True )) / 'playblasts' 
     else:
-        playblast_root = cmds.workspace( q=True, dir=True )
-    
-    playblast_dir = Path (
-        os.getenv('AVALON_WORKDIR', playblast_root)
-        ) / 'playblasts'
+        playblast_dir = Path (cmds.internalVar(uad=True)) / 'playblasts' 
 
+    # make the directories if they do not exist
     playblast_dir.mkdir(parents=True, exist_ok=True)
     return str(playblast_dir)
 
-def getReviewSettings():
-    reviewDict = {}
-    scene_sets = cmds.listSets( allSets=True )
-    for opSet in scene_sets:
-        if opSet == "review_Main":
-            review_attrs = (cmds.listAttr(opSet,channelBox=True))
-            for setting in review_attrs:
-                attr_path = f"{opSet}.{setting}" 
-                reviewDict[setting] = cmds.getAttr (attr_path)
-            
-            review_members = cmds.sets( opSet, q=True )
-            print (review_members)
-            for r in review_members:  
-                shapes = cmds.listRelatives(r, shapes=True)
-                if shapes and cmds.objectType(shapes[0]) == 'camera':
-                    print (shapes[0]) 
-                    reviewDict['review_camera'] = r
-
-    return reviewDict
-
-def mergeReviewSettingsToPreset(preset, review):
-    pass

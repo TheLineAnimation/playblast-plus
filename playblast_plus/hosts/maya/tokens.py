@@ -47,20 +47,6 @@ def list_tokens():
 def get_user_name():
     import getpass
     return getpass.getuser()
-    
-def get_work_dir():
-    
-    """
-    open_pype_server_root = os.getenv("OPENPYPE_PROJECT_ROOT_WORK") 
-    open_pype_project = os.getenv("AVALON_PROJECT")
-                open_pype_task = os.getenv("AVALON_TASK")             
-    open_pype_shot = os.getenv("AVALON_ASSET") 
-    open_pype_project = os.getenv("AVALON_PROJECT")            
-    open_pype_work_dir = os.getenv("AVALON_WORKDIR")
-    """
-
-    import os
-    return os.getenv('AVALON_WORKDIR', "FALLBACK")
 
 # register default tokens
 # scene based tokens

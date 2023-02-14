@@ -14,7 +14,6 @@ class ToolHeader(QtWidgets.QWidget):
     
     Returns:
         A QWdidget control item.
-
     
     **Useful code:**
     
@@ -29,8 +28,15 @@ class ToolHeader(QtWidgets.QWidget):
     """
 
     LINE_LOGO = 'tl_logo_white.png'
-        
-    STYLE_SHEET = 'font-weight: bold; color: rgb(205, 205, 205);background-color: rgb(30,30,30);'
+    # STYLE_SHEET = 'font-weight: bold; color: rgb(205, 205, 205);background-color: rgb(30,30,30);'
+
+    STYLE_SHEET = ("font: bold 14px;"
+                 "color: rgb(205, 205, 205);"
+                 "height: 25px;"
+                 "background-color: rgb(30,30,30);"
+                 "border:1px solid black;"
+                 "border-radius:4px;"
+                 )
 
     def __init__(self, name='', text= '', parent=None):
             super(ToolHeader, self).__init__(parent)
@@ -47,17 +53,20 @@ class ToolHeader(QtWidgets.QWidget):
             
         self.labelIcon = QtWidgets.QLabel()
         self.labelIcon.setStyleSheet(self.STYLE_SHEET)          
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, 
+                                           QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelIcon.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.labelIcon.sizePolicy().hasHeightForWidth())
         self.labelIcon.setMaximumSize(QtCore.QSize(160, 40))
         self.labelIcon.setSizePolicy(sizePolicy) 
         self.labelText = QtWidgets.QLabel()
         self.labelText.setStyleSheet(self.STYLE_SHEET)
         self.labelText.setText(self.headerTitle)
         self.labelText.setMaximumSize(QtCore.QSize(16777215, 40)) 
-        self.labelText.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignLeading|QtCore.Qt.AlignVCenter)
+        self.labelText.setAlignment(
+            QtCore.Qt.AlignRight|QtCore.Qt.AlignLeading|QtCore.Qt.AlignVCenter)
         self.labelText.setIndent(4)
 
     def create_layout(self): 

@@ -23,6 +23,8 @@ def get_config() -> dict:
 def save_config(data: dict) -> bool:
     return utils.Parsing.save_json_to_file( data , PLAYBLAST_PLUS_MODULE_ROOT / 
                                           'settings.json')
+def filepath() -> str :
+    return (PLAYBLAST_PLUS_MODULE_ROOT / 'settings.json')
 
 def get_ffmpeg_path() -> str :
     return (PLAYBLAST_PLUS_MODULE_ROOT / get_config()['ffmpeg']['path'] / 'ffmpeg.exe')
@@ -41,9 +43,3 @@ def get_ffmpeg_input_args() -> str :
 
 def get_ffmpeg_output_args() -> str :
     return f"{get_config()['ffmpeg']['output_args']}"
-
-def open_pype_enabled() -> bool :
-    return bool(get_config()['openpype'])
-
-# if __name__ == '__main__':
-#     CONFIG = refresh()
