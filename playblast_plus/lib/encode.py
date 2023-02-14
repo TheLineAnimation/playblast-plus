@@ -14,6 +14,12 @@ Otherwise there will be issues with black frames
 FFMPEG_PATH = settings.get_ffmpeg_path()
 FFPROBE_PATH = settings.get_ffprobe_path()
 
+def open_media_file(filepath:str):
+    # open the video file
+    print(f'Launching : "{filepath}"')
+    import os
+    os.startfile(filepath)
+
 def extract_middle_image(source_path: str, output_path: str):
 
     ffprobe_cmd = (
@@ -92,8 +98,6 @@ def mp4_from_image_sequence(image_seq_path: str,
     # check output fie exists
     if Path(output_path).exists() and post_open:
         # open the video file
-        print(f'"{output_path}"')
-        import os
-        os.startfile(output_path)
-        # subprocess.run(['open', f'"{output_path}"'])
+        open_media_file(output_path)
+        
 

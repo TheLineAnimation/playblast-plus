@@ -2,22 +2,26 @@
 """
 Playblast Plus
 
-huge thanks to Jerome Drese for his UI code from SmearDeform www.nodilus.com
+A huge thanks to Jerome Dresse for his UI code from SmearDeform
+www.nodilus.com
 
 """
 
 # imports
-import os
+
 from maya import cmds
 from maya import OpenMaya, OpenMayaUI
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
-from PySide2 import QtWidgets
-from PySide2 import QtGui
+
+from playblast_plus.vendor.Qt import QtWidgets
+from playblast_plus.vendor.Qt import QtGui
+from playblast_plus.vendor.Qt import QtCore
 from shiboken2 import wrapInstance
-from PySide2 import QtCore
 
-
-# import playblast_plus
+# from PySide2 import QtWidgets
+# from PySide2 import QtGui
+# from shiboken2 import wrapInstance
+# from PySide2 import QtCore
 
 from pathlib import Path
 
@@ -26,6 +30,8 @@ from playblast_plus.lib import widgets as widgets
 from playblast_plus.lib import settings as settings
 from playblast_plus.lib import preset as preset
 from playblast_plus.lib import encode as encode
+
+# to implement openpype review link
 from playblast_plus.lib import content_management
 
 from playblast_plus.hosts.maya import capture as capture
@@ -46,7 +52,6 @@ class PlayBlastPlusLogger(MayaLogger):
     Set up a custom script logger
     """
     LOGGER_NAME = "PlayBlastPlusLogger"
-
 
 class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     """
@@ -98,12 +103,15 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self._SETTINGS = self._load_settings()
 
         self.tokens_field.setText(self._SETTINGS['ui']['output_token'])
-        self.template_paths = preset.get_project_locations (str(module_root /self._SETTINGS['studio_templates'] ))
+        self.template_paths = preset.get_project_locations (
+                                        str(module_root / 
+                                        self._SETTINGS['studio_templates'] ))
+        
         self._TEMPLATES = preset.load_templates ( self.template_paths )
         self.current_playblast_directory = maya_scene.get_playblast_dir()
         
-        # to identify the different presets, they are stored within a dictionary, 
-        # so the first key is the name identifier
+        # to identify the different presets, they are stored within a 
+        # dictionary, so the first key is the name identifier
         template_names = [list(k.keys())[0] for k in self._TEMPLATES]
         # PlayBlastPlusLogger.info(template_names)
         self.template_list.addItems( template_names)
@@ -118,17 +126,14 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         """
         self.playblast_button.clicked.connect(self.create_playblast)
         self.capture_button.clicked.connect(self.capture_viewport)
-        
         self.open_playblast_dir.triggered.connect(self.open_playblast_directory)
+        self.open_last_playblast.triggered.connect(self.open_last_capture)
         self.purge_playblast_dir.triggered.connect(self.clear_playblast_directory)
-        
         self.template_override_setting.toggled.connect(self.toggle_ui_state) 
 
-
-        
     def _create_actions(self):
 
-        self.copy_to_clipboard_setting = QtWidgets.QAction("Copy To Clipboard", self)
+        self.copy_to_clipboard_setting =  QtWidgets.QAction("Copy To Clipboard", self)
         self.copy_to_clipboard_setting.setCheckable(True)
         self.copy_to_clipboard_setting.setChecked(True)
         
@@ -140,38 +145,33 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.template_override_setting.setCheckable(True)
         self.template_override_setting.setChecked(False)
 
-        self.open_playblast_dir = QtWidgets.QAction("Open Playblast Directory", self)
-        self.purge_playblast_dir = QtWidgets.QAction("Purge Contents", self)
-        
-        
-        # self.open_playblast_dir.setIcon (icon)
-        # def setIconText ()
-        self.open_playblast_dir.setIconVisibleInMenu(True)
-
-        # add the actions from create widgets to organise things better
-
     def _create_widgets(self):
         """ Creates the widget elements the user will interact with
         """
-
         self.menu_bar = QtWidgets.QMenuBar()       
-        self.display_menu = self.menu_bar.addMenu("Settings")   
+        self.display_menu = self.menu_bar.addMenu("Settings")  
+        
+        self.open_last_playblast = QtWidgets.QAction("Open Last Capture", self)
+        self.display_menu.addAction(self.open_last_playblast)
+        
+        self.open_playblast_dir = QtWidgets.QAction("Explore Playblast Folder", self)
         self.display_menu.addAction(self.open_playblast_dir)
+ 
 
-        # self.display_menu.addSeparator()
+       
+        self.purge_playblast_dir = QtWidgets.QAction("Purge Contents", self)
+        
         folder_separator = QtWidgets.QLabel("<b>Template Overrides</b>")
         folder_separator_action = QtWidgets.QWidgetAction(self)
         folder_separator_action.setDefaultWidget(folder_separator)
         self.display_menu.addAction(folder_separator_action)
         self.display_menu.addAction(self.template_override_setting) 
-        # self.display_menu.addSeparator()
 
         folder_separator = QtWidgets.QLabel("<b>Data Options</b>")
         folder_separator_action = QtWidgets.QWidgetAction(self)
         folder_separator_action.setDefaultWidget(folder_separator)
 
         self.display_menu.addAction(folder_separator_action)
-
         self.display_menu.addAction(self.copy_to_clipboard_setting)
         self.display_menu.addAction(self.keep_images_setting)
         self.display_menu.addAction(self.purge_playblast_dir)
@@ -356,14 +356,12 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         print (index)
         if index >= 0:
             self.camera_list.setCurrentIndex(index)
-        
-        
-        
+
         return settings_dict 
 
     def get_render_resolution(self,multiplier=1.0):
-        w = maya.cmds.getAttr("defaultResolution.width")
-        h = maya.cmds.getAttr("defaultResolution.height")
+        w = cmds.getAttr("defaultResolution.width")
+        h = cmds.getAttr("defaultResolution.height")
         if multiplier != 1.0:
             w = int (w * multiplier)
             h = int (h * multiplier)
@@ -387,7 +385,8 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             try:
                 cmds.delete(self.WF_OVERRIDE_LAYER_NAME)
             except:
-                OpenMaya.MGlobal.displayWarning(f'Something went wrong deleting the display layer - {WF_OVERRIDE_LAYER_NAME}') 
+                OpenMaya.MGlobal.displayWarning(
+                    f'Something went wrong deleting the display layer - {self.WF_OVERRIDE_LAYER_NAME}') 
 
     def set_overrides(self,template) -> dict:
         """
@@ -404,7 +403,9 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 self.set_display_layer()
             
             if 'modelPanel' in viewport:
-                cmds.modelEditor(viewport, edit=True, wireframeOnShaded=wf_override_state)
+                cmds.modelEditor(viewport, 
+                                 edit=True, 
+                                 wireframeOnShaded=wf_override_state)
 
             template["viewport_options"]["imagePlane"] = self.show_imgplane_box.isChecked()
 
@@ -441,9 +442,14 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         file_output = Path(file_path)  
         return file_output.is_file()
       
-    def create_movie(self,input_sequence, output_filename, framerate, post_open=True) -> str :
+    def create_movie(self,input_sequence, 
+                     output_filename, 
+                     framerate, 
+                     post_open=True
+                     ) -> str :
  
-        ffmpeg_input_string = utils.Parsing.playblast_output_to_ffmpeg_input(input_sequence)
+        ffmpeg_input_string = utils.Parsing.playblast_output_to_ffmpeg_input(
+                                                                input_sequence)
         output_path = f'{output_filename}.mp4'
         PlayBlastPlusLogger.info(f'ffmpeg_input_string {ffmpeg_input_string}')
         PlayBlastPlusLogger.info(f'output_path {output_path}')
@@ -462,16 +468,33 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
     def open_playblast_directory(self):
         utils.FolderOps.explore(self.current_playblast_directory)
-        PlayBlastPlusLogger.info(f"Open Playblast Directory {self.current_playblast_directory}")
+        PlayBlastPlusLogger.info(
+            f"Open Playblast Directory {self.current_playblast_directory}"
+            )
+            
+    def open_last_capture(self):
+        # file should be current to the settings dictionary 
+        # as it's saved to this before writing out to JSON each time
+        last_captured = self._SETTINGS['last_playblast']
+        if self.validate_output(last_captured):
+            encode.open_media_file(last_captured)
         
+        PlayBlastPlusLogger.info(
+            f"Launching last captured : {self.current_playblast_directory}"
+            )
+
+    def update_last_playblast(self, filepath):
+        self._SETTINGS['last_playblast'] = filepath
+        settings.save_config(self._SETTINGS)
+
     def get_output_name(self, strToken) -> str:
         return tokens.format_tokens(strToken,None)
         
     def get_current_template(self) -> dict:
         """
-        We want to clone the template as we might want to override the keys each time 
-        we make playblast. This means the defaults are not modified direectly 
-        and are collected only when init is called
+        We want to clone the template as we might want to override the keys 
+        each time we make playblast. This means the defaults are not modified 
+        direectly and are collected only when init is called
         """
         selected_template = self._TEMPLATES[self.template_list.currentIndex()]
         capture_template = selected_template[self.template_list.currentText()]
@@ -488,7 +511,8 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         output_path = Path (self.current_playblast_directory, 'captures') 
     
         if self.validate_output_path(output_path):
-            snap_image_filename = (tokens.format_tokens(f'{output_path}\{self.tokens_field.text()}_capture',None))
+            snap_image_filename = (tokens.format_tokens(
+                f'{output_path}\{self.tokens_field.text()}_capture',None))
             capture_template = self.get_current_template()    
             capture_template["filename"] = snap_image_filename
             
@@ -496,7 +520,9 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 self.set_overrides(capture_template)
 
             snap_clip_image = capture.snap(**capture_template)
-            PlayBlastPlusLogger.info(f"Viewport Capture saved to {snap_clip_image}")
+            PlayBlastPlusLogger.info(
+                f"Viewport Capture saved to {snap_clip_image}")
+            self.update_last_playblast(snap_clip_image)
             
             if self.copy_to_clipboard_setting.isChecked():
                     # check the mp4 has written and is a file
@@ -505,8 +531,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                         
             if self.template_override_setting.isChecked():
                 self.remove_display_layer()
-
- 
+                
     def create_playblast(self):
 
         output_name = self.get_output_name(self.tokens_field.text())
@@ -521,15 +546,24 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 capture_template["camera"] = self._CAMERAS[self.camera_list.currentIndex()]
 
                 if capture_template["frame_padding"] > 4:
-                    PlayBlastPlusLogger.warning ("Playblast padding should be set to 4 to allow output transcode compatibility - This value will be set automatically.")
+                    PlayBlastPlusLogger.warning ( """Playblast padding 
+                            "should be set to 4 to allow output transcode " \
+                            "compatibility - This value will be set " \
+                            "automatically."""
+                            )
 
                 if self.template_override_setting.isChecked():
                     self.set_overrides(capture_template)
 
                 filename = capture.capture(**capture_template)
-                mp4_output = self.create_movie(filename, capture_template["filename"], 24, post_open=True)
-                
-                # if self.clipboard_box.isChecked():
+                mp4_output = self.create_movie(
+                                               filename, 
+                                               capture_template["filename"], 
+                                               24, 
+                                               post_open=True
+                                               )
+                if self.validate_output(mp4_output):                              
+                    self.update_last_playblast(mp4_output)
                     
                 if self.copy_to_clipboard_setting.isChecked():
                     # check the mp4 has written and is a file
@@ -538,15 +572,19 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                         
                 # if not self.images_box.isChecked():
                 if not self.keep_images_setting.isChecked():   
-                    utils.FolderOps.purge_contents(output_path, ext='.png', skip_folder='captures')
+                    utils.FolderOps.purge_contents(output_path, 
+                                                    ext='.png', 
+                                                    skip_folder='captures')
                  
                 if self.template_override_setting.isChecked():
                     self.remove_display_layer()
 
             else:
-                OpenMaya.MGlobal.displayWarning("Please create a valid camera.") 
+                OpenMaya.MGlobal.displayWarning(
+                    "Please create a valid camera.") 
         else:
-            OpenMaya.MGlobal.displayError(f'The filename specified is wrong - {output_name}') 
+            OpenMaya.MGlobal.displayError(
+                f'The filename specified is wrong - {output_name}') 
             
 
 

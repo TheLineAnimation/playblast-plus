@@ -6,7 +6,7 @@
         0.1,
         0.1
     ],
-    "last_playblast": "",
+    "last_playblast": "C:\\Users\\pete\\OneDrive\\Documents\\maya\\playblasts\\captures\\pb_test_scene_side_pete_capture.0013.png",
     "openpype": true,
     "ffmpeg": {
         "path": "./bin",
@@ -15,7 +15,7 @@
         "burnin": "-vf \"drawtext=font=Consolas: fontsize=24: fontcolor=white: text=\"%{{frame_num}}\": r=24: x=(w-tw-20): y=h-lh-20: box=1: boxcolor=black"
     },
     "ui": {
-        "toggle_overrides": true,
+        "toggle_overrides": false,
         "toggle_copy": true,
         "toggle_keep": false,
         "set_imageplane": false,
