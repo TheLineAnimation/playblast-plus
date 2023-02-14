@@ -28,14 +28,9 @@ class ToolHeader(QtWidgets.QWidget):
     """
 
     LINE_LOGO = 'tl_logo_white.png'
-    # STYLE_SHEET = 'font-weight: bold; color: rgb(205, 205, 205);background-color: rgb(30,30,30);'
-
-    STYLE_SHEET = ("font: bold 14px;"
+    STYLE_SHEET = ("font: bold 12px;"
                  "color: rgb(205, 205, 205);"
-                 "height: 25px;"
                  "background-color: rgb(30,30,30);"
-                 "border:1px solid black;"
-                 "border-radius:4px;"
                  )
 
     def __init__(self, name='', text= '', parent=None):
@@ -43,12 +38,11 @@ class ToolHeader(QtWidgets.QWidget):
             self.name = name
             self.headerTitle = text
             self.registerUserData = ""            
-            self.setMinimumSize(QtCore.QSize(160, 46))
+            self.setMinimumSize(QtCore.QSize(160, 40))
             self.setStyleSheet(self.STYLE_SHEET)             
             self.create_widgets()
             self.create_layout()
-            self.create_actions()
-
+        
     def create_widgets(self):
             
         self.labelIcon = QtWidgets.QLabel()
@@ -64,7 +58,7 @@ class ToolHeader(QtWidgets.QWidget):
         self.labelText = QtWidgets.QLabel()
         self.labelText.setStyleSheet(self.STYLE_SHEET)
         self.labelText.setText(self.headerTitle)
-        self.labelText.setMaximumSize(QtCore.QSize(16777215, 40)) 
+        self.labelText.setMaximumSize(QtCore.QSize(1000, 40)) 
         self.labelText.setAlignment(
             QtCore.Qt.AlignRight|QtCore.Qt.AlignLeading|QtCore.Qt.AlignVCenter)
         self.labelText.setIndent(4)
@@ -86,9 +80,7 @@ class ToolHeader(QtWidgets.QWidget):
     def setTitleText(self,text):
         self.headerTitle = text 
         self.labelText.setText(self.headerTitle)
-    
-    def create_actions(self):
-        pass
+
             
     def addHeaderIcon(self, widget):
         icon_root = settings.get_resources_directory()

@@ -118,7 +118,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
     def dockCloseEventTriggered (self):
         self._save_settings()
-        print('Window closed')
+        PlayBlastPlusLogger.info(f'Settings saved to {settings.filepath()}')
         
     def _connect_signals(self):
         """ Connects widget signals to functionalities
@@ -143,6 +143,11 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.template_override_setting = QtWidgets.QAction("Enable", self)
         self.template_override_setting.setCheckable(True)
         self.template_override_setting.setChecked(False)
+        
+        self.use_workspace_setting = QtWidgets.QAction("Use Workspace", self)
+        self.use_workspace_setting.setCheckable(True)
+        self.use_workspace_setting.setChecked(False)
+
 
     def _create_widgets(self):
         """ Creates the widget elements the user will interact with
@@ -156,7 +161,9 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.open_playblast_dir = QtWidgets.QAction("Explore Playblast Folder", self)
         self.display_menu.addAction(self.open_playblast_dir)
  
-
+      
+        self.display_menu.addAction(self.use_workspace_setting)
+ 
        
         self.purge_playblast_dir = QtWidgets.QAction("Purge Contents", self)
         
@@ -166,7 +173,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.display_menu.addAction(folder_separator_action)
         self.display_menu.addAction(self.template_override_setting) 
 
-        folder_separator = QtWidgets.QLabel("<b>Data Options</b>")
+        folder_separator = QtWidgets.QLabel("<b>File Options</b>")
         folder_separator_action = QtWidgets.QWidgetAction(self)
         folder_separator_action.setDefaultWidget(folder_separator)
 
@@ -337,7 +344,8 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         ui_dict['set_half'] = self.half_res_box.isChecked()
         ui_dict['output_token'] = self.tokens_field.text()
         ui_dict['last_camera'] = self.camera_list.currentText()
-        
+        ui_dict['use_workspace'] = self.use_workspace_setting.isChecked()
+
         settings.save_config(self._SETTINGS)
         
     def _load_settings(self):
@@ -350,6 +358,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.wireframe_box.setChecked(settings_dict['ui']['set_wire']) 
         self.half_res_box.setChecked(settings_dict['ui']['set_half'])
         self.tokens_field.setText(settings_dict['ui']['output_token'])
+        self.use_workspace_setting.setChecked(settings_dict['ui']['use_workspace'] )
 
         index = self.camera_list.findText(settings_dict['ui']['last_camera'], QtCore.Qt.MatchFixedString)
         print (index)
