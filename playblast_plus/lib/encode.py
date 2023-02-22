@@ -15,12 +15,19 @@ FFMPEG_PATH = settings.get_ffmpeg_path()
 FFPROBE_PATH = settings.get_ffprobe_path()
 
 def open_media_file(filepath:str):
-    # open the video file
+    # open the file (video or jpg)
+    # this should open the OS defined executable for the file type
+    # possible feature upgrade - specify a custom viewer in settings
     print(f'Launching : "{filepath}"')
-    import os
-    os.startfile(filepath)
+    subprocess.Popen(['start',filepath],shell=True)
 
 def extract_middle_image(source_path: str, output_path: str):
+    """_summary_
+
+    Args:
+        source_path (str): _description_
+        output_path (str): _description_
+    """
 
     ffprobe_cmd = (
         f'{FFPROBE_PATH} '
@@ -45,10 +52,14 @@ def extract_middle_image(source_path: str, output_path: str):
 
 def mp4_from_image_sequence(image_seq_path: str, 
                             output_path: str, 
-                            framerate: int = 24, 
+                            framerate: int = 24,
+                            start_frame: int = 0, 
+                            end_frame: int = 0,
                             audio_path: str = None,
                             post_open: bool = False,
-                            add_burnin: bool = False
+                            add_burnin: bool = False,
+                            burnin_text: str = "",
+                            burnin_font_size: int = 24
                         ):
     """_summary_
 
@@ -56,19 +67,22 @@ def mp4_from_image_sequence(image_seq_path: str,
         image_seq_path (str): _description_
         output_path (str): _description_
         framerate (int, optional): _description_. Defaults to 24.
-        audio_path (_type_, optional): _description_. Defaults to None.
+        start_frame (int, optional): _description_. Defaults to 0.
+        end_frame (int, optional): _description_. Defaults to 0.
+        audio_path (str, optional): _description_. Defaults to None.
         post_open (bool, optional): _description_. Defaults to False.
-
-
-    get total frames
-    ffprobe -v error -select_streams v:0 -count_packets \
-        -show_entries stream=nb_read_packets -of csv=p=0 input.mp4
-
+        add_burnin (bool, optional): _description_. Defaults to False.
+        burnin_text (str, optional): _description_. Defaults to "".
+        burnin_font_size (int, optional): _description_. Defaults to 24.
     """
+
     if add_burnin:
-        burnin = f'-vf "drawtext=font=Consolas: fontsize=24: fontcolor=white: \
-        text=\'%{{frame_num}}\': r=24: x=(w-tw-20): \
-        y=h-lh-20: box=1: boxcolor=black"'
+        burnin = (
+            f'-vf "drawtext=font=Consolas: fontsize={burnin_font_size}: '
+            f'fontcolor=white@0.5: text=\'{burnin_text} | %{{eif\:n\:d\:4}} |\': '
+            f'start_number={start_frame}: r=24: x=(w-tw-20): y=h-lh-20: '
+            f'box=1: boxcolor=black@0.5: boxborderw=2"'
+        )
     else:
         burnin = ''        
 
@@ -82,13 +96,15 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'{FFMPEG_PATH} '
         f'-framerate {framerate} '
         f'-y ' # overwrite
-        f'-loglevel quiet ' 
+        f'-start_number {start_frame} '
+        # f'-loglevel quiet ' 
         f'-i "{image_seq_path}" '
         f'{burnin} '
         f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
         # f'-pix_fmt yuv420p '
         f'{audio_params}'
+        f'-frames:v {end_frame} '
         f'"{output_path}"'
     )
 
@@ -100,4 +116,3 @@ def mp4_from_image_sequence(image_seq_path: str,
         # open the video file
         open_media_file(output_path)
         
-

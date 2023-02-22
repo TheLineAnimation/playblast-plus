@@ -104,22 +104,3 @@ if __name__ == "__main__":
     Logger.error("error message")
     Logger.critical("critical message")
 
-class MayaLogger(Logger):
-    
-    LOGGER_NAME = "MayaLogger"
-    FORMAT_DEFAULT = "[%(levelname)s][%(name)s] %(message)s"
-    PROPAGATE_DEFAULT = False
-
-if __name__ == "__main__":
-    
-    MayaLogger.set_propagate(MayaLogger.PROPAGATE_DEFAULT)
-    
-    # handler = logging.StreamHandler(stream=sys.stdout)
-    # MayaLogger.logger_obj().addHandler(handler)
-    # create a global instance of our class to register the hook
-    # qt_exception_hook = UncaughtHook()
-
-    MayaLogger.debug("debug message")
-    MayaLogger.info("info message")
-    MayaLogger.warning("warning message")
-    MayaLogger.error("error message")

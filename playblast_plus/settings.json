@@ -6,7 +6,7 @@
         0.1,
         0.1
     ],
-    "last_playblast": "C:\\Users\\pete\\OneDrive\\Documents\\maya\\playblasts\\pb_test_scene_side_pete.mp4",
+    "last_playblast": "C:\\Users\\pete\\OneDrive\\Documents\\maya\\playblasts\\pb_test_scene.mp4",
     "ffmpeg": {
         "path": "./bin",
         "input_args": "-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p",
@@ -14,14 +14,15 @@
         "burnin": "-vf \"drawtext=font=Consolas: fontsize=24: fontcolor=white: text=\"%{{frame_num}}\": r=24: x=(w-tw-20): y=h-lh-20: box=1: boxcolor=black"
     },
     "ui": {
-        "toggle_overrides": false,
+        "toggle_overrides": true,
         "toggle_copy": true,
         "toggle_keep": false,
         "set_imageplane": true,
         "set_wire": true,
         "set_half": false,
         "use_workspace": false,
-        "output_token": "<scene>_<camera>_<user>",
-        "last_camera": "side1"
+        "add_burnin": true,
+        "output_token": "<scene>",
+        "last_camera": "persp1"
     }
 }

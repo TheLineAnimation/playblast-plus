@@ -4,11 +4,11 @@ from typing import List, Dict
 
 def load_templates(template_paths : List[str]) -> List[Dict]:
     json_templates = []
-    print (f'template paths {template_paths}')
+    # print (f'template paths {template_paths}')
     for location in template_paths:
         if location:
             location = Path (location).resolve() 
-            print (f'location {location}')
+            # print (f'location {location}')
             for json_file in location.glob('*.json'):               
                 template = Parsing.load_json_from_file(json_file)
                 json_templates.append({ f"{json_file.stem}":template})

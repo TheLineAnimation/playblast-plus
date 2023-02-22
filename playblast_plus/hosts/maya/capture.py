@@ -11,8 +11,11 @@ import contextlib
 from maya import cmds
 from maya import mel
 
+# TO=DO adjust for vendor qy.py instead
 try:
-    from PySide2 import QtGui, QtWidgets
+    # from PySide2 import QtGui, QtWidgets
+    from ...vendor.Qt import QtGui, QtWidgets
+
 except ImportError:
     from PySide import QtGui
     QtWidgets = QtGui

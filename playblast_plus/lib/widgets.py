@@ -1,9 +1,78 @@
-from PySide2 import QtCore
-from PySide2 import QtGui
-from PySide2 import QtWidgets
+# from PySide2 import QtCore
+# from PySide2 import QtGui
+# from PySide2 import QtWidgets
+
+from ..vendor.Qt import QtCore, QtGui, QtWidgets, QtSvg
+
 import os
 
+from pathlib import Path
+
 from . import settings
+
+class Icons():
+
+    def get(icon, size=24):
+        """
+        Adapted from MGear > core > pyqt > get_icon
+        Thanks Miguel and team for saving me endless time
+        get svg icon from icon resources folder as a pixel map
+        """
+        # img = get_icon_path("{}.svg".format(icon))
+        svg_path = str(Path(settings.get_resources_directory(), f'{icon}.svg'))
+        svg_renderer = QtSvg.QSvgRenderer(svg_path)
+        image = QtGui.QImage(size, size, QtGui.QImage.Format_ARGB32)
+        # Set the ARGB to 0 to prevent rendering artifacts
+        image.fill(0x00000000)
+        svg_renderer.render(QtGui.QPainter(image))
+        pixmap = QtGui.QPixmap.fromImage(image)
+        return pixmap
+
+class Styles():
+    """_summary_
+    """
+    CHECKBOX = (
+                "QCheckBox {"
+                "background-color: #3C3C3C;"
+                "}"
+                "QWidget {"
+                "background-color: #3C3C3C;"
+                "}"
+                )
+    
+    BUTTON_HERO = (
+                "QPushButton{"
+                "font: bold 12px;"
+                "color: rgb(220, 250, 250);"
+                "height: 40px;"
+                "background-color: rgb(103, 163, 217);"
+                "border:1px solid black;"
+                "border-radius:4px;}"
+                "QPushButton:pressed{"
+                "background-color: rgb(44, 189, 218);"
+                "}"
+                )
+    
+    BUTTON_SIDEKICK = (
+                "QPushButton{"
+                "font: bold 12px;"
+                "color: rgb(220, 250, 250);"
+                "height: 40px;"
+                "background-color: rgb(197, 104, 141);"
+                "border:1px solid black;"
+                "border-radius:4px;}"
+                "}"
+                "QPushButton:pressed{"
+                "background-color: rgb(197, 104, 141);"
+                )
+    
+    TEXTFIELD = (
+                "QLineEdit{"
+                "font: bold 10px;"
+                "color: rgb(0, 250, 50);"
+                "height: 12px;"
+                )
+
 
 class ToolHeader(QtWidgets.QWidget):
     """A standardised Tool Header widget, with line Logo and a settable script name field.
@@ -28,10 +97,12 @@ class ToolHeader(QtWidgets.QWidget):
     """
 
     LINE_LOGO = 'tl_logo_white.png'
-    STYLE_SHEET = ("font: bold 12px;"
-                 "color: rgb(205, 205, 205);"
-                 "background-color: rgb(30,30,30);"
+    STYLE_SHEET = (
+                "font: bold 12px;"
+                "color: rgb(205, 205, 205);"
+                "background-color: rgb(30,30,30);"
                  )
+    
 
     def __init__(self, name='', text= '', parent=None):
             super(ToolHeader, self).__init__(parent)
@@ -86,8 +157,9 @@ class ToolHeader(QtWidgets.QWidget):
         icon_root = settings.get_resources_directory()
             
         if icon_root:
-            image_path = os.path.join (icon_root,self.LINE_LOGO)
-            image = QtGui.QImage(image_path)
+            # image_path = os.path.join (icon_root,self.LINE_LOGO)
+            image_path = Path(icon_root , self.LINE_LOGO )
+            image = QtGui.QImage(str(image_path))
             pixmap = QtGui.QPixmap()
             pixmap.convertFromImage(image)
             widget.setPixmap(pixmap)

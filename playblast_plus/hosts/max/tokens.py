@@ -6,7 +6,6 @@ The capture gui application will format tokens in the filename.
 The tokens can be registered using `register_token`
 
 """
-import maya.cmds as cmds
 from . import maya_scene
 
 _registered_tokens = dict()
@@ -76,7 +75,7 @@ register_token("<playblast_dir>",
 
 if __name__ == '__main__':
     outPath = format_tokens('<playblast_dir>',_registered_tokens)
-    # out_str = format_tokens('<playblast_dir>_<scene>_<camera>_Bumholes_<user>', _registered_tokens )
+
     print (outPath)  
 
     
