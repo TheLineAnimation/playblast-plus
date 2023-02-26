@@ -3,6 +3,8 @@ import subprocess
 from . import settings
 from pathlib import Path
 
+from .logger import Logger
+
 """
 Full credit goes to Chris Zurbrigg for this code, updated to use f-strings 
 for FFMPEG process command. 
@@ -14,12 +16,22 @@ Otherwise there will be issues with black frames
 FFMPEG_PATH = settings.get_ffmpeg_path()
 FFPROBE_PATH = settings.get_ffprobe_path()
 
-def open_media_file(filepath:str):
+def open_media_file(filepath:str, viewer:str='start'):
     # open the file (video or jpg)
     # this should open the OS defined executable for the file type
-    # possible feature upgrade - specify a custom viewer in settings
-    print(f'Launching : "{filepath}"')
-    subprocess.Popen(['start',filepath],shell=True)
+    # possible feature upgrade - specify a custom viewer in host local settings
+    check_viewer = Path(viewer)
+
+    if viewer != 'start':
+        Logger.info(f'Checking custom viewer path : "{viewer}"')
+
+    if check_viewer.is_file():
+        Logger.info(f'Launching : {check_viewer.stem} : "{filepath}"')
+        subprocess.Popen([viewer,filepath],shell=False)
+        return
+    else:
+        Logger.info(f'Launching default viewer : "{filepath}"')
+        subprocess.Popen(['start',filepath],shell=True)
 
 def extract_middle_image(source_path: str, output_path: str):
     """_summary_
@@ -47,7 +59,7 @@ def extract_middle_image(source_path: str, output_path: str):
         f'"{output_path}"'
     )
 
-    print(f'FFMPEG FULL COMMAND (extract_middle_image) - {ffmpeg_cmd}')
+    Logger.info(f'FFMPEG COMMAND (extract_middle_image) : {ffmpeg_cmd}')
     subprocess.call(ffmpeg_cmd)
 
 def mp4_from_image_sequence(image_seq_path: str, 
@@ -57,6 +69,7 @@ def mp4_from_image_sequence(image_seq_path: str,
                             end_frame: int = 0,
                             audio_path: str = None,
                             post_open: bool = False,
+                            viewer_arg='start',
                             add_burnin: bool = False,
                             burnin_text: str = "",
                             burnin_font_size: int = 24
@@ -79,7 +92,7 @@ def mp4_from_image_sequence(image_seq_path: str,
     if add_burnin:
         burnin = (
             f'-vf "drawtext=font=Consolas: fontsize={burnin_font_size}: '
-            f'fontcolor=white@0.5: text=\'{burnin_text} | %{{eif\:n\:d\:4}} |\': '
+            f'fontcolor=white@0.5: text=\'{burnin_text} | %{{eif\:n\:d\:4}}\': '
             f'start_number={start_frame}: r=24: x=(w-tw-20): y=h-lh-20: '
             f'box=1: boxcolor=black@0.5: boxborderw=2"'
         )
@@ -108,11 +121,11 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'"{output_path}"'
     )
 
-    print(f'FFMPEG FULL COMMAND (mp4_from_image_sequence) - {ffmpeg_cmd}')
+    Logger.info(f'FFMPEG COMMAND (mp4_from_image_sequence) : {ffmpeg_cmd}')
     subprocess.call(ffmpeg_cmd)
 
     # check output fie exists
     if Path(output_path).exists() and post_open:
         # open the video file
-        open_media_file(output_path)
+        open_media_file(output_path, viewer_arg)
         

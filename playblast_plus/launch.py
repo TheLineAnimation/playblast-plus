@@ -1,19 +1,28 @@
 
 from .lib.host import Host as host
+from .lib import settings
 from . import version
 
+from pathlib import Path
 
 def run():
-    HOST = host.get_name()
+    """
+    settings.get_ffmpeg_path checks the list of executables in the config.json
+     
+    """
 
-    if HOST == 'maya':
-        from .hosts.maya import ui
-        ui.run(version)
+    ffmpeg_path = settings.get_ffmpeg_path()
+    if Path(ffmpeg_path).exists():
+        HOST = host.get_name()
 
-    elif HOST == '3dsmax':
-        from .hosts.max import max_scene
-        print (f'Current Maxfile : {max_scene.Max_Scene.get_name()}')
-        from .hosts.max import ui
-        ui.run(version)
+        if HOST == 'maya':
+            from .hosts.maya import ui
+            ui.run(version)
+        elif HOST == '3dsmax':
+            from .hosts.max import ui
+            ui.run(version)
+    else:
+        pass
+
 
         

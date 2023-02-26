@@ -3,6 +3,14 @@ from .utils import Parsing
 from typing import List, Dict
 
 def load_templates(template_paths : List[str]) -> List[Dict]:
+    """_summary_
+
+    Args:
+        template_paths (List[str]): _description_
+
+    Returns:
+        List[Dict]: _description_
+    """
     json_templates = []
     # print (f'template paths {template_paths}')
     for location in template_paths:

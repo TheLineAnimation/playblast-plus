@@ -20,7 +20,8 @@ class Parsing:
         Returns:
             dict: The JSON data parsed into a dictionary
         """
-        with open(file, 'r') as f:
+
+        with open(str(file), 'r') as f:
             data=f.read()
         return json.loads(data)
     
@@ -31,8 +32,7 @@ class Parsing:
         Args:
             data (dict): _description_
             file (str): location of the file. 
-        """
-      
+        """       
         with open(file, 'w',encoding='utf-8') as f:
             json.dump( data , f, ensure_ascii=False, indent=4)
 
@@ -239,3 +239,49 @@ class FolderOps:
         if dirPath.exists():
             sequence = dirPath.glob(f'*{ext}')  
             return next(sequence)
+        
+class Downloader(QtCore.QThread):
+
+    # Signal for the window to establish the maximum value
+    # of the progress bar.
+    setTotalProgress = QtCore.Signal(int)
+    # Signal to increase the progress.
+    setCurrentProgress = QtCore.Signal(int)
+    # Signal to be emitted when the file has been downloaded successfully.
+    succeeded = QtCore.Signal()
+
+    def __init__(self, url, filename):
+        super().__init__()
+        self._url = url
+        self._filename = filename
+
+    def run(self):
+        url = FFMPEG_URL
+        filename =  str(Path.home() / FFMPEG_FILENAME)
+        readBytes = 0
+        chunkSize = 1024
+        # Open the URL address.
+        with urlopen(url) as r:
+            # Tell the window the amount of bytes to be downloaded.
+            self.setTotalProgress.emit(int(r.info()["Content-Length"]))
+            with open(filename, "ab") as f:
+                while True:
+                    # Read a piece of the file we are downloading.
+                    chunk = r.read(chunkSize)
+                    # If the result is `None`, that means data is not
+                    # downloaded yet. Just keep waiting.
+                    if chunk is None:
+                        continue
+                    # If the result is an empty `bytes` instance, then
+                    # the file is complete.
+                    elif chunk == b"":
+                        break
+                    # Write into the local file the downloaded chunk.
+                    f.write(chunk)
+                    readBytes += chunkSize
+                    # Tell the window how many bytes we have received.
+                    self.setCurrentProgress.emit(readBytes)
+        # If this line is reached then no exception has ocurred in
+        # the previous lines.
+        self.succeeded.emit()
+

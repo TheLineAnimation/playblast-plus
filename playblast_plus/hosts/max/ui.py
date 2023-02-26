@@ -67,7 +67,7 @@ class MaxPlayblastPlus(QtWidgets.QDialog):
         main_layout.addWidget(preview_btn)
         
         capture_button = QtWidgets.QPushButton("SNAP")
-        capture_button.setStyleSheet(widgets.Style.BUTTON_SIDEKICK)
+        capture_button.setStyleSheet(widgets.Styles.BUTTON_SIDEKICK)
 
 
         self.setLayout(main_layout)

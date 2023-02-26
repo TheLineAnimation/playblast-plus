@@ -50,8 +50,8 @@ To install, download this and place the PlayblastPlus folder in a directory on y
 To show the interface in Maya run:
 
 ```python
-import playblast_plus.ui
-playblast_plus.ui.run()
+import playblast_plus.launch
+playblast_plus.launch.run()
 ```
 
 <br>

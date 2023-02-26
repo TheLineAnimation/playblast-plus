@@ -3,7 +3,7 @@ from ...lib import logger
 class MaxLogger(logger.Logger):
     
     LOGGER_NAME = "MaxLogger"
-    FORMAT_DEFAULT = "[%(levelname)s][%(name)s] %(message)s"
+    FORMAT_DEFAULT = "[%(name)s][%(levelname)s] %(message)s"
     PROPAGATE_DEFAULT = False
 
 if __name__ == "__main__":

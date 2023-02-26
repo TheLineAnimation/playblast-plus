@@ -4,11 +4,11 @@ import os
 
 class Logger(object):
 
-    LOGGER_NAME = "MainScriptLogger"
+    LOGGER_NAME = "PlayblastPlusModuleLogger"
     FORMAT_DEFAULT = "[%(name)s][%(levelname)s] %(message)s"
     LEVEL_DEFAULT = logging.DEBUG
 
-    PROPAGATE_DEFAULT = True
+    PROPAGATE_DEFAULT = False
 
     _logger_obj = None
 

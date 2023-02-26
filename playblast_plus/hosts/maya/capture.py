@@ -1,7 +1,22 @@
-"""Maya Capture
 
-Playblasting with independent viewport, camera and display options
+"""
+    Maya Capture
 
+    Playblasting with independent viewport, camera and display options
+
+
+    Raises:
+        RuntimeError: _description_
+        RuntimeError: _description_
+        TypeError: _description_
+        RuntimeError: _description_
+        Exception: _description_
+
+    Returns:
+        _type_: _description_
+
+    Yields:
+        _type_: _description_
 """
 
 import re
@@ -816,22 +831,24 @@ def _in_standalone():
 # Apply version specific settings
 #
 # --------------------------------
-
-version = mel.eval("getApplicationVersionAsFloat")
-if version > 2015:
-    Viewport2Options.update({
-        "hwFogAlpha": 1.0,
-        "hwFogFalloff": 0,
-        "hwFogDensity": 0.1,
-        "hwFogEnable": False,
-        "holdOutDetailMode": 1,
-        "hwFogEnd": 100.0,
-        "holdOutMode": True,
-        "hwFogColorR": 0.5,
-        "hwFogColorG": 0.5,
-        "hwFogColorB": 0.5,
-        "hwFogStart": 0.0,
-    })
-    ViewportOptions.update({
-        "motionTrails": False
-    })
+try:
+    version = mel.eval("getApplicationVersionAsFloat")
+    if version > 2015:
+        Viewport2Options.update({
+            "hwFogAlpha": 1.0,
+            "hwFogFalloff": 0,
+            "hwFogDensity": 0.1,
+            "hwFogEnable": False,
+            "holdOutDetailMode": 1,
+            "hwFogEnd": 100.0,
+            "holdOutMode": True,
+            "hwFogColorR": 0.5,
+            "hwFogColorG": 0.5,
+            "hwFogColorB": 0.5,
+            "hwFogStart": 0.0,
+        })
+        ViewportOptions.update({
+            "motionTrails": False
+        })
+except:
+    pass

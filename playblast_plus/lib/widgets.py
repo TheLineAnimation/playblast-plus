@@ -17,6 +17,13 @@ class Icons():
         Adapted from MGear > core > pyqt > get_icon
         Thanks Miguel and team for saving me endless time
         get svg icon from icon resources folder as a pixel map
+
+        For Maya - run this code to see internal icons
+        
+        import maya.app.general.resourceBrowser as resourceBrowser
+        resBrowser = resourceBrowser.resourceBrowser()
+        path = resBrowser.run()
+
         """
         # img = get_icon_path("{}.svg".format(icon))
         svg_path = str(Path(settings.get_resources_directory(), f'{icon}.svg'))
