@@ -2,11 +2,7 @@ import sys
 from pathlib import Path
 
 class Host():
-    """_summary_
 
-    Returns:
-        _type_: _description_
-    """
     @classmethod
     def get_name(cls) -> str:
         """_summary_

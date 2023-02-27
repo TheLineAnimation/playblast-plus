@@ -63,6 +63,7 @@ def extract_middle_image(source_path: str, output_path: str):
     subprocess.call(ffmpeg_cmd)
 
 def mp4_from_image_sequence(image_seq_path: str, 
+
                             output_path: str, 
                             framerate: int = 24,
                             start_frame: int = 0, 
@@ -74,19 +75,17 @@ def mp4_from_image_sequence(image_seq_path: str,
                             burnin_text: str = "",
                             burnin_font_size: int = 24
                         ):
-    """_summary_
-
-    Args:
-        image_seq_path (str): _description_
-        output_path (str): _description_
-        framerate (int, optional): _description_. Defaults to 24.
-        start_frame (int, optional): _description_. Defaults to 0.
-        end_frame (int, optional): _description_. Defaults to 0.
-        audio_path (str, optional): _description_. Defaults to None.
-        post_open (bool, optional): _description_. Defaults to False.
-        add_burnin (bool, optional): _description_. Defaults to False.
-        burnin_text (str, optional): _description_. Defaults to "".
-        burnin_font_size (int, optional): _description_. Defaults to 24.
+    """
+    Create a video from a sequence of images. 
+    @param image_seq_path - the path to the image sequence folders.
+    @param output_path - the path to the output video.
+    @param framerate - the framerate of the output video.
+    @param start_frame - the first frame to include in the video.
+    @param end_frame - the last frame to include in the video.
+    @param audio_path - the path to the audio file to include in the video.
+    @param post_open - whether to open the video after creation.
+    @param viewer_arg - the viewer argument to pass to ffmpeg.
+    @param
     """
 
     if add_burnin:

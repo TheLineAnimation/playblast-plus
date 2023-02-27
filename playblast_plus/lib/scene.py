@@ -3,23 +3,24 @@ class Scene():
     """
     Base class for each host to inherit methods for preview handling
     """
-    # this is an example function which retrieves the name of the current user
+
     @staticmethod
-    def get_user_name():
-        import getpass
-        return getpass.getuser()
+    def main_window():
+        pass
+
+
 
     @staticmethod
     def get_name():
         """
         Returns the scene file name
         """
+        pass
 
     @staticmethod
     def get_scene_cameras():
         """Returns the scene cameras, surprisingly
         """
-
         pass
     
     @staticmethod

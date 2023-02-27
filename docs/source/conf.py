@@ -78,8 +78,9 @@ release = '1.2'
 # ones.
 
 sys.path.append(os.path.abspath('../exts'))
-extensions = ['sphinx.ext.autodoc', 
-              'sphinx.ext.coverage',
+extensions = [
+                'sphinx.ext.autodoc', 
+                'sphinx.ext.coverage',
                 'sphinx.ext.napoleon',
                 'sphinx.ext.autosummary',
                 'sphinx.ext.autosectionlabel'
@@ -133,7 +134,14 @@ html_theme = 'sphinx_rtd_theme'
 if html_theme == "sphinx_rtd_theme":
     html_css_files = ["css/theme_overrides.css"]
 
+html_sidebars = {'**': ['fulltoc.html']}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_theme_options = {
+    'globaltoc_depth': 4,
+    'globaltoc_collapse': 4,
+}

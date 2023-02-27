@@ -1,7 +1,13 @@
-import maya.cmds as cmds
 from pathlib import Path
-                
+import sys
+from playblast_plus.vendor.Qt import QtWidgets, QtCore
+from shiboken2 import wrapInstance
+
+import maya.cmds as cmds
+import maya.OpenMayaUI as omui
+            
 from ...lib import scene
+
 
 class Maya_Scene(scene.Scene):
     """_summary_
@@ -9,6 +15,15 @@ class Maya_Scene(scene.Scene):
     Args:
         scene (_type_): _description_
     """
+    def main_window():
+        """
+        Return the Maya main window widget as a Python object
+        """
+        main_window_ptr = omui.MQtUtil.mainWindow()
+        if sys.version_info.major >= 3:
+            return wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
+        else:
+            return wrapInstance(long(main_window_ptr), QtWidgets.QWidget)
 
     def get_name(full_path: bool = False) -> str:
         """_summary_

@@ -1,9 +1,19 @@
 from pathlib import Path
 from ...lib import scene
 
-from pymxs import runtime as mxs
+from pymxs import runtime as mxs 
 
 class Max_Scene(scene.Scene):
+
+    def main_window():
+        """
+        Return the Max main window widget as a Python object
+        """
+        from ...vendor.Qt import QtWidgets
+        main_window_qwdgt = QtWidgets.QWidget.find(mxs.windows.getMAXHWND())
+        return main_window_qwdgt
+
+
     def get_name(full_path: bool = False) -> str:
 
         path = Path (mxs.maxFilePath, mxs.maxFileName)
@@ -29,6 +39,18 @@ class Max_Scene(scene.Scene):
         else:
             return selection
 
+    def getFrameRate():
+        '''
+        Return an int of the current frame rate
+        '''
+        pass
+
+    def getFrameRange():
+        return mxs.animationRange
+    
+    def get_render_resolution(self,multiplier=1.0):
+        pass
+
     def get_current_camera():
         """Returns the currently active camera.
 
@@ -43,9 +65,6 @@ class Max_Scene(scene.Scene):
         else:
             mxs.pushPrompt('Please provide a valid camera.')
 
-    def get_animation_range():
-        return mxs.animationRange
- 
     # maybe use args here for different hosts             
     def get_output_dir(workspace:bool = False) -> str:
         """Returns the playblast directory so that a filename can be specified.
@@ -58,4 +77,12 @@ class Max_Scene(scene.Scene):
             string: A folder location string
         """
         return mxs.getDir( mxs.Name("preview"))
+
+    def get_user_directory() -> str:
+        return mxs.getDir( mxs.Name("userScripts"))
+
+
+
+
+
         

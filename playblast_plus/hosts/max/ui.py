@@ -76,10 +76,20 @@ class MaxPlayblastPlus(QtWidgets.QDialog):
         self._TEMPLATES = {}
         self._CAMERAS = scene.get_scene_cameras()
         self._SETTINGS = settings.get_config()
-        self._SETTINGS['ui']['output_token']
+
+        self.host_settings_directory = scene.get_user_directory()
+
+        self._CONFIG = settings.get_config()
+        MaxPreviewLogger.info(f'Configuration settings { self._CONFIG }')
+        self._SETTINGS = settings.get_host_settings(self.host_settings_directory)
+        # self._SETTINGS = self._load_host_settings()
+
+        MaxPreviewLogger.info(f'3dsMax settings {self.host_settings_directory} {self._SETTINGS}')
+
         self._TEMPLATES = preset.load_templates ( [str(module_root / 
-                                          self._SETTINGS['studio_templates'] )] )
+                                          self._CONFIG['studio_templates'] )] )
         self.current_playblast_directory = scene.get_output_dir()
+
         
         #~ self._create_actions()
         #~ self._create_widgets()

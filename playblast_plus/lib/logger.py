@@ -3,6 +3,10 @@ import logging
 import os
 
 class Logger(object):
+    """
+    A class to handle logging. This class is used to log the training and test accuracies.
+    @param object - the object itself, which is the class itself.
+    """
 
     LOGGER_NAME = "PlayblastPlusModuleLogger"
     FORMAT_DEFAULT = "[%(name)s][%(levelname)s] %(message)s"

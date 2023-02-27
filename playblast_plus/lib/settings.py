@@ -19,6 +19,11 @@ Returns:
 """
 
 def create_host_settings(path:Path):
+    """
+    Create the host settings dictionary. This dictionary will contain the host settings for each camera.
+    @param path - the path to the host settings file.
+    @returns the host settings dictionary.
+    """
     data = {
         "toggle_overrides": False,
         "toggle_copy": False,
@@ -38,13 +43,10 @@ def create_host_settings(path:Path):
     utils.Parsing.save_json_to_file( data , path)
 
 def get_host_settings(path:str) -> dict:
-    """_summary_
-
-    Args:
-        path (str): _description_
-
-    Returns:
-        dict: _description_
+    """
+    Given a path to a file, return the host settings dictionary.
+    @param path - the path to the file containing the host settings dictionary.
+    @returns the host settings dictionary.
     """
 
     user_folder = Path(path)
@@ -60,15 +62,13 @@ def get_host_settings(path:str) -> dict:
         return utils.Parsing.load_json_from_file(str(host_config))
 
 def save_host_settings(path:str, data: dict) -> bool:
-    """_summary_
-
-    Args:
-        path (str): _description_
-        data (dict): _description_
-
-    Returns:
-        bool: _description_
     """
+    Save the host settings to a file.
+    @param path - the path to the file we are saving to.
+    @param data - the data we are saving.
+    @returns True if the save was successful, False otherwise.
+    """
+
     user_folder = Path(path)
     if user_folder.exists and user_folder.is_dir():
         host_config = user_folder / 'pbp_settings.json'
@@ -79,50 +79,110 @@ def save_host_settings(path:str, data: dict) -> bool:
         return False
 
 def get_config() -> dict:
+    """
+    Read the config file and return a dictionary of the values.
+    @returns the config dictionary
+    """
     return utils.Parsing.load_json_from_file(PLAYBLAST_PLUS_MODULE_ROOT / 
                                           'config.json')
 def save_config(data: dict) -> bool:
+    """
+    Save the configuration dictionary to a file.
+    @param data - the configuration dictionary
+    @returns True if the file was saved successfully, False otherwise.
+    """
     return utils.Parsing.save_json_to_file( data , PLAYBLAST_PLUS_MODULE_ROOT / 
                                           'config.json')
 def filepath() -> str :
-    return (PLAYBLAST_PLUS_MODULE_ROOT / 'config.json')
-
-def filepath() -> str :
+    """
+    Return the filepath for the rotation dictionary.
+    @return The filepath for the rotation dictionary.
+    """
     return (PLAYBLAST_PLUS_MODULE_ROOT / 'config.json')
 
 def is_FFMpeg_installed(exe:str= 'ffmpeg'):
+    """
+    Check if the FFMPEG is installed on the system.
+    @param exe - the name of the executable file.
+    @returns True if the executable is found, False otherwise.
+    """
+      
     config = get_config()
-    if config['ffmpeg']:
-        for path in config['ffmpeg']['executable_paths']:
-            ffmpeg_path = Path(path)
+    if config['ffmpeg']:    
+        index = 0
+        exists = False
+        fpaths = config['ffmpeg']['executable_paths']
+        while index < len(fpaths) and not exists:
+            ffmpeg_path = Path(fpaths[index]).absolute()
             print (f'FFMPEG PATHS : {ffmpeg_path} {ffmpeg_path.exists()}') 
             exe_path = (ffmpeg_path / f'{exe}.exe')
             if exe_path.exists():
-                return exe_path
-    else:
-        return False
+                exists = exe_path
+            index += 1
+        return exists
+    return
 
 def get_ffmpeg_path() -> str :
+    """
+    Get the path to the ffmpeg executable. This is used to convert the video files to images.
+    @returns the path to the ffmpeg executable
+    """
     return is_FFMpeg_installed()
 
+def resolve_ffmpeg_paths() -> list :    
+    """
+    Resolve the paths to the ffmpeg executables. This is necessary because the paths are stored as relative paths.
+    @returns the list of paths to the ffmpeg executables
+    """
+    config = get_config()['ffmpeg']['executable_paths']
+    return [Path(path).absolute() for path in config]
+
 def get_ffprobe_path() -> str :
+    """
+    Get the path to the ffprobe executable. This is used to get the duration of each video.
+    @returns the path to the ffprobe executable
+    """
     return is_FFMpeg_installed('ffprobe')
 
 def get_project_template_subpath() -> str :
+    """
+    Get the project template subpath. This is the subpath of the project template directory.
+    @return The subpath of the project template directory.
+    """
     return f"{get_config()['project_template_subpath']}"
 
 def get_resources_directory() -> str :
+    """
+    Get the resources directory for the project. This is used to find the data files.
+    @returns the resources directory
+    """
     return (PLAYBLAST_PLUS_MODULE_ROOT / 'resources')
 
 def get_ffmpeg_input_args() -> str :
+    """
+    Get the input arguments for ffmpeg. This is used to get the input arguments for the video.
+    @returns the input arguments for ffmpeg.
+    """
     return f"{get_config()['ffmpeg']['input_args']}"
 
 def get_ffmpeg_output_args() -> str :
+    """
+    Get the ffmpeg output arguments for the video writer.
+    @returns the ffmpeg output arguments for the video writer.
+    """
     return f"{get_config()['ffmpeg']['output_args']}"
 
 def get_ffmpeg_burnin_text() -> str :
+    """
+    Generate the text to be burned into the video. This is a function that returns a string.
+    @returns the text to be burned into the video.
+    """
     return f"{get_config()['ffmpeg']['burnin']['text']}"
 
 def get_ffmpeg_download_url() -> str :
+    """
+    Get the ffmpeg download url for the current system.
+    @returns the ffmpeg download url for the current system.
+    """
     return f"{get_config()['ffmpeg']['download_url']}"
 

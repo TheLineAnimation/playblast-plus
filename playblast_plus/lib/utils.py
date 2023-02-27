@@ -4,6 +4,15 @@ from typing import Union #, dict, list
 import re 
 import subprocess
 
+# this is an example function which retrieves the name of the current user
+
+def get_user_name():
+    """
+    It returns the user's name.
+    """
+    import getpass
+    return getpass.getuser()
+
 class Parsing:
     """
     Functions to process file strings for certain operations.
@@ -35,6 +44,7 @@ class Parsing:
         """       
         with open(file, 'w',encoding='utf-8') as f:
             json.dump( data , f, ensure_ascii=False, indent=4)
+            
 
     @staticmethod
     def get_templates(dir: str) -> list:
@@ -136,7 +146,13 @@ class FolderOps:
 
     @staticmethod
     def explore(dir:str) -> bool:
-        # subprocess.run(['open', f'"{dir}"'])
+        """
+        `explore` takes a directory name as a string and returns a boolean
+        
+        :param dir: The directory to explore
+        :type dir: str
+        """
+        
         subprocess.Popen(f'explorer  "{dir}"')
 
     @staticmethod
@@ -240,48 +256,3 @@ class FolderOps:
             sequence = dirPath.glob(f'*{ext}')  
             return next(sequence)
         
-class Downloader(QtCore.QThread):
-
-    # Signal for the window to establish the maximum value
-    # of the progress bar.
-    setTotalProgress = QtCore.Signal(int)
-    # Signal to increase the progress.
-    setCurrentProgress = QtCore.Signal(int)
-    # Signal to be emitted when the file has been downloaded successfully.
-    succeeded = QtCore.Signal()
-
-    def __init__(self, url, filename):
-        super().__init__()
-        self._url = url
-        self._filename = filename
-
-    def run(self):
-        url = FFMPEG_URL
-        filename =  str(Path.home() / FFMPEG_FILENAME)
-        readBytes = 0
-        chunkSize = 1024
-        # Open the URL address.
-        with urlopen(url) as r:
-            # Tell the window the amount of bytes to be downloaded.
-            self.setTotalProgress.emit(int(r.info()["Content-Length"]))
-            with open(filename, "ab") as f:
-                while True:
-                    # Read a piece of the file we are downloading.
-                    chunk = r.read(chunkSize)
-                    # If the result is `None`, that means data is not
-                    # downloaded yet. Just keep waiting.
-                    if chunk is None:
-                        continue
-                    # If the result is an empty `bytes` instance, then
-                    # the file is complete.
-                    elif chunk == b"":
-                        break
-                    # Write into the local file the downloaded chunk.
-                    f.write(chunk)
-                    readBytes += chunkSize
-                    # Tell the window how many bytes we have received.
-                    self.setCurrentProgress.emit(readBytes)
-        # If this line is reached then no exception has ocurred in
-        # the previous lines.
-        self.succeeded.emit()
-

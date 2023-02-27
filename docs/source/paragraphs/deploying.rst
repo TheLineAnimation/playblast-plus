@@ -2,23 +2,31 @@
 Deploying Playblast Plus
 ---------------------------
 
-Studio Pipeline could be easily deployed outside of a formal pipeline, but given we operate inside the Open Pype ecosystem, 
-it is best invoked within the open pype envirnoment. Open Pype has a concept of tools that can be versioned and deployed on a project by project basis.
-It also allows for changes to be made depending on software version, as each project can be configured to run a particular version. 
+Playblast Plus can run in two different ways : 
+
+- Completely localised on an artist's workstation.
+- From a network location to allow Pipeline TDs to specify versions and allow for easy updates in a Studio setting
+
+This is because it only runs the core code from the library and offloads any transcoding to a local install of MMPeg. 
+
 
 Environment
 ------------
 
 Studio Pipeline has been designed to run with the minimum amount of setup.
+It requires the directory to be visible on the PYTHONPATH, and this can be set 
+identivally for multiple hosts.
+
+PBP is executed via a launch.py script, which detects the host executable 
+and imports the relevant DCC-centrict modules.
 
 .. code:: python
     
-    MAYA_MODULE_PATH = {STUDIOPIPELINE_VERSION_FOLDER}/hosts/maya
+    PYTHONPATH = {STUDIOPIPELINE_VERSION_FOLDER}/hosts/maya
 
+Running from a networked drive is the prefered route for a Studio install, as the
+PYTHONPATH environment varibale can be set via something like Active directory or within a pipeline loder, like OpenPype/Ayon.
 
 Pipeline Versions
 -----------------
-
-Additionally, different versions of the Pipeline can be hosted and run according to the version number. This version number becomes part of the load path so the host can look for the version compatible with it. New versions can be cloned and developed, leaving production tested (and working code) untouched and running in that particular host version.
-
 
