@@ -1,4 +1,4 @@
-- name: Sphinx to GitHub Pages
+name: Sphinx to GitHub Pages
   # You may pin to the exact commit or the version.
   # uses: sphinx-notes/pages@f7cabbad7f99057f9617e73ea57b40c5fedb53bc
   uses: sphinx-notes/pages@3.0
