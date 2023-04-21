@@ -1,4 +1,4 @@
-### Playblasting in Maya that doesn't completely suck
+### Playblasting in various 3d DCCs so it doesn't completely suck
 
 <img align="right" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
 
