@@ -6,6 +6,10 @@ The tokens can be registered using `register_token`
 """
 _registered_tokens = dict()
 
+def get_user_name() -> str :
+    import getpass
+    return getpass.getuser()
+
 def format_tokens(string, options):
     """Replace the tokens with the correlated strings
 
@@ -35,3 +39,7 @@ def register_token(token, func, label=""):
 
 def list_tokens():
     return _registered_tokens.copy()
+
+register_token("<user>",
+                lambda options :get_user_name(),
+                label="Insert current user's name")

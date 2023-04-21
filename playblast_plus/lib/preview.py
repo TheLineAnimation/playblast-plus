@@ -3,20 +3,20 @@ Base class for the methods applicable to each host
 """
 class PreviewRender():
 
-    def create(*args):
+    def create(self, **kwargs) -> str:
         pass
 
-    def snapshot(*args):
+    def snapshot(self,**kwargs):
         pass
 
-    def kill(name):
+    def pre_process(self,**kwargs):
         pass
 
-    def set_override_properties(*args):
+    def post_process(self,**kwargs):
         pass
 
-    def set_display_properties(*args):
+    def set_override_properties(self,**kwargs) -> dict:
         pass
 
-    def remove_display_properties(*args):
+    def notify_user(self, message):
         pass

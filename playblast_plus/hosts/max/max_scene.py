@@ -1,7 +1,22 @@
 from pathlib import Path
 from ...lib import scene
+from ...vendor.Qt import QtWidgets
 
 from pymxs import runtime as mxs 
+import qtmax
+
+"""
+ def get_frame_range(self, **kwargs):
+
+        current_in = int(pymxs.runtime.animationRange.start.frame)
+        current_out = int(pymxs.runtime.animationRange.end.frame)
+        return (current_in, current_out)
+
+    def set_frame_range(self, in_frame=None, out_frame=None, **kwargs):
+
+        pymxs.runtime.animationRange = pymxs.runtime.interval(in_frame, out_frame)
+
+"""
 
 class Max_Scene(scene.Scene):
 
@@ -9,10 +24,23 @@ class Max_Scene(scene.Scene):
         """
         Return the Max main window widget as a Python object
         """
-        from ...vendor.Qt import QtWidgets
-        main_window_qwdgt = QtWidgets.QWidget.find(mxs.windows.getMAXHWND())
+        main_window_qwdgt = qtmax.GetQMaxMainWindow()  
         return main_window_qwdgt
+    
+    # def get_widget(**kwargs):
+    #     """ Deletes an already created widget
 
+    #     Args:
+    #         name (str): the widget object name
+    #     """
+    #     name = kwargs['name']
+    #     # finds the widget
+    #     # need to get a widget int from the name
+    #     widget = QtWidgets.QWidget.find(name)
+    #     return widget
+
+    def ui_base_class():
+        return ( QtWidgets.QDialog )
 
     def get_name(full_path: bool = False) -> str:
 
@@ -23,6 +51,10 @@ class Max_Scene(scene.Scene):
             else:
                 return str(path.stem)
         return None
+    
+    def _is_empty_scene():
+        return len(mxs.rootNode.Children) == 0
+
 
     def get_scene_cameras():
         """Returns the scene cameras, surprisingly
@@ -30,7 +62,7 @@ class Max_Scene(scene.Scene):
         other possible list comp is 
         [cam for cam in mxs.cameras if mxs.superclassOf(cam) == mxs.camera]
         """
-        return [cam for cam in mxs.cameras if mxs.isKindOf(cam, mxs.camera)]
+        return [cam.name for cam in mxs.cameras if mxs.isKindOf(cam, mxs.camera)]
     
     def get_selected_object():
         selection = [s for s in mxs.selection]
@@ -38,26 +70,44 @@ class Max_Scene(scene.Scene):
             return (selection[0])
         else:
             return selection
+        
+    def current_frame():
+        '''
+        Return an int of the current frame rate
+        q - what if it's 29.97? 
+        '''
+        return int(mxs.currentTime)
 
     def getFrameRate():
         '''
         Return an int of the current frame rate
+        q - what if it's 29.97? 
         '''
-        pass
+        return int(mxs.frameRate)
 
-    def getFrameRange():
-        return mxs.animationRange
+    def getFrameRange() -> tuple:
+        anim_range = mxs.animationRange
+        return (int(anim_range.start),int(anim_range.end))
     
     def get_render_resolution(self,multiplier=1.0):
-        pass
+        return (mxs.renderWidth, mxs.renderHeight)
 
-    def get_current_camera():
+    def get_current_camera(**kwargs):
         """Returns the currently active camera.
+        if name is passed from the function 
 
         Returns:
-            obj: the active camera
+            obj: the active viewport camera or the named camera
         """
-        return (mxs.viewport.GetCamera())
+        cam_node =None
+        if 'name' in kwargs:
+            cam_node = (mxs.getNodeByName(kwargs['name']))
+        # Just in case, we need to see if the name passed resolves into a camera
+        # otherwise we return the active viewport
+        if cam_node: 
+            return cam_node
+        else:
+            return (mxs.viewport.GetCamera())
     
     def set_viewport_camera(cam):
         if mxs.isKindOf(cam, mxs.camera):

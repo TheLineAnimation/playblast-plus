@@ -114,7 +114,7 @@ def is_FFMpeg_installed(exe:str= 'ffmpeg'):
         fpaths = config['ffmpeg']['executable_paths']
         while index < len(fpaths) and not exists:
             ffmpeg_path = Path(fpaths[index]).absolute()
-            print (f'FFMPEG PATHS : {ffmpeg_path} {ffmpeg_path.exists()}') 
+            # print (f'FFMPEG PATHS : {ffmpeg_path} {ffmpeg_path.exists()}') 
             exe_path = (ffmpeg_path / f'{exe}.exe')
             if exe_path.exists():
                 exists = exe_path
@@ -185,4 +185,8 @@ def get_ffmpeg_download_url() -> str :
     @returns the ffmpeg download url for the current system.
     """
     return f"{get_config()['ffmpeg']['download_url']}"
+
+def get_doclink() -> str :
+    return get_config()['documentation_url']
+
 

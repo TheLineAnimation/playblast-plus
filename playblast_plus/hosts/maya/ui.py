@@ -652,7 +652,7 @@ def kill_ui(name):
         return
 
     # wraps the widget into a qt object
-    qt_object = wrapInstance(long(widget), QtWidgets.QDialog)
+    qt_object = wrapInstance(int(widget), QtWidgets.QDialog)
 
     # sets the widget parent to none
     qt_object.setParent(None)

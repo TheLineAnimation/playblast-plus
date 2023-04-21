@@ -23,9 +23,9 @@ tokens.register_token("<scene>",
                 lambda options: Max_Scene.get_name() or "playblast",
                 label="Insert current scene name")               
 
-tokens.register_token("<user>",
-                lambda options :tokens.get_user_name(),
-                label="Insert current user's name")
+# tokens.register_token("<user>",
+#                 lambda options :tokens.get_user_name(),
+#                 label="Insert current user's name")
                
 tokens.register_token("<output_dir>",
                 lambda options: Max_Scene.get_output_dir(),

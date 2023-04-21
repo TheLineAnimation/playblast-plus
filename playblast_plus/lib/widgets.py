@@ -150,10 +150,11 @@ class ToolHeader(QtWidgets.QWidget):
             self.setStyleSheet(self.STYLE_SHEET)             
             self.create_widgets()
             self.create_layout()
+            self.create_actions()
         
     def create_widgets(self):
             
-        self.labelIcon = QtWidgets.QLabel()
+        self.labelIcon = ClickableLabel()
         self.labelIcon.setStyleSheet(self.STYLE_SHEET)          
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, 
                                            QtWidgets.QSizePolicy.Minimum)
@@ -164,7 +165,7 @@ class ToolHeader(QtWidgets.QWidget):
         self.labelIcon.setMaximumSize(QtCore.QSize(1600, 40))
         self.labelIcon.setSizePolicy(sizePolicy) 
 
-        self.labelText = QtWidgets.QLabel()
+        self.labelText = ClickableLabel()
         self.labelText.setStyleSheet(self.STYLE_SHEET)
         self.labelText.setText(self.headerTitle)
         # self.labelText.setMaximumSize(QtCore.QSize(10000, 40)) 
@@ -190,6 +191,14 @@ class ToolHeader(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.labelIcon,1,0)
         self.gridLayout.addWidget(self.labelText,1,1)
         self.setLayout(self.gridLayout) 
+
+    def create_actions(self):
+        self.labelIcon.clicked.connect(self.iconClicked)
+        self.labelText.clicked.connect(self.iconClicked)
+
+    def iconClicked(self):
+        import webbrowser
+        webbrowser.open(settings.get_doclink())
         
     def setTitleText(self,text):
         self.headerTitle = text 
@@ -207,8 +216,11 @@ class ToolHeader(QtWidgets.QWidget):
             pixmap.convertFromImage(image)
             widget.setPixmap(pixmap)
 
-    def iconClicked(self):
-        pass
+class ClickableLabel(QtWidgets.QLabel):
+    clicked= QtCore.Signal()
+
+    def mouseReleaseEvent(self, ev):
+        self.clicked.emit()
 
 class Downloader(QtCore.QThread):
     """
@@ -262,14 +274,14 @@ class Downloader(QtCore.QThread):
 
 class DownloadWindow(QtWidgets.QDialog):
     """
-    The window that allows the user to download the data. This window is used to download the data from the server.
+    The window that allows the user to download ffmpeg executable specfied 
+    in the config file.
     """
 
-    
     def __init__(self, url:str, locations:list=[], parent=None):
         super(DownloadWindow, self).__init__(parent)
         self.setWindowTitle(" ")
-        self.resize(300,100)
+        self.resize(360,100)
         self._url = url
         self._filename = str(Path(url).name)
         self._locations = locations
@@ -282,7 +294,7 @@ class DownloadWindow(QtWidgets.QDialog):
         self.header = ToolHeader('pbp_header', 'Download Required ')  
         self.label = QtWidgets.QLabel(
                                     "To keep mp4 encoding lighting-fast, "
-                                    "it's a requirement to install ffmpeg.exe"
+                                    "it's a requirement to install ffmpeg.exe "
                                     "somewhere on your local system. "
                                     "You don't appear to have FFMpeg installed "
                                     "in any of the config locations."

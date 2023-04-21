@@ -42,9 +42,10 @@ class MaxPlayblastPlus(QtWidgets.QDialog):
     """
     def __init__(self, parent=None):
         super(MaxPlayblastPlus, self).__init__(parent)
+
+        
         #~ self.setWindowTitle('Max Preview Plus')
         self.init_ui()
-        
         self.setObjectName(UI_NAME)
         self.setWindowFlags(QtCore.Qt.Tool)
         self.setWindowTitle("")

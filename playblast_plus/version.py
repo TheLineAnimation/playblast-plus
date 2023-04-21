@@ -9,9 +9,10 @@ _______________________________________
   / _ \| .` || || |\/| |/ _ \| |  | | (_) | .` |
  /_/ \_\_|\_|___|_|  |_/_/ \_\_| |___\___/|_|\_|
  
+PLAYBLAST PLUS
 """
 VERSION_MAJOR = 1
-VERSION_MINOR = 2
+VERSION_MINOR = 4
 VERSION_PATCH = 0
 
 version_info = (VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)

@@ -44,7 +44,7 @@ class Parsing:
         """       
         with open(file, 'w',encoding='utf-8') as f:
             json.dump( data , f, ensure_ascii=False, indent=4)
-            
+        print (f'creating settings file {file}')  
 
     @staticmethod
     def get_templates(dir: str) -> list:
@@ -65,7 +65,7 @@ class Parsing:
         return _enum_items
 
     @staticmethod
-    def create_ffmpeg_input(img_start: Path) -> str:
+    def create_ffmpeg_input(img_start: str) -> str:
         """_summary_
 
         Args:
@@ -78,6 +78,7 @@ class Parsing:
                 ffmpeg padding characters.
         """
         if img_start:
+            img_start = Path(img_start)
             file_name = img_start.name
             # if name matches a regex pattern with a number of digits
             m = re.search(r"(?<=_|.)\d{2,}(?=\d*\.)", file_name)
@@ -111,20 +112,19 @@ class Parsing:
                 return str(ffpmeg_input)
 
     @staticmethod
+
     def create_ffmpeg_still_frame_output(input_file: str, 
                                    filename: str, 
                                    padding: int = 4, 
                                    ext: str = '.png'
                                    ) -> str:
-        """Takes a movie file input and returns a still frame based on 
-            the input name 
-
-        Args:
-            img_start (Path): Path object to the first image sequence
-
-        Returns:
-            str: A new, formated path string containing the 
-                ffmpeg padding characters.
+        """
+        Create a filename for ffmpeg still frame output.
+        @param input_file - the input file to create the filename for.
+        @param filename - the filename to use.
+        @param padding - the padding to use.
+        @param ext - the extension to use.
+        @return the filename for ffmpeg still frame output.
         """
         image_root = Path(input_file)
 
@@ -235,7 +235,7 @@ class FolderOps:
 
 
     @classmethod
-    def getImageSequence(cls, dir: str, ext: str) -> Path:
+    def getImageSequence(cls, dir: str, ext:str=None) -> Path:
         """
         Looked into being able to glob multiple filetpyes, then decided after 
         the code looked confusing as you'll always set the format in the Maya 
@@ -256,3 +256,30 @@ class FolderOps:
             sequence = dirPath.glob(f'*{ext}')  
             return next(sequence)
         
+
+    @classmethod
+    def get_first_frame_from_filename(cls, dir: str, ext:str=None) -> Path:
+        """
+        Looked into being able to glob multiple filetpyes, then decided after 
+        the code looked confusing as you'll always set the format in the Maya 
+        playblast. This is a simple globcall via Pathlib. 
+
+        Args:
+            dir (str): Root directory of the file sequence 
+            ext (str, optional): the image file extension. Defaults to 'png'.
+
+        Returns:
+            Path: The first image in the found sequence
+        """
+        if not ext:
+            ext = cls.EXTENSION_DEFAULT
+
+        dirPath = Path(dir)
+        print (dirPath.parent)
+        if dirPath.parent.exists():
+            sequence = dirPath.glob(f'*{ext}')  
+            print (f' sequence {next(sequence)}')
+            return next(sequence)
+        
+        
+

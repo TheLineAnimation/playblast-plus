@@ -3,12 +3,9 @@ class Scene():
     """
     Base class for each host to inherit methods for preview handling
     """
-
     @staticmethod
     def main_window():
         pass
-
-
 
     @staticmethod
     def get_name():

@@ -4,7 +4,8 @@ from playblast_plus.vendor.Qt import QtWidgets, QtCore
 from shiboken2 import wrapInstance
 
 import maya.cmds as cmds
-import maya.OpenMayaUI as omui
+# import maya.OpenMayaUI as omui
+from maya import OpenMaya, OpenMayaUI
             
 from ...lib import scene
 
@@ -19,11 +20,32 @@ class Maya_Scene(scene.Scene):
         """
         Return the Maya main window widget as a Python object
         """
-        main_window_ptr = omui.MQtUtil.mainWindow()
+        main_window_ptr = OpenMayaUI.MQtUtil.mainWindow()
         if sys.version_info.major >= 3:
             return wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
         else:
             return wrapInstance(long(main_window_ptr), QtWidgets.QWidget)
+        
+    def ui_base_class():
+        return (QtWidgets.QDialog)
+
+    def get_widget(**kwargs):
+        """ Deletes an already created widget
+
+        Args:
+            name (str): the widget object name
+        """
+        name = kwargs['name']
+
+        # finds workspace control if dockable widget
+        if cmds.workspaceControl(name, exists=True):
+            cmds.workspaceControl(name, edit=True, clp=False)
+            cmds.deleteUI(name)
+
+        # finds the widget
+        widget = OpenMayaUI.MQtUtil.findWindow(name)
+        return widget
+
 
     def get_name(full_path: bool = False) -> str:
         """_summary_
@@ -82,6 +104,14 @@ class Maya_Scene(scene.Scene):
         end = cmds.playbackOptions(q=True, max=True)
         return (start,end)
     
+    def current_frame():
+        '''
+        Return an int of the current frame rate
+        q - what if it's 29.97? 
+        '''
+        return cmds.currentTime(query=1)
+
+    
     def get_render_resolution(self,multiplier=1.0):
         w = cmds.getAttr("defaultResolution.width")
         h = cmds.getAttr("defaultResolution.height")
@@ -89,8 +119,17 @@ class Maya_Scene(scene.Scene):
             w = int (w * multiplier)
             h = int (h * multiplier)
         return (w,h)
+    
+    def warning_message(text):
+        OpenMaya.MGlobal.displayWarning(text)
 
-    def get_current_camera():
+    def info_message(text):
+        OpenMaya.MGlobal.displayInfo(text)
+
+    def error_message(text):
+        OpenMaya.MGlobal.displayError(text)
+  
+    def get_current_camera(name=None):
         """Returns the currently active camera.
 
         Searched in the order of:
@@ -104,41 +143,48 @@ class Maya_Scene(scene.Scene):
             This doesn't work very well!! 
             need a beeter way to get the current camera from view
         """
+        if name:
+            import maya.OpenMaya as om
+            import maya.OpenMayaUI as omui
+            view = omui.M3dView.active3dView()
+            camera = om.MDagPath()
+            view.getCamera(camera)
+            return om.MFnDagNode(camera.transform()).name()
         
         # (check if the set has a camera defined)
+        else:
+            # Get camera from active modelPanel  (if any)
+            panel = cmds.getPanel(withFocus=True)
+            if cmds.getPanel(typeOf=panel) == "modelPanel":
+                cam = cmds.modelEditor(panel, query=True, camera=True)
+                # In some cases above returns the shape, but most often it returns 
+                # the transform. Still we need to make sure we return the transform.
+                if cam:
+                    if cmds.nodeType(cam) == "transform":
+                        return cam
+                    # camera shape is a shape type
+                    elif cmds.objectType(cam, isAType="shape"):
+                        parent = cmds.listRelatives(cam, parent=True, fullPath=True)
+                        if parent:
+                            return parent[0]
 
-        # Get camera from active modelPanel  (if any)
-        panel = cmds.getPanel(withFocus=True)
-        if cmds.getPanel(typeOf=panel) == "modelPanel":
-            cam = cmds.modelEditor(panel, query=True, camera=True)
-            # In some cases above returns the shape, but most often it returns 
-            # the transform. Still we need to make sure we return the transform.
-            if cam:
-                if cmds.nodeType(cam) == "transform":
-                    return cam
-                # camera shape is a shape type
-                elif cmds.objectType(cam, isAType="shape"):
-                    parent = cmds.listRelatives(cam, parent=True, fullPath=True)
-                    if parent:
-                        return parent[0]
-
-        # Check if a camShape is selected (if so use that)
-        cam_shapes = cmds.ls(selection=True, type="camera")
-        if cam_shapes:
-            return cmds.listRelatives(cam_shapes,
-                                    parent=True,
-                                    fullPath=True)[0]
-
-        # Check if a transform of a camShape is selected
-        # (return cam transform if any)
-        transforms = cmds.ls(selection=True, type="transform")
-        if transforms:
-            cam_shapes = cmds.listRelatives(transforms, 
-                                            shapes=True, type="camera")
+            # Check if a camShape is selected (if so use that)
+            cam_shapes = cmds.ls(selection=True, type="camera")
             if cam_shapes:
                 return cmds.listRelatives(cam_shapes,
                                         parent=True,
-                                        fullPath=True)[0] 
+                                        fullPath=True)[0]
+
+            # Check if a transform of a camShape is selected
+            # (return cam transform if any)
+            transforms = cmds.ls(selection=True, type="transform")
+            if transforms:
+                cam_shapes = cmds.listRelatives(transforms, 
+                                                shapes=True, type="camera")
+                if cam_shapes:
+                    return cmds.listRelatives(cam_shapes,
+                                            parent=True,
+                                            fullPath=True)[0] 
 
     def get_user_directory() -> str:
         # perhaps this should be the host class, it's not scene related

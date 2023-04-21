@@ -1,42 +1,19 @@
 """Playblast Plus
 
-A huge thanks to Jerome Dresse for his UI code from SmearDeform
+A huge thanks to Jerome Dresse for his UI code from SmearDeform.
+I used this (and some other snippets from mGear) to help speed up development
 www.nodilus.com
 
-
-    Returns:
-        _type_: _description_
 """
-
-
 
 # Globals
 UI_NAME = "playblast_plus_dialog"
 
-from maya import cmds
-from maya import OpenMaya, OpenMayaUI
-from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
-from shiboken2 import wrapInstance
-
-# from . import capture as capture
-# from . import register_tokens
-# from .maya_scene import Maya_Scene as scene
-# from .maya_logger import MayaLogger
-
-# # custom imports
-# from ...vendor.Qt import QtWidgets, QtGui, QtCore
-
-# from ...lib import utils, widgets, settings, preset, encode
-# from ... import PLAYBLAST_PLUS_MODULE_ROOT as module_root
-
-from playblast_plus.hosts.maya import capture as capture
-from playblast_plus.hosts.maya import register_tokens
-from playblast_plus.hosts.maya.maya_scene import Maya_Scene as scene
-from playblast_plus.hosts.maya.maya_logger import MayaLogger
+from playblast_plus.lib.dcc import Host
+from playblast_plus.lib import logger
 
 # custom imports
 from playblast_plus.vendor.Qt import QtWidgets, QtGui, QtCore
-
 
 from playblast_plus.lib import utils as utils, widgets, settings, preset, encode
 from playblast_plus import PLAYBLAST_PLUS_MODULE_ROOT as module_root
@@ -46,36 +23,37 @@ from pathlib import Path
 from typing import Union
 import copy
 
-class PlayBlastPlusLogger(MayaLogger):
+HOST = Host()
+UI_BASECLASS = HOST.UIBASECLASS
+
+class PlayBlastPlusLogger(logger.Logger):
     """
     Set up a custom script logger
     """
     LOGGER_NAME = "PlayBlastPlusLogger"
 
-class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
+class PlayblastPlusUI(UI_BASECLASS):
     """
     PlayBlastPlus User Interface
     """
-    
     # CLASS LEVEL GLOBALS
     WF_OVERRIDE_LAYER_NAME = 'pbp_Wireframe_Override'
+    ISOLATE_SET_NAME = 'pbp_isolate'
     
-    def __init__(self, name, parent=None):
-        super(PlayblastPlusUI, self).__init__(parent=parent)
-
-        # checks for previous ui instances
-        kill_ui("{}WorkspaceControl".format(UI_NAME))
-        kill_ui(UI_NAME)
+    def __init__(self, host:Host):
+        super(PlayblastPlusUI, self).__init__(parent=host.main_window)
+        self.host = host
 
         # sets title and object name
-        self.setWindowTitle("")
+        self.setWindowTitle(" ")
         self.setObjectName(UI_NAME)
         self.setWindowFlags(QtCore.Qt.Tool)
-        
+
         self.setMinimumWidth(250)
         
         self._TEMPLATES = {}
-        self._CAMERAS = scene.get_scene_cameras()
+        self._CAMERAS = self.host.scene.get_scene_cameras()
+
         # creates main layout widget
         self.main_layout = QtWidgets.QVBoxLayout(self)
         self.main_layout.setMargin(2)
@@ -91,20 +69,21 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
         # Get the scene cameras first, we will need to see 
         # if the last camera used can be set automatically
+
         self.camera_list.clear()
-        self.camera_list.addItems([c.replace('Shape','') for c in self._CAMERAS])
+        # SORT THE CAMERAS FUNCTION OUT IN BOTH HOSTS
+        self.camera_list.addItems(self._CAMERAS)
 
         # populate the UI with data
-        self.host_settings_directory = scene.get_user_directory()
-        self.current_playblast_directory = scene.get_output_dir()
+        self.host_settings_directory = self.host.scene.get_user_directory()
+        self.current_playblast_directory = self.host.scene.get_output_dir()
         
         self._CONFIG = settings.get_config()
         PlayBlastPlusLogger.info(f'Configuration settings { self._CONFIG }')
 
         self._SETTINGS = self._load_host_settings()
-        PlayBlastPlusLogger.info(f'Maya settings {self._SETTINGS}')
+        PlayBlastPlusLogger.info(f'{self.host.name} settings {self._SETTINGS}')
 
-        
         if not self._SETTINGS['output_token']:
             self.tokens_field.setText(self._CONFIG['default_output_token'])        
         else:
@@ -125,8 +104,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.template_list.addItems( template_names)
         self.toggle_ui_state()
 
-        if not cmds.ls("pbp_isolate", sets=True):
-            cmds.sets(name='pbp_isolate', empty=True)
+        self.host.preview.pre_process(isolate_set_name = self.ISOLATE_SET_NAME)
 
     def dockCloseEventTriggered (self):
         self._save_host_settings(self.host_settings_directory)
@@ -176,13 +154,15 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         self.display_menu.addAction(self.open_last_playblast)
         
-        self.open_playblast_dir = QtWidgets.QAction("Explore Playblast Folder", self)
+        self.open_playblast_dir = QtWidgets.QAction(
+            f"Explore {self.host.UITEXT_preview} Folder", self)
         self.open_playblast_dir.setIcon(widgets.Icons.get("folder"))
 
         self.display_menu.addAction(self.open_playblast_dir)
         self.display_menu.addAction(self.use_workspace_setting)
  
-        self.purge_playblast_dir = QtWidgets.QAction("Empty Playblast Folder", self)
+        self.purge_playblast_dir = QtWidgets.QAction(
+            f"Empty {self.host.UITEXT_preview} Folder", self)
         self.purge_playblast_dir.setIcon(widgets.Icons.get("bin"))
         
         folder_separator = QtWidgets.QLabel("<b>Template Overrides</b>")
@@ -223,7 +203,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         # Add widgets to the layout
         # ToolHeader is a custom label widget imported from lib.widgets
-        header = widgets.ToolHeader('pbp_header', 'Playblast Plus ')  
+        header = widgets.ToolHeader('pbp_header', f'{self.host.UITEXT_preview} Plus ')  
  
         cam_formlayout = QtWidgets.QGridLayout()
         cam_formlayout.setMargin(0)
@@ -268,7 +248,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         # create
         style = widgets.Styles.BUTTON_HERO
-        self.playblast_button = QtWidgets.QPushButton("PLAYBLAST")
+        self.playblast_button = QtWidgets.QPushButton(self.host.UITEXT_preview.upper())
         self.playblast_button.setStyleSheet(style)
 
         # edit frame border and layout
@@ -293,7 +273,8 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.wireframe_box = QtWidgets.QCheckBox("Show Wireframe")
         self.wireframe_box.setChecked(False)
         
-        self.show_imgplane_box = QtWidgets.QCheckBox("Show Image Plane")
+        self.show_imgplane_box = QtWidgets.QCheckBox(
+            f"Show {self.host.UITEXT_image_plane}")
         self.show_imgplane_box.setChecked(False)
         
         self.half_res_box = QtWidgets.QCheckBox("Half Res")
@@ -363,7 +344,7 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
     def _load_host_settings(self):
         
-        PlayBlastPlusLogger.info(f'Maya settings directory { self.host_settings_directory }')
+        PlayBlastPlusLogger.info(f'{self.host.name} settings directory { self.host_settings_directory }')
         
         settings_dict = settings.get_host_settings(self.host_settings_directory)
         
@@ -384,64 +365,22 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         return settings_dict 
 
-    def set_display_layer(self):
-        # just in case a file has been saved with the layer present and not remove by the script
-        if self.WF_OVERRIDE_LAYER_NAME in cmds.ls(typ='displayLayer'):
-            cmds.delete(self.WF_OVERRIDE_LAYER_NAME)
+    def set_template_overrides(self,template) -> dict:
 
-        geo = cmds.listRelatives(cmds.ls(geometry=True), p=True, path=True)
-        wfGroup = cmds.createDisplayLayer(geo, n=self.WF_OVERRIDE_LAYER_NAME)
-        wf_col = self._CONFIG['overrides']['wireframe_color']
-        cmds.setAttr("{}.color".format(wfGroup), True)
-        cmds.setAttr("{}.overrideRGBColors".format(wfGroup), True)
-        cmds.setAttr("{}.overrideColorRGB".format(wfGroup), wf_col[0], wf_col[1], wf_col[2])
-        
-    def remove_display_layer(self):
-        if self.wireframe_box.isChecked():
-            try:
-                cmds.delete(self.WF_OVERRIDE_LAYER_NAME)
-            except:
-                OpenMaya.MGlobal.displayWarning(
-                    f'Something went wrong deleting the display layer - {self.WF_OVERRIDE_LAYER_NAME}') 
+        height, width = self.host.scene.get_render_resolution(0.5)
 
-    def set_overrides(self,template) -> dict:
-        """
-        Add all pbjects to display layer and set to black, then remove afterwards
-        """
-        
-        viewport = cmds.getPanel( withFocus=True)
-        if self.template_override_setting.isChecked(): 
-            # is wireframe override on? 
-            wf_override_state = self.wireframe_box.isChecked()
-            template["viewport_options"]["wireframeOnShaded"] = wf_override_state
-            
-            if wf_override_state:
-                self.set_display_layer()
-            
-            if 'modelPanel' in viewport:
-                cmds.modelEditor(viewport, 
-                                 edit=True, 
-                                 wireframeOnShaded=wf_override_state)
-
-            template["viewport_options"]["imagePlane"] = self.show_imgplane_box.isChecked()
-
-            if self.half_res_box.isChecked():
-            #    calculate the current res and halve it
-                width, height = scene.get_render_resolution(0.5)
-                template["width"] = width
-                template["height"] = height
-                PlayBlastPlusLogger.info(f'New Playblast Size {width}x{height}')
-
-            if self.isolate_box.isChecked():
-                if cmds.ls("pbp_isolate", sets=True):
-                    isolate_nodes = cmds.sets('pbp_isolate', q = True)
-                    template["isolate"] = isolate_nodes
-
-        else:
-            if 'modelPanel' in viewport:
-                cmds.modelEditor(viewport, edit=True, wireframeOnShaded=False)
-
-        return template
+        self.host.preview.set_override_properties(
+            template_override_setting = self.template_override_setting.isChecked(),
+            wireframe_option = self.wireframe_box.isChecked(),
+            half_res_option =  self.half_res_box.isChecked(),
+            image_plane_option = self.show_imgplane_box.isChecked(),
+            isolate_option = self.isolate_box.isChecked(),
+            override_layer_name = self.WF_OVERRIDE_LAYER_NAME,
+            wireframe_color = self._CONFIG['overrides']['wireframe_color'],
+            render_height = height,
+            render_width = width,
+            template = template
+            )
         
     def toggle_ui_state(self):
         for elem in [self.wireframe_box,
@@ -466,22 +405,17 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         file_output = Path(file_path)  
         return file_output.is_file()
       
-    def create_movie(self,input_sequence, 
+    def create_movie(self,ffmpeg_input_string, 
                      output_filename, 
                      post_open=True
                      ) -> str :
- 
-        ffmpeg_input_string = utils.Parsing.playblast_output_to_ffmpeg_input(
-                                                                input_sequence)
+
         output_path = f'{output_filename}.mp4'
-        current_fr = scene.getFrameRate()
-        framerange = scene.getFrameRange()
+        current_fr = self.host.scene.getFrameRate()
+        framerange = self.host.scene.getFrameRange()
         burnin_str = self.get_output_name(self.tokens_field.text())
-        # scene.get_name()
-        
-        # PlayBlastPlusLogger.info(f'ffmpeg_input_string {ffmpeg_input_string}')
+
         PlayBlastPlusLogger.info(f'output_path {output_path}')
-        PlayBlastPlusLogger.info(f'Framerate {current_fr} Range {framerange}')
 
         if self._SETTINGS['custom_viewer']:
             viewer_start_path = self._SETTINGS['custom_viewer']
@@ -530,9 +464,8 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self._save_host_settings(self.host_settings_directory)
 
     def get_output_name(self, strToken) -> str:
-        # return tokens.format_tokens(strToken,None)
-        return register_tokens.tokens.format_tokens(strToken,None)
-        
+        return self.host.tokens.format_tokens(strToken,None)
+
     def get_current_template(self) -> dict:
         """
         We want to clone the template as we might want to override the keys 
@@ -550,13 +483,18 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         return QtWidgets.QApplication.clipboard().setMimeData(data)
 
     def capture_viewport(self):
-        
+        pass
+        # self.host.preview.create()
+
         output_path = Path (self.current_playblast_directory, 'captures') 
-    
+        # output_name = self.get_output_name(self.tokens_field.text())
+        # output_path = self.current_playblast_directory
+        #     
         if self.validate_output_path(output_path):
-            snap_image_filename = (register_tokens.tokens.format_tokens(
+            snap_image_filename = (self.host.tokens.format_tokens(
                 f'{output_path}\{self.tokens_field.text()}_capture',None))
-            capture_template = self.get_current_template()    
+            capture_template = self.get_current_template()
+
             capture_template["filename"] = snap_image_filename
 
             if self._CAMERAS:
@@ -564,11 +502,16 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 self._CAMERAS[self.camera_list.currentIndex()]
             
             if self.template_override_setting.isChecked():
-                self.set_overrides(capture_template)
+                self.set_template_overrides(capture_template)
 
-            snap_clip_image = capture.snap(**capture_template)
+            snap_clip_image = self.host.preview.snapshot(
+                                                template=capture_template,
+                                                host_options=self._SETTINGS 
+                                                ) 
+
             PlayBlastPlusLogger.info(
                 f"Viewport Capture saved to {snap_clip_image}")
+            
             self.update_last_playblast(snap_clip_image)
             
             if self.copy_to_clipboard_setting.isChecked():
@@ -577,7 +520,10 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                         self.set_clipboard_data(snap_clip_image)
                         
             if self.template_override_setting.isChecked():
-                self.remove_display_layer()
+                self.host.preview.post_process(
+                        wireframe_option = self.wireframe_box.isChecked(),
+                        override_layer_name = self.WF_OVERRIDE_LAYER_NAME,
+                    )
                 
     def create_playblast(self):
 
@@ -601,14 +547,21 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                             )
 
                 if self.template_override_setting.isChecked():
-                    self.set_overrides(capture_template)
+                    self.set_template_overrides(capture_template)
 
-                filename = capture.capture(**capture_template)
+                filename = self.host.preview.create(template=capture_template,
+                                                    host_options=self._SETTINGS 
+                                                    )
+                PlayBlastPlusLogger.info(
+                f"filename {filename}")
+
+
                 mp4_output = self.create_movie(
                                                filename, 
                                                capture_template["filename"],  
                                                post_open=True
                                                )
+                
                 if self.validate_output(mp4_output):                              
                     self.update_last_playblast(mp4_output)
                     
@@ -624,62 +577,32 @@ class PlayblastPlusUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                                                     skip_folder='captures')
                  
                 if self.template_override_setting.isChecked():
-                    self.remove_display_layer()
+                    self.host.preview.post_process(
+                        wireframe_option = self.wireframe_box.isChecked(),
+                        override_layer_name = self.WF_OVERRIDE_LAYER_NAME,
+                    )
 
             else:
-                OpenMaya.MGlobal.displayWarning(
-                    "Please create a valid camera.") 
+                self.host.preview.notify_user(
+                    "Please create a valid camera.")
         else:
-            OpenMaya.MGlobal.displayError(
-                f'The filename specified is wrong - {output_name}') 
+            self.host.scene.warning_message(
+                f'The filename specified is wrong - {output_name}')
 
-def kill_ui(name):
-    """ Deletes an already created widget
-
-    Args:
-        name (str): the widget object name
+def run(**kwargs):  # @unusedVariable
     """
-
-    # finds workspace control if dockable widget
-    if cmds.workspaceControl(name, exists=True):
-        cmds.workspaceControl(name, edit=True, clp=False)
-        cmds.deleteUI(name)
-
-    # finds the widget
-    widget = OpenMayaUI.MQtUtil.findWindow(name)
-
-    if not widget:
-        return
-
-    # wraps the widget into a qt object
-    qt_object = wrapInstance(long(widget), QtWidgets.QDialog)
-
-    # sets the widget parent to none
-    qt_object.setParent(None)
-
-    # deletes the widget
-    qt_object.deleteLater()
-    del(qt_object)
-
-def run(*args):  # @unusedVariable
-    """ 
     Opens the Playblast Plus UI
     """
-    # # Worth checking FFMpeg is installed correctly on the local system
-    # ffmpeg_path = settings.get_ffmpeg_path()
-    # if Path(ffmpeg_path).exists():
-    tool = PlayblastPlusUI(UI_NAME)
-    tool.show(dockable=True)
-    PlayBlastPlusLogger.info(f"playblastPlus {args[0].version} Running...")
-    # else:
-    #     OpenMaya.MGlobal.displayError(
-    #             f'FFMpeg is not installed in the directory specified : '
-    #             f'{ffmpeg_path}'
-    #             ) 
-    #     OpenMaya.MGlobal.displayWarning(
-    #             f'Install to this location or edit the following file '
-    #             f'to point at your install : {settings.filepath()}'
-    #             )
-        
+    PlayBlastPlusLogger.info(f'{kwargs["version"]}')
+
+    if HOST:
+        tool = PlayblastPlusUI(host=HOST)
+        tool.show()
+        PlayBlastPlusLogger.info(
+            f"PlayblastPlus {kwargs['version'].version} {HOST} Running...")
+    else:
+        PlayBlastPlusLogger.info(
+            f"PlayblastPlus Host environment not present or supported..")
+
 if __name__ == "__main__":
     run()

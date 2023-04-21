@@ -31,7 +31,9 @@ def open_media_file(filepath:str, viewer:str='start'):
         return
     else:
         Logger.info(f'Launching default viewer : "{filepath}"')
-        subprocess.Popen(['start',filepath],shell=True)
+        import os
+        os.startfile(f'"{filepath}"')
+        # subprocess.Popen(['start', filepath ],shell=True)
 
 def extract_middle_image(source_path: str, output_path: str):
     """_summary_
@@ -105,7 +107,7 @@ def mp4_from_image_sequence(image_seq_path: str,
     )
 
     ffmpeg_cmd = (
-        f'{FFMPEG_PATH} '
+        f'"{FFMPEG_PATH}" '
         f'-framerate {framerate} '
         f'-y ' # overwrite
         f'-start_number {start_frame} '
@@ -126,5 +128,6 @@ def mp4_from_image_sequence(image_seq_path: str,
     # check output fie exists
     if Path(output_path).exists() and post_open:
         # open the video file
+        Logger.info(f'OUTPUT PATH ENCODE  (mp4_from_image_sequence) : {output_path}')
         open_media_file(output_path, viewer_arg)
         

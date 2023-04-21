@@ -6,6 +6,9 @@ from .maya_scene import Maya_Scene
 # host/scene based tokens
 def _camera_token(camera=Maya_Scene.get_current_camera()):
     # needs more error checking, this fails randomly
+
+    print (f'REGISTER TOKENS - CAMERA : {camera}')
+
     """Return short name of camera from capture options"""
     camera = camera.rsplit("|", 1)[-1]  # use short name
     camera = camera.replace(":", "_")   # namespace `:` to `_`
@@ -19,9 +22,9 @@ tokens.register_token("<scene>",
                 lambda options: Maya_Scene.get_name() or "playblast",
                 label="Insert current scene name")               
 
-tokens.register_token("<user>",
-                lambda options :Maya_Scene.get_user_name(),
-                label="Insert current user's name")
+# tokens.register_token("<user>",
+#                 lambda options :tokens.get_user_name(),
+#                 label="Insert current user's name")
                
 tokens.register_token("<output_dir>",
                 lambda options: Maya_Scene.get_output_dir(),

@@ -15,10 +15,10 @@ lib.encode Module
 .. automodule:: playblast_plus.lib.encode
    :members:
 
-lib.host Module
+lib.dcc Module
 ------------------
 
-.. automodule:: playblast_plus.lib.host
+.. automodule:: playblast_plus.lib.dcc
    :members:
 
 lib.logger Module

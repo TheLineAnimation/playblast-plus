@@ -1,7 +1,7 @@
 {
     "studio_templates": "./templates/studio",
     "project_template_subpath": "tools/pipeline/playblast/templates",
-    "documentation_url":"",
+    "documentation_url":"https://thelineanimation.com",
     "overrides": {
     "wireframe_color": [0.1,0.1,0.1]
     },
@@ -10,9 +10,7 @@
         "download_url":"https://github.com/GyanD/codexffmpeg/releases/download/5.1.2/ffmpeg-5.1.2-essentials_build.zip",
         "executable_paths": [
             "./bin",
-            "C:/Program Files/FFmpeg/bin_",
-            "C:/Users/pete/OneDrive/Documents/ffmpeg_",
-            "C:/Users/pete/OneDrive/Documents/Files/Code/Testing/ffmpeg"
+            "C:/Program Files/ffmpeg/bin"
             ],
         "input_args": "-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p",
         "output_args": "",
