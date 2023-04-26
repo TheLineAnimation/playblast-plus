@@ -1,5 +1,5 @@
 =====================
-Playblast Plus Edit
+Playblast Plus 
 =====================
 
 Playblast Plus is a python library that is designed to facilitate animation workflows with consistent,
