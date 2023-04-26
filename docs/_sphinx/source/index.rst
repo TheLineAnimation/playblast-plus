@@ -9,18 +9,20 @@ User Guides
     .. container:: tocdescr
 
       .. container:: descr
-         ..name deploying
+         ..name user_guide
 
          .. figure:: /images/flipbook.gif
+            :width: 20em
             :target: ./paragraphs/interface.html
 
          How to Use Playblast Plus
             Instructions for Artists on how to use Playblast Plus.
 
       .. container:: descr
-         ..name deploying
+         ..name installation_doc
 
          .. figure:: /images/code_dark.gif
+            :width: 20em
             :target: ./paragraphs/deploying.html
 
          Installation
