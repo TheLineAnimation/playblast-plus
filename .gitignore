@@ -6,4 +6,4 @@ __pycache__/
 # no ffmpeg executables needed
 *.exe
 
-/docs/build
+.doctrees

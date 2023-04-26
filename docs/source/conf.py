@@ -9,10 +9,9 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+
 import os
 import sys
-
 
 # Step 1 - If you don't have the base r.st files, you'll need to generate the stubs
 # with a CMD call to sphinx-apidoc.
@@ -23,7 +22,6 @@ sphinx-apidoc -f -o source '../playblast_plus'
 sphinx-apidoc -f -o source '../playblast_plus/hosts/maya'  
 """
 
-
 # IMPORTANT!!!!
 # you need to add every path that a module resides on for sphinx to detect it. 
 # we are needing to jump back 2 directories, hence why we have ../../
@@ -32,36 +30,7 @@ sphinx-apidoc -f -o source '../playblast_plus/hosts/maya'
 # ./make clean - clears the build directory
 # ./make html - builds the html site
 
-# for p in [
-#     '../../hosts/maya/pipeline/scripts',
-#     '../../hosts/maya/core/pipeline/studio',
-#     '../../hosts/maya/core/pipeline/studio/core',
-#     '../../hosts/maya/core/pipeline/studio/ui', 
-#     '../../hosts/maya/core/pipeline/studio/lib',
-#     '../common/ui',
-#     '../common/path'   
-# ]:
-#     sys.path.insert(0, os.path.abspath(p))
-
-
-# for p in [
-#     '../../hosts/maya/pipeline/scripts',
-#     '../common/'  
-# ]:
-
-
 sys.path.insert(0, os.path.abspath('..'))
-
-
-# for p in [
-#     '../hosts/maya/',
-#     '../hosts/max/',
-#     '../lib',
-# ]:
-#     sys.path.insert(0, os.path.abspath(p))
-
-# print(sys.path)
-
 
 project = 'Playblast Plus'
 copyright = '2023, Pete Addington'
@@ -70,20 +39,21 @@ author = 'Pete Addington'
 # The full version, including alpha/beta/rc tags
 release = '1.2'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 
+# 'sphinx.ext.coverage',
+
 sys.path.append(os.path.abspath('../exts'))
 extensions = [
                 'sphinx.ext.autodoc', 
-                'sphinx.ext.coverage',
                 'sphinx.ext.napoleon',
                 'sphinx.ext.autosummary',
-                'sphinx.ext.autosectionlabel'
+                'sphinx.ext.autosectionlabel',
+                'sphinx.ext.githubpages'
             ]
 
 napoleon_google_docstring = True
@@ -98,9 +68,7 @@ napoleon_google_docstring = True
 # autodoc_mock_imports = ["django"]
 # Will mock all imports under the django package.
 
-
 autodoc_mock_imports = ['vendor.Qt','pymel.core', 'maya.cmds', 'maya.mel','pymel', 'PySide2', 'maya', 'shiboken2','urllib2','long','int', 'pymxs.runtime']
-
 # autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
 # autodoc_default_options = {
@@ -122,7 +90,6 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
-
 
 # -- Options for HTML output -------------------------------------------------
 

@@ -11,14 +11,15 @@ from ...lib import scene
 
 
 class Maya_Scene(scene.Scene):
-    """_summary_
+    """
+    An encapsualtion of methods that can describe a Maya scene file.
 
-    Args:
-        scene (_type_): _description_
+    Inherits From:
+        scene (scene.Scene): scene base class
     """
     def main_window():
         """
-        Return the Maya main window widget as a Python object
+        Returns the Maya main window widget as a Python object
         """
         main_window_ptr = OpenMayaUI.MQtUtil.mainWindow()
         if sys.version_info.major >= 3:
@@ -66,7 +67,8 @@ class Maya_Scene(scene.Scene):
         return None
 
     def get_scene_cameras():
-        """Returns the scene cameras, surprisingly
+        """
+        Returns the scene cameras, surprisingly
         """
 
         # all cameras
@@ -78,9 +80,10 @@ class Maya_Scene(scene.Scene):
         return cameras
     
     def getFrameRate():
-        '''
+        """
         Return an int of the current frame rate
-        '''
+        """
+
         currentUnit = cmds.currentUnit(query=True, time=True)
         if currentUnit == 'film':
             return 24
@@ -104,11 +107,16 @@ class Maya_Scene(scene.Scene):
         end = cmds.playbackOptions(q=True, max=True)
         return (start,end)
     
-    def current_frame():
-        '''
-        Return an int of the current frame rate
-        q - what if it's 29.97? 
-        '''
+    def current_frame() -> int:
+        """
+        Return an integer of the current frame rate
+
+        Fix To-DO - what if it's 29.97? 
+
+        Returns:
+            int: The scene's current frame rate
+        """
+
         return cmds.currentTime(query=1)
 
     
@@ -130,7 +138,8 @@ class Maya_Scene(scene.Scene):
         OpenMaya.MGlobal.displayError(text)
   
     def get_current_camera(name=None):
-        """Returns the currently active camera.
+        """
+        Returns the currently active camera.
 
         Searched in the order of:
             1. Active Panel

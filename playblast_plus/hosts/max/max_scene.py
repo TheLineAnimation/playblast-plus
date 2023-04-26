@@ -90,10 +90,20 @@ class Max_Scene(scene.Scene):
         return (int(anim_range.start),int(anim_range.end))
     
     def get_render_resolution(self,multiplier=1.0):
+        """
+        Returns the scene's render resolution.
+
+        Args:
+            multiplier (float, optional): _description_. Defaults to 1.0.
+
+        Returns:
+            tuple : the height and width of the render output
+        """
         return (mxs.renderWidth, mxs.renderHeight)
 
     def get_current_camera(**kwargs):
-        """Returns the currently active camera.
+        """
+        Returns the currently active camera.
         if name is passed from the function 
 
         Returns:
