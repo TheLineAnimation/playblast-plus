@@ -1,6 +1,6 @@
-================
-Playblast Plus
-================
+=====================
+Playblast Plus Edit
+=====================
 
 Playblast Plus is a python library that is designed to facilitate animation workflows with consistent,
 yet customisable content previews in a variety of DDC Hosts. 
