@@ -15,7 +15,7 @@ These can be built from the source files contained on our `GitHub repository <ht
    .. container:: tocdescr
 
       .. container:: descr
-         ..name lib_docs
+         ..name lib_module
 
          .. figure:: /images/tl_ui_ph_9.jpg
             :target: ../docs/lib.html
@@ -24,7 +24,7 @@ These can be built from the source files contained on our `GitHub repository <ht
             Maya Python Code
 
       .. container:: descr
-         ..name lib_docs
+         ..name maya_host
 
          .. figure:: /images/tl_ui_ph_2.jpg
             :target: ../docs/hosts_maya.html
@@ -34,7 +34,7 @@ These can be built from the source files contained on our `GitHub repository <ht
 
       
       .. container:: descr
-         ..name lib_docs
+         ..name max_host
 
          .. figure:: /images/tl_ui_ph_4.jpg
             :target: ../docs/hosts_max.html
