@@ -49,8 +49,7 @@ So this is more of a Dr.Frankenstein script, made from parts created by people w
 - playblasts/previews and captures reside on the artist's machine
 - requires FFMpeg to be installed locally. The location isn't important and can be configured to multiple folders globally to allow different setups. 
 
-
-
+<img align="right" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/pbp_structure.png?raw=true"/>
 
 <br>
 
