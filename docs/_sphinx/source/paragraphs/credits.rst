@@ -7,7 +7,8 @@ I used the following resources to build Playblast Plus:
 - `Chris Zurbrigg <https://zurbrigg.com/courses>`_'s teaching resources - Chris has an in-depth python series specific to Maya (Plus a great tool with an enhanced featureset - `Advanced Playblast <https://zurbrigg.com/advanced-playblast>`_ )
 - `Maya Capture <https://github.com/abstractfactory/maya-capture>`_ - By - A very capable playblast library that encapsulates the preset functionality
 - `Maya Capture GUI <https://github.com/BigRoy/maya-capture-gui>`_ - By Roy Nietereau - Was a helpful git repo that had the token system used in the dynamic filename creation
-- `Jerome Dresse <https://www.nodilus.lu/>`_ - A technical direction superstar and provider of the code I used as a template for the user interface
+- `Jerome Dresse <https://www.nodilus.lu/>`_ - A superstar technical director, and provider of the code I used as a template for the user interface
+- `Qt.py <https://github.com/mottosso/Qt.py>` - Minimal Python 2 & 3 shim around all Qt bindings - PySide, PySide2, PyQt4 and PyQt5.
 
 ===============================
 Technical Documentation

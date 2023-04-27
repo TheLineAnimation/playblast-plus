@@ -16,18 +16,22 @@ ready to let those keyframes fly, like little tweened starlings flocking in an a
 
 Playblast Plus is in debt to the great coding work from the following sources - 
 
-- [maya-capture](https://github.com/abstractfactory/maya-capture). The core module is being used as is, 
-    and contains pretty much all the playblasting functionality you'd need. Current version - 2.1.0
+- [maya-capture](https://github.com/abstractfactory/maya-capture). 
+    The core module is being used as is, and contains pretty much all the playblasting functionality you'd need. Current version - 2.1.0
 
 - [maya-capture-gui]() by Roy Nieterau (Colorbleed)
     I could have used Big Roy's front-end, but I wanted to at least try to learn something for myself. Used the tokenised string parsing, as this is a very elegant way of performing function based string substituation. 
 
-- [Chris-Zurbrig]() Chris's FFMPEG in production course was the starting point for the FFMPEG encoding part of the
-    script. Maya's codec support is woeful and this wouldn't be possible without it. Updated the examples to utilise the new f-string formatting in Python 3
+- [Qt.py](https://github.com/mottosso/Qt.py)
+    Minimal Python 2 & 3 shim around all Qt bindings - PySide, PySide2, PyQt4 and PyQt5.
 
-- [Jerome Dresse](www.nodilus.nl) Jeorme's Smear Deformer script has a great UI that I was able to re-task into the job
+- [Chris-Zurbrig]() 
+    Chris's FFMPEG in production course was the starting point for the FFMPEG encoding part of the script. Maya's codec support is woeful and this wouldn't be possible without it. Updated the examples to utilise the new f-string formatting in Python 3
 
-So this is more of a Dr.Frankenstein script, made from parts created by people who can actually code. It makes a change from a Dr.Franenstein script created by Stack Overflow. 
+- [Jerome Dresse](www.nodilus.nl) 
+    Jerome's Smear Deformer script has a great UI that I was able to re-task into the job
+
+So this is more of a Dr.Frankenstein script, made from parts created by people who can actually code. It makes a change from a Dr.Franenstein script created by Stack Overflow. Thanks to everyone listed here for sharing their knowledge.  
 
 <br>
 
