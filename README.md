@@ -37,7 +37,7 @@ So this is more of a Dr.Frankenstein script, made from parts created by people w
 
 ### Documentation
 
-- [Click here for detailed documentation about usage, installation and the python class descriptions](https://thelineanimation.github.io/playblast-plus/)
+- [Click here for detailed documentation](https://thelineanimation.github.io/playblast-plus/) about usage, installation and the python class descriptions
 
 You can also click the header in the UI to launch this help inside your DCC. 
 
