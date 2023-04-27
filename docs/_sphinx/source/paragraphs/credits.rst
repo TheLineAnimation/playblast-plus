@@ -18,7 +18,7 @@ Technical Documentation
       .. container:: descr
          ..name templates
 
-         .. figure:: /images/studio_ui.jpg
+         .. figure:: /images/tl_ui_ph_7.jpg
             :target: ./paragraphs/templates.html
 
          Templates
@@ -27,7 +27,7 @@ Technical Documentation
       .. container:: descr
          ..name python
 
-         .. figure:: /images/studio_ui.jpg
+         .. figure:: /images/tl_ui_ph_8.jpg
             :target: ./paragraphs/python.html
 
          Python Documentation
