@@ -60,26 +60,14 @@ napoleon_google_docstring = True
 
 
 # IMPORTANT!!!!
-# you need to create exceptions for maya specific classes, otherwise the build will grumble and fail
+# you need to create exceptions for specific classes, otherwise the build will grumble and fail
 
 # autodoc_mock_imports
 # This value contains a list of modules to be mocked up. This is useful when some external dependencies are not met at build time and break the building process. You may only specify the root package of the dependencies themselves and omit the sub-modules:
 
-# autodoc_mock_imports = ["django"]
-# Will mock all imports under the django package.
 
 autodoc_mock_imports = ['vendor.Qt','pymel.core', 'maya.cmds', 'maya.mel','pymel', 'PySide2', 'maya', 'shiboken2','urllib2','long','int', 'pymxs.runtime']
-# autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
-# autodoc_default_options = {
-#     'show-inheritance': False,
-#     'members': True,
-#     'member-order': 'bysource',
-#     'special-members': '__init__',
-#     'undoc-members': True,
-#     'exclude-members': '__weakref__'
-# }
-# autoclass_content = 'both'
 
 html_logo = "images/thelinelogo.png"
 

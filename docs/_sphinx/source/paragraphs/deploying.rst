@@ -58,7 +58,7 @@ This will download the ffMpeg version specified in the config key `ffmpeg:downlo
 .. tip::
     if you don't alter the first entry of the `executable_paths` entry, it will resolve a relative folder called **/bin** in the current script environment.
 
-I don't unpack and move this automtically, I decided it's ok for someone to decide where they run this from.
+I don't unpack and move this automatically, I decided it's ok for someone to decide where they run this from.
 
 Understanding the config.json
 -------------------------------

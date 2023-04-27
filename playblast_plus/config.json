@@ -1,7 +1,7 @@
 {
     "studio_templates": "./templates/studio",
     "project_template_subpath": "tools/pipeline/playblast/templates",
-    "documentation_url":"https://thelineanimation.com",
+    "documentation_url":"https://thelineanimation.github.io/playblast-plus",
     "overrides": {
     "wireframe_color": [0.1,0.1,0.1]
     },
