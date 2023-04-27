@@ -35,6 +35,14 @@ So this is more of a Dr.Frankenstein script, made from parts created by people w
 
 <br>
 
+### Documentation
+
+- [Click here for detailed documentation about usage, installation and the python class descriptions](https://thelineanimation.github.io/playblast-plus/)
+
+You can also click the header in the UI to launch this help inside your DCC. 
+
+<br>
+
 ### Features
 
 - Transcodes the Maya playblast into MP4 (Uses [FFMpeg](https://ffmpeg.org/))
@@ -61,7 +69,7 @@ To install, download this and place the PlayblastPlus folder in a directory on y
 
 ### Usage
 
-To show the interface in Maya run:
+To show the interface in any supported host, run:
 
 ```python
 import playblast_plus.launch
