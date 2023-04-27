@@ -41,7 +41,7 @@ So this is more of a Dr.Frankenstein script, made from parts created by people w
 
 You can also click the header in the UI to launch this help inside your DCC. 
 
-<img align="right" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/ui.png?raw=true"/>
+<img align="center" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/ui.png?raw=true"/>
 
 <br>
 
