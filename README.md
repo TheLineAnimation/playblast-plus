@@ -19,17 +19,17 @@ Playblast Plus is in debt to the great coding work from the following sources -
 - [maya-capture](https://github.com/abstractfactory/maya-capture). 
     The core module is being used as is, and contains pretty much all the playblasting functionality you'd need. Current version - 2.1.0
 
-- [maya-capture-gui]() by Roy Nieterau (Colorbleed)
-    I could have used Big Roy's front-end, but I wanted to at least try to learn something for myself. Used the tokenized string parsing, as this is a very elegant way of performing function based string substitution. 
+- [maya-capture-gui](https://github.com/BigRoy/maya-capture-gui) by Roy Nieterau
+    Used the tokenized string parsing from this repo, as this is a very nice way of performing function based string substitution. 
 
 - [Qt.py](https://github.com/mottosso/Qt.py)
     Minimal Python 2 & 3 shim around all Qt bindings - PySide, PySide2, PyQt4 and PyQt5.
 
-- [Chris-Zurbrig]() 
+- [Chris-Zurbrig](https://zurbrigg.com) 
     Chris's FFMPEG in production course was the starting point for the FFMPEG encoding part of the script. Maya's codec support is woeful and this wouldn't be possible without it. Updated the examples to utilise the new f-string formatting in Python 3
 
-- [Jerome Dresse](www.nodilus.nl) 
-    Jerome's Smear Deformer script has a great UI that I was able to re-task into the job
+- [Jerome Dresse](http://www.nodilus.lu) 
+    Jerome's Smear Deformer script has a great UI that I was able to re-task as the basis of the qt ui. 
 
 So this is more of a Dr.Frankenstein script, made from parts created by people who can actually code. Thanks to everyone listed here for sharing their knowledge.  
 
