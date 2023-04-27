@@ -7,10 +7,19 @@ Playblast Plus can run in two different ways :
 - Completely localised on an artist's workstation.
 - From a network location to allow Pipeline TDs to specify versions and allow for easy updates in a studio setting
 
+
+.. _module_setup:
+
+.. figure:: /images/pbp_structure.png
+  :width: 40em
+  :align: center
+
+  How the module is structured
+
 This is because it only runs the core code from the library and offloads any transcoding to a local install of ffMpeg. 
 
-Setup Module Environment
--------------------------
+Setting up the Module Environment
+-----------------------------------
 
 Playblast Plus requires the directory to be visible on the PYTHONPATH, and this can be set identically for multiple hosts.
 
@@ -23,13 +32,13 @@ Playblast Plus requires the directory to be visible on the PYTHONPATH, and this 
     
     PYTHONPATH = {PLAYBLAST PLUS FOLDER}
 
-Running from a networked drive is the prefered route for a Studio install, as the PYTHONPATH environment varibale can be set via something like Active directory, or within a pipeline loder like OpenPype/Ayon.
+Running from a networked drive is the preferred route for a Studio install, as the PYTHONPATH environment varibale can be set via something like Active directory, or within a pipeline loader like OpenPype/Ayon.
 You could keep the `playblast plus` folder marked with the version release. This way, you would have a flexxible way to update and test new versions, as you can point the python path at the specific version for each DCC version
 
 Launching the UI
 ------------------
 
-This should be an identical call regardless of host. Playblast Plus is executed via a launch.py script, which detects the host executable and imports the relevant DCC-centrict modules.
+This should be an identical call regardless of host. Playblast Plus is executed via a launch.py script, which detects the host executable and imports the relevant DCC-centric modules.
 
 .. code:: python
 
@@ -39,9 +48,9 @@ This should be an identical call regardless of host. Playblast Plus is executed 
 Setting up ffMpeg 
 ---------------------------
 
-Playblast plus uses ffMpeg to transcode the preview image sequences into a H264 encoded MP4. It does this seamlessly after the preiew stage, but you need to have the executable located somewhere on your local system. 
+Playblast plus uses ffMpeg to transcode the preview image sequences into a H264 encoded MP4. It does this seamlessly after the preview stage, but you need to have the executable located somewhere on your local system. 
 
-I don't bundle the executable with the code base for a number of reasons, but the main one is so that the encoding step is offloaded to the local machine, while the main codebase can be run from a network. Whilst Playblast Plus will work fine when installed locally, run from a netwrok means the studio template default is applied across the board, and any changes to this will be adopted studio-wide automatically.
+I don't bundle the executable with the code base for a number of reasons, but the main one is so that the encoding step is offloaded to the local machine, while the main codebase can be run from a network. Whilst Playblast Plus will work fine when installed locally, run from a network means the studio template default is applied across the board, and any changes to this will be adopted studio-wide automatically.
 
 .. _download_picture:
 

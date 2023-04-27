@@ -44,7 +44,7 @@ Settings Explained
     To open this review at any point, choose this menu item. 
     Playblast Plus will open the file in the default software for the extension you are opening.
 
-    Each host stores local settings information (like UI state) in a file called `pbp_settings.json`. It does this per host, so it's only specfic to the artist. 
+    Each host stores local settings information (like UI state) in a file called `pbp_settings.json`. It does this per host, so it's only specific to the artist. 
     It also allows the user to specify a custom executable to open the previews. To do this, locate the settings file in your default Maya/3dsMax user directory and enter the path to the executable.
 
 
@@ -62,7 +62,7 @@ Settings Explained
 
 - **Add Burnin** 
 
-    Adds the scenename and a frame counter to the preview in the bottom right corner.
+    Adds the scene name and a frame counter to the preview in the bottom right corner.
 
 - **Copy To Clipboard** 
 
@@ -79,7 +79,7 @@ Settings Explained
 Template Overrides
 --------------------
 
-Template overrides allow the preview to side-step some settings that may be hardcoded into the preset. If anything more complex needs to be overriden, this would be best handled in a tmeplate override.
+Template overrides allow the preview to side-step some settings that may be hardcoded into the preset. If anything more complex needs to be overridden, this would be best handled in a template override.
 
 .. _template_overrides:
 
@@ -91,7 +91,7 @@ Template overrides allow the preview to side-step some settings that may be hard
 
 - **Show Image Plane** 
 
-    The state of this checkbox decides if the backgorund images/planes are displayed in the preview
+    The state of this checkbox decides if the background images/planes are displayed in the preview
 
 - **Show Wireframe** 
 

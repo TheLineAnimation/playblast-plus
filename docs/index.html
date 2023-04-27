@@ -85,12 +85,12 @@ yet customisable content previews in a variety of DDC Hosts.</p>
 <div class="warning admonition">
 <p class="admonition-title">The Problem</p>
 <p>Both Maya and 3dsMax have pretty awful ways to create quick animation previews.
-They aren’t particulary sharable and animation sequences have very sketchy codec support.</p>
+They aren’t particularly sharable and animation sequences have very sketchy codec support.</p>
 </div>
 <section id="playblast-plus-solves-this-by">
 <h2>Playblast Plus solves this by…<a class="headerlink" href="#playblast-plus-solves-this-by" title="Permalink to this headline"></a></h2>
 <ul class="simple">
-<li><p>Using the host’s native preview functionality to render a frame sequence, pasing it to ffMpeg to render a H264 MP4 file. This allows animators to see their work more often and spend less time rendering viewable previews.</p></li>
+<li><p>Using the host’s native preview functionality to render a frame sequence, parsing it to ffMpeg to render a H264 MP4 file. This allows animators to see their work more often and spend less time rendering viewable previews.</p></li>
 <li><p>Applying a view template to the preview so that you can define a set appearance to previews, making sure different animators create reviews with identical visual settings.</p></li>
 <li><p>Giving flexibility to override some parameters, like image planes (backgrounds), wireframe renders and isolating key components.</p></li>
 <li><p>Providing both animation preview and viewport image capture.</p></li>
@@ -124,7 +124,7 @@ They aren’t particulary sharable and animation sequences have very sketchy cod
 <h1>Credits and Thanks<a class="headerlink" href="#credits-and-thanks" title="Permalink to this headline"></a></h1>
 <p>I used the following resources to build Playblast Plus:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://zurbrigg.com/courses">Chris Zurbrigg</a>’s teaching resources - Chris has an in-depth python series specific to Maya (Plus a great tool with an enhanced featureset - <a class="reference external" href="https://zurbrigg.com/advanced-playblast">Advanced Playblast</a> )</p></li>
+<li><p><a class="reference external" href="https://zurbrigg.com/courses">Chris Zurbrigg</a>’s teaching resources - Chris has an in-depth python series specific to Maya (Plus a great tool with an enhanced feature set - <a class="reference external" href="https://zurbrigg.com/advanced-playblast">Advanced Playblast</a> )</p></li>
 <li><p><a class="reference external" href="https://github.com/abstractfactory/maya-capture">Maya Capture</a> - By - A very capable playblast library that encapsulates the preset functionality</p></li>
 <li><p><a class="reference external" href="https://github.com/BigRoy/maya-capture-gui">Maya Capture GUI</a> - By Roy Nietereau - Was a helpful git repo that had the token system used in the dynamic filename creation</p></li>
 <li><p><a class="reference external" href="https://www.nodilus.lu/">Jerome Dresse</a> - A superstar technical director, and provider of the code I used as a template for the user interface</p></li>
@@ -159,7 +159,7 @@ They aren’t particulary sharable and animation sequences have very sketchy cod
 <p class="admonition-title">Known Issues</p>
 <ul class="simple">
 <li><p>Maya is a bit cranky in returning the camera from the viewport. I need to find a better way to return the active viewport’s camera name from the token system, or provide a fallback</p></li>
-<li><p>Catch if the half res option results in an odd number for the W or H resolution. Otherwise ffMpeg will thow an error.</p></li>
+<li><p>Catch if the half res option results in an odd number for the W or H resolution. Otherwise ffMpeg will throw an error.</p></li>
 </ul>
 </div>
 <div class="hint admonition">
@@ -167,7 +167,7 @@ They aren’t particulary sharable and animation sequences have very sketchy cod
 <ul class="simple">
 <li><p>Given this has capability to deliver a Host-centric solution for previewing - it should have the framework to function in more hosts than Maya and 3dsMax.</p></li>
 <li><p>Nuke would be potentially viable - instead of cameras, it could execute write nodes inside the current nuke script.</p></li>
-<li><p>Blender might be more problematic to run via the same UI, but it could have a custom operator in this specific case and still utilise all the core classes for encoding.</p></li>
+<li><p>Blender might be more problematic to run via the same UI, but it could have a custom operator in this specific case and still utilize all the core classes for encoding.</p></li>
 </ul>
 </div>
 </section>

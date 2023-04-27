@@ -3,8 +3,8 @@
 <img align="right" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
 
 Let's face it, Maya's playblast isn't the best. (And that's saying something as a long-time 3dsmax user)
-This script standardises the playblast output to allow animators an easy way to create a rolling,
-local playblast to review thier work. 
+This script standardizes the playblast output to allow animators an easy way to create a rolling,
+local playblast to review their work. 
 
 <br>
 
@@ -20,7 +20,7 @@ Playblast Plus is in debt to the great coding work from the following sources -
     The core module is being used as is, and contains pretty much all the playblasting functionality you'd need. Current version - 2.1.0
 
 - [maya-capture-gui]() by Roy Nieterau (Colorbleed)
-    I could have used Big Roy's front-end, but I wanted to at least try to learn something for myself. Used the tokenised string parsing, as this is a very elegant way of performing function based string substituation. 
+    I could have used Big Roy's front-end, but I wanted to at least try to learn something for myself. Used the tokenized string parsing, as this is a very elegant way of performing function based string substitution. 
 
 - [Qt.py](https://github.com/mottosso/Qt.py)
     Minimal Python 2 & 3 shim around all Qt bindings - PySide, PySide2, PyQt4 and PyQt5.
@@ -31,7 +31,7 @@ Playblast Plus is in debt to the great coding work from the following sources -
 - [Jerome Dresse](www.nodilus.nl) 
     Jerome's Smear Deformer script has a great UI that I was able to re-task into the job
 
-So this is more of a Dr.Frankenstein script, made from parts created by people who can actually code. It makes a change from a Dr.Franenstein script created by Stack Overflow. Thanks to everyone listed here for sharing their knowledge.  
+So this is more of a Dr.Frankenstein script, made from parts created by people who can actually code. Thanks to everyone listed here for sharing their knowledge.  
 
 <br>
 
@@ -40,6 +40,17 @@ So this is more of a Dr.Frankenstein script, made from parts created by people w
 - Transcodes the Maya playblast into MP4 (Uses [FFMpeg](https://ffmpeg.org/))
 - Template overrides for common requirements, like show wireframe and image planes
 - Tokenized path output to control filenames and paths.
+
+<br>
+
+### How it all works
+
+- Code base runs from a networked location, and offloads the transcoding to the local machine
+- playblasts/previews and captures reside on the artist's machine
+- requires FFMpeg to be installed locally. The location isn't important and can be configured to multiple folders globally to allow different setups. 
+
+
+
 
 <br>
 
@@ -64,4 +75,4 @@ playblast_plus.launch.run()
 
 - Tidy up the project template idea, feels redundant now.
 
-### Known issues
+
