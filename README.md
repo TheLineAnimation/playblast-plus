@@ -1,6 +1,8 @@
-### Playblasting in various 3d DCCs so it doesn't completely suck
+### Playblasting in 3d DCCs so it doesn't completely suck
 
 <img align="right" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
+
+<br>
 
 Let's face it, Maya's playblast isn't the best. (And that's saying something as a long-time 3dsmax user)
 This script standardizes the playblast output to allow animators an easy way to create a rolling,
