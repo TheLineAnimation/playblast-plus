@@ -16,7 +16,7 @@ from playblast_plus.lib import logger
 from playblast_plus.vendor.Qt import QtWidgets, QtGui, QtCore
 
 from playblast_plus.lib import utils as utils, widgets, settings, preset, encode
-from playblast_plus import PLAYBLAST_PLUS_MODULE_ROOT as module_root
+from playblast_plus import PLAYBLAST_PLUS_MODULE_ROOT as module_root, version
 
 # standard lib imports
 from pathlib import Path
@@ -81,6 +81,15 @@ class PlayblastPlusUI(UI_BASECLASS):
         self._CONFIG = settings.get_config()
         PlayBlastPlusLogger.info(f'Configuration settings { self._CONFIG }')
 
+        self._TEMPLATES = preset.load_templates ( [str(module_root / 
+                                        self._CONFIG['studio_templates'] )] )
+
+        # to identify the different presets, they are stored within a 
+        # dictionary, so the first key is the name identifier
+        template_names = [list(k.keys())[0] for k in self._TEMPLATES]
+        # PlayBlastPlusLogger.info(template_names)
+        self.template_list.addItems( template_names )
+
         self._SETTINGS = self._load_host_settings()
         PlayBlastPlusLogger.info(f'{self.host.name} settings {self._SETTINGS}')
 
@@ -88,27 +97,19 @@ class PlayblastPlusUI(UI_BASECLASS):
             self.tokens_field.setText(self._CONFIG['default_output_token'])        
         else:
             self.tokens_field.setText(self._SETTINGS['output_token'])
- 
-
-        self._TEMPLATES = preset.load_templates ( [str(module_root / 
-                                        self._CONFIG['studio_templates'] )] )
 
         PlayBlastPlusLogger.info(
             f'Current Playblast Directory : {self.current_playblast_directory}'
             )
-        
-        # to identify the different presets, they are stored within a 
-        # dictionary, so the first key is the name identifier
-        template_names = [list(k.keys())[0] for k in self._TEMPLATES]
-        # PlayBlastPlusLogger.info(template_names)
-        self.template_list.addItems( template_names)
+ 
         self.toggle_ui_state()
 
         self.host.preview.pre_process(isolate_set_name = self.ISOLATE_SET_NAME)
 
-    def dockCloseEventTriggered (self):
+    def CloseEvent (self,event):
         self._save_host_settings(self.host_settings_directory)
         PlayBlastPlusLogger.info(f'Settings saved to : {self.host_settings_directory}')
+        event.accept()
         
     def _connect_signals(self):
         """ Connects widget signals to functionalities
@@ -119,6 +120,8 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.open_last_playblast.triggered.connect(self.open_last_capture)
         self.purge_playblast_dir.triggered.connect(self.clear_playblast_directory)
         self.template_override_setting.toggled.connect(self.toggle_ui_state) 
+
+        self.closeEvent = self.CloseEvent
 
     def _create_actions(self):
 
@@ -148,6 +151,11 @@ class PlayblastPlusUI(UI_BASECLASS):
         """
         self.menu_bar = QtWidgets.QMenuBar()       
         self.display_menu = self.menu_bar.addMenu("Settings")  
+
+        version_separator = QtWidgets.QLabel(f'<b>{self.host.UITEXT_preview} Plus v{version.version}</b>')
+        version_separator_action = QtWidgets.QWidgetAction(self)
+        version_separator_action.setDefaultWidget(version_separator)
+        self.display_menu.addAction(version_separator_action)
         
         self.open_last_playblast = QtWidgets.QAction("Open Last Capture", self)
         self.open_last_playblast.setIcon(widgets.Icons.get("video"))
@@ -187,8 +195,10 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.display_menu.addAction(self.keep_images_setting)
         self.display_menu.addAction(self.purge_playblast_dir)
 
+
+
         # creates full frame border around the entire UI
-        # self.main_layout is the container for the enitre UI
+        # self.main_layout is the container for the entire UI
         frame = QtWidgets.QFrame()
         frame.setFrameStyle(7)
         frame_layout = QtWidgets.QVBoxLayout(frame)
@@ -337,9 +347,10 @@ class PlayblastPlusUI(UI_BASECLASS):
         ui_dict['set_half'] = self.half_res_box.isChecked()
         ui_dict['output_token'] = self.tokens_field.text()
         ui_dict['last_camera'] = self.camera_list.currentText()
+        ui_dict['last_template'] = self.template_list.currentText()
         ui_dict['use_workspace'] = self.use_workspace_setting.isChecked()
         ui_dict['add_burnin'] = self.add_burnin_setting.isChecked()
-
+ 
         settings.save_host_settings(path, self._SETTINGS)
         
     def _load_host_settings(self):
@@ -362,6 +373,14 @@ class PlayblastPlusUI(UI_BASECLASS):
         index = self.camera_list.findText(settings_dict['last_camera'], QtCore.Qt.MatchFixedString)
         if index >= 0:
             self.camera_list.setCurrentIndex(index)
+
+        if 'last_template' in settings_dict:
+            index = self.template_list.findText(settings_dict['last_template'], QtCore.Qt.MatchFixedString)
+            print (f'template index : {index}')
+            if index >= 0:
+                self.template_list.setCurrentIndex(index)
+        else:
+            PlayBlastPlusLogger.info(f'{self.host.name} The last template setting key wasn\'t found but it will be added.')
 
         return settings_dict 
 

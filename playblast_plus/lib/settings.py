@@ -36,6 +36,7 @@ def create_host_settings(path:Path):
         "add_burnin": False,
         "output_token": "",
         "last_camera": "",
+        "last_template": "",
         "last_playblast": "",
         "custom_viewer": ""
     }
