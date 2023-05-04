@@ -1,14 +1,13 @@
 ### Playblasting in 3d DCCs so it doesn't completely suck
 
-<img align="right" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
+<img align="center" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
 
-<br>
+</br>
+</br>
 
 Let's face it, Maya's playblast isn't the best. (And that's saying something as a long-time 3dsmax user)
 This script standardizes the playblast output to allow animators an easy way to create a rolling,
 local playblast to review their work. 
-
-<br>
 
 ### Why bother? 
 
@@ -35,8 +34,6 @@ Playblast Plus is in debt to the great coding work from the following sources -
 
 So this is more of a Dr.Frankenstein script, made from parts created by people who can actually code. Thanks to everyone listed here for sharing their knowledge.  
 
-<br>
-
 ### Documentation
 
 - [Click here for detailed documentation](https://thelineanimation.github.io/playblast-plus/) about usage, installation and the python class descriptions
@@ -45,15 +42,11 @@ You can also click the header in the UI to launch this help inside your DCC.
 
 <img align="center" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/ui.png?raw=true"/>
 
-<br>
-
 ### Features
 
 - Transcodes the Maya playblast into MP4 (Uses [FFMpeg](https://ffmpeg.org/))
 - Template overrides for common requirements, like show wireframe and image planes
 - Tokenized path output to control filenames and paths.
-
-<br>
 
 ### How it all works
 
@@ -61,15 +54,12 @@ You can also click the header in the UI to launch this help inside your DCC.
 - playblasts/previews and captures reside on the artist's machine
 - requires FFMpeg to be installed locally. The location isn't important and can be configured to multiple folders globally to allow different setups. 
 
-<img align="right" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/pbp_structure.png?raw=true"/>
-
-<br>
+<img align="center" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/pbp_structure.png?raw=true"/>
 
 ### Installation
 
-To install, download this and place the PlayblastPlus folder in a directory on your PYTHONPATH
+To install, download the [latest release](https://github.com/TheLineAnimation/playblast-plus/releases/latest) and place the `playblast_plus` folder in a directory on your `PYTHONPATH`
 
-<br>
 
 ### Usage
 
@@ -79,8 +69,6 @@ To show the interface in any supported host, run:
 import playblast_plus.launch
 playblast_plus.launch.run()
 ```
-
-<br>
 
 ### To-Do
 
