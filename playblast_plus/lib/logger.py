@@ -5,7 +5,10 @@ import os
 class Logger(object):
     """
     A class to handle logging. This class is used to log the training and test accuracies.
-    @param object - the object itself, which is the class itself.
+        
+        Args: (object) - the object itself, which is the class.
+
+    Full credit goes to Chris Zurbrigg for this code.
     """
 
     LOGGER_NAME = "PlayblastPlusModuleLogger"

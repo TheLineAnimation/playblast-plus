@@ -2,12 +2,9 @@
 Playblast Plus Lib Module
 ==========================
 
+
+
 .. contents:: :local:
-
-lib.encode Module
-------------------
-
-.. autoclass:: playblast_plus.lib
 
 lib.encode Module
 ------------------

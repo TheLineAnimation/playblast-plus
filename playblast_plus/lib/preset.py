@@ -3,13 +3,13 @@ from .utils import Parsing
 from typing import List, Dict
 
 def load_templates(template_paths : List[str]) -> List[Dict]:
-    """_summary_
+    """Load the JSON templates and parses them into a python dictionary.
 
     Args:
-        template_paths (List[str]): _description_
+        template_paths (List[str]): A list of locations. Can be added globally now as I've regressed the notion of project templates
 
     Returns:
-        List[Dict]: _description_
+        List[Dict]: A list of folder locations. The files will be searched for on this level.
     """
     json_templates = []
     # print (f'template paths {template_paths}')

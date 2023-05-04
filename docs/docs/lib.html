@@ -43,8 +43,7 @@
               <!-- Local TOC -->
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">Playblast Plus Lib Module</a><ul>
-<li><a class="reference internal" href="#lib-encode-module">lib.encode Module</a></li>
-<li><a class="reference internal" href="#id1">lib.encode Module</a></li>
+<li><a class="reference internal" href="#module-playblast_plus.lib.encode">lib.encode Module</a></li>
 <li><a class="reference internal" href="#module-playblast_plus.lib.dcc">lib.dcc Module</a></li>
 <li><a class="reference internal" href="#module-playblast_plus.lib.logger">lib.logger Module</a></li>
 <li><a class="reference internal" href="#module-playblast_plus.lib.preset">lib.preset Module</a></li>
@@ -86,85 +85,146 @@
 <h1>Playblast Plus Lib Module<a class="headerlink" href="#playblast-plus-lib-module" title="Permalink to this headline"></a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#lib-encode-module" id="id2">lib.encode Module</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id3">lib.encode Module</a></p></li>
-<li><p><a class="reference internal" href="#module-playblast_plus.lib.dcc" id="id4">lib.dcc Module</a></p></li>
-<li><p><a class="reference internal" href="#module-playblast_plus.lib.logger" id="id5">lib.logger Module</a></p></li>
-<li><p><a class="reference internal" href="#module-playblast_plus.lib.preset" id="id6">lib.preset Module</a></p></li>
-<li><p><a class="reference internal" href="#module-playblast_plus.lib.preview" id="id7">lib.preview Module</a></p></li>
-<li><p><a class="reference internal" href="#module-playblast_plus.lib.scene" id="id8">lib.scene Module</a></p></li>
-<li><p><a class="reference internal" href="#lib-settings-module" id="id9">lib.settings Module</a></p></li>
-<li><p><a class="reference internal" href="#module-playblast_plus.lib.tokens" id="id10">lib.tokens Module</a></p></li>
-<li><p><a class="reference internal" href="#module-playblast_plus.lib.utils" id="id11">lib.utils Module</a></p></li>
-<li><p><a class="reference internal" href="#lib-widgets-module" id="id12">lib.widgets Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.encode" id="id1">lib.encode Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.dcc" id="id2">lib.dcc Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.logger" id="id3">lib.logger Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.preset" id="id4">lib.preset Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.preview" id="id5">lib.preview Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.scene" id="id6">lib.scene Module</a></p></li>
+<li><p><a class="reference internal" href="#lib-settings-module" id="id7">lib.settings Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.tokens" id="id8">lib.tokens Module</a></p></li>
+<li><p><a class="reference internal" href="#module-playblast_plus.lib.utils" id="id9">lib.utils Module</a></p></li>
+<li><p><a class="reference internal" href="#lib-widgets-module" id="id10">lib.widgets Module</a></p></li>
 </ul>
 </div>
-<section id="lib-encode-module">
-<h2><a class="toc-backref" href="#id2">lib.encode Module</a><a class="headerlink" href="#lib-encode-module" title="Permalink to this headline"></a></h2>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="playblast_plus.lib">
-<span class="sig-prename descclassname"><span class="pre">playblast_plus.</span></span><span class="sig-name descname"><span class="pre">lib</span></span><a class="headerlink" href="#playblast_plus.lib" title="Permalink to this definition"></a></dt>
-<dd><p>alias of &lt;module ‘playblast_plus.lib’ from ‘C:\Users\pete\OneDrive\Documents\repos\maya-playblast-plus\playblast_plus\lib\__init__.py’&gt;</p>
-</dd></dl>
-
-</section>
-<section id="id1">
-<h2><a class="toc-backref" href="#id3">lib.encode Module</a><a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
-<span class="target" id="module-playblast_plus.lib.encode"></span><dl class="py function">
+<section id="module-playblast_plus.lib.encode">
+<span id="lib-encode-module"></span><h2><a class="toc-backref" href="#id1">lib.encode Module</a><a class="headerlink" href="#module-playblast_plus.lib.encode" title="Permalink to this headline"></a></h2>
+<p>Full credit goes to Chris Zurbrigg for this code, updated to use f-strings
+for FFMPEG process command.</p>
+<p>Ensure -pix_fmt yuv420p is present to create playable media.
+Otherwise there will be issues with black frames</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.encode.extract_middle_image">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.encode.</span></span><span class="sig-name descname"><span class="pre">extract_middle_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.encode.extract_middle_image" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>Takes a sequence and locates the middle image. This is useful for preview
+thumbnails when the start image might not indicate the contents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source_path</strong> (<em>str</em>) – _description_</p></li>
-<li><p><strong>output_path</strong> (<em>str</em>) – _description_</p></li>
+<li><p><strong>source_path</strong> (<em>str</em>) – The path to the sequence</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The output image</p></li>
 </ul>
 </dd>
 </dl>
+<p>Full credit goes to Chris Zurbrigg for this code, updated to use f-strings
+for FFMPEG process command.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.encode.mp4_from_image_sequence">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.encode.</span></span><span class="sig-name descname"><span class="pre">mp4_from_image_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_seq_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_open</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewer_arg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'start'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_burnin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">burnin_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">burnin_font_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.encode.mp4_from_image_sequence" title="Permalink to this definition"></a></dt>
-<dd><p>Create a video from a sequence of images.
-&#64;param image_seq_path - the path to the image sequence folders.
-&#64;param output_path - the path to the output video.
-&#64;param framerate - the framerate of the output video.
-&#64;param start_frame - the first frame to include in the video.
-&#64;param end_frame - the last frame to include in the video.
-&#64;param audio_path - the path to the audio file to include in the video.
-&#64;param post_open - whether to open the video after creation.
-&#64;param viewer_arg - the viewer argument to pass to ffmpeg.
-&#64;param</p>
+<dd><p>Create a video from a sequence of images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_seq_path</strong> (<em>str</em>) – the path to the image sequence folders.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – the path to the output video.</p></li>
+<li><p><strong>framerate</strong> (<em>int</em>) – the framerate of the output video.</p></li>
+<li><p><strong>start_frame</strong> (<em>int</em>) – the first frame to include in the video.</p></li>
+<li><p><strong>end_frame</strong> (<em>int</em>) – the last frame to include in the video.</p></li>
+<li><p><strong>audio_path</strong> (<em>str</em>) – the path to the audio file to include in the video.</p></li>
+<li><p><strong>post_open</strong> (<em>bool</em>) – whether to open the video after creation.</p></li>
+<li><p><strong>viewer_arg</strong> (<em>str</em>) – the viewer argument to pass to ffmpeg.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Full credit goes to Chris Zurbrigg for this code, updated to use f-strings
+for FFMPEG process command, and some additional arguments.</p>
+<p>Enabled log level quiet as a default now it seems to be working nicely, but
+perhaps this could be exposed as a local setting.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="playblast_plus.lib.encode.open_media_file">
+<span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.encode.</span></span><span class="sig-name descname"><span class="pre">open_media_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'start'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.encode.open_media_file" title="Permalink to this definition"></a></dt>
+<dd><p>Opens the supplied mp4 or image file in the OS prefered viewer,
+or a supplied custom viewer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – Path to the media that needs to be viewed</p></li>
+<li><p><strong>viewer</strong> (<em>str</em><em>, </em><em>optional</em>) – A path to a viewer executable. Can be specified</p></li>
+<li><p><strong>'start'.</strong> (<em>per user in the local settings.json _. Defaults to</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
 <section id="module-playblast_plus.lib.dcc">
-<span id="lib-dcc-module"></span><h2><a class="toc-backref" href="#id4">lib.dcc Module</a><a class="headerlink" href="#module-playblast_plus.lib.dcc" title="Permalink to this headline"></a></h2>
+<span id="lib-dcc-module"></span><h2><a class="toc-backref" href="#id2">lib.dcc Module</a><a class="headerlink" href="#module-playblast_plus.lib.dcc" title="Permalink to this headline"></a></h2>
+<p>A class that encapsulates the host environment.
+This binds the specific classes and functions that will be called in the
+specific DCC so the tool can function in multiple environments.</p>
+<p>It detects the executable from sys.executable and uses the name to yield the
+DCC.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="playblast_plus.lib.dcc.Host">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.dcc.</span></span><span class="sig-name descname"><span class="pre">Host</span></span><a class="headerlink" href="#playblast_plus.lib.dcc.Host" title="Permalink to this definition"></a></dt>
+<dd><p>Class to hold the DDC Environment. Each host subclasses the scene,
+tokens and preview classes to provide common methods applicable to
+each host.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="playblast_plus.lib.dcc.HostEnv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.dcc.</span></span><span class="sig-name descname"><span class="pre">HostEnv</span></span><a class="headerlink" href="#playblast_plus.lib.dcc.HostEnv" title="Permalink to this definition"></a></dt>
+<dd><p>HostEnv should perhaps be underscored as we don’t want to call it directly,
+as it’s instantiated by the Host class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="playblast_plus.lib.dcc.HostEnv.get_executable">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_executable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#playblast_plus.lib.dcc.HostEnv.get_executable" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the current running executable
+:returns: The exe file as a pathlib.Path
+:rtype: Path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="playblast_plus.lib.dcc.HostEnv.get_name">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.dcc.HostEnv.get_name" title="Permalink to this definition"></a></dt>
+<dd><p>gets the name of the host
+:returns: the host name, eg. Maya, 3dsmax.
+:rtype: str</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-playblast_plus.lib.logger">
-<span id="lib-logger-module"></span><h2><a class="toc-backref" href="#id5">lib.logger Module</a><a class="headerlink" href="#module-playblast_plus.lib.logger" title="Permalink to this headline"></a></h2>
+<span id="lib-logger-module"></span><h2><a class="toc-backref" href="#id3">lib.logger Module</a><a class="headerlink" href="#module-playblast_plus.lib.logger" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="playblast_plus.lib.logger.Logger">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.logger.</span></span><span class="sig-name descname"><span class="pre">Logger</span></span><a class="headerlink" href="#playblast_plus.lib.logger.Logger" title="Permalink to this definition"></a></dt>
-<dd><p>A class to handle logging. This class is used to log the training and test accuracies.
-&#64;param object - the object itself, which is the class itself.</p>
+<dd><p>A class to handle logging. This class is used to log the training and test accuracies.</p>
+<blockquote>
+<div><p>Args: (object) - the object itself, which is the class.</p>
+</div></blockquote>
+<p>Full credit goes to Chris Zurbrigg for this code.</p>
 </dd></dl>
 
 </section>
 <section id="module-playblast_plus.lib.preset">
-<span id="lib-preset-module"></span><h2><a class="toc-backref" href="#id6">lib.preset Module</a><a class="headerlink" href="#module-playblast_plus.lib.preset" title="Permalink to this headline"></a></h2>
+<span id="lib-preset-module"></span><h2><a class="toc-backref" href="#id4">lib.preset Module</a><a class="headerlink" href="#module-playblast_plus.lib.preset" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.preset.load_templates">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.preset.</span></span><span class="sig-name descname"><span class="pre">load_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#playblast_plus.lib.preset.load_templates" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>Load the JSON templates and parses them into a python dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>template_paths</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – _description_</p>
+<dd class="field-odd"><p><strong>template_paths</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – A list of locations. Can be added globally now as I’ve regressed the notion of project templates</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>_description_</p>
+<dd class="field-even"><p>A list of folder locations. The files will be searched for on this level.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>List[Dict]</p>
@@ -174,11 +234,11 @@
 
 </section>
 <section id="module-playblast_plus.lib.preview">
-<span id="lib-preview-module"></span><h2><a class="toc-backref" href="#id7">lib.preview Module</a><a class="headerlink" href="#module-playblast_plus.lib.preview" title="Permalink to this headline"></a></h2>
+<span id="lib-preview-module"></span><h2><a class="toc-backref" href="#id5">lib.preview Module</a><a class="headerlink" href="#module-playblast_plus.lib.preview" title="Permalink to this headline"></a></h2>
 <p>Base class for the methods applicable to each host</p>
 </section>
 <section id="module-playblast_plus.lib.scene">
-<span id="lib-scene-module"></span><h2><a class="toc-backref" href="#id8">lib.scene Module</a><a class="headerlink" href="#module-playblast_plus.lib.scene" title="Permalink to this headline"></a></h2>
+<span id="lib-scene-module"></span><h2><a class="toc-backref" href="#id6">lib.scene Module</a><a class="headerlink" href="#module-playblast_plus.lib.scene" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="playblast_plus.lib.scene.Scene">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.scene.</span></span><span class="sig-name descname"><span class="pre">Scene</span></span><a class="headerlink" href="#playblast_plus.lib.scene.Scene" title="Permalink to this definition"></a></dt>
@@ -200,7 +260,11 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="playblast_plus.lib.scene.Scene.get_name">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.scene.Scene.get_name" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the scene file name</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(str) The scene file name</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -226,135 +290,276 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="playblast_plus.lib.scene.Scene.get_scene_cameras">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_scene_cameras</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.scene.Scene.get_scene_cameras" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the scene cameras, surprisingly</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(str) Returns the scene cameras, surprisingly</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="playblast_plus.lib.scene.Scene.main_window">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">main_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.scene.Scene.main_window" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves the main_window handle of the DCC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A pointer to the window object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Ptr</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="lib-settings-module">
-<h2><a class="toc-backref" href="#id9">lib.settings Module</a><a class="headerlink" href="#lib-settings-module" title="Permalink to this headline"></a></h2>
-<span class="target" id="module-playblast_plus.lib.settings"></span><dl class="py function">
+<h2><a class="toc-backref" href="#id7">lib.settings Module</a><a class="headerlink" href="#lib-settings-module" title="Permalink to this headline"></a></h2>
+<span class="target" id="module-playblast_plus.lib.settings"></span><p>lib.settings</p>
+<p>Decided to opt for a getter method on this module to avoid restarting
+or reloading any host’s python environment. It might be poor form to load the
+config dict for each setting, but you could simply use the get_config() method
+directly to retrieve the dictionary and grab the keys you want.</p>
+<p># Removed -
+# CONFIG = utils.Parsing.load_json_from_file(PLAYBLAST_PLUS_MODULE_ROOT /
+#                                           ‘settings.json’)</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.create_host_settings">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">create_host_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.settings.create_host_settings" title="Permalink to this definition"></a></dt>
-<dd><p>Create the host settings dictionary. This dictionary will contain the host settings for each camera.
-&#64;param path - the path to the host settings file.
-&#64;returns the host settings dictionary.</p>
+<dd><blockquote>
+<div><p>Create the host settings dictionary.
+This dictionary will contain the host settings for each camera.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Path</em>) – The pathlib Path to the host settings file.</p></li>
+<li><p><strong>templates</strong> (<em>Can be added globally now as I've regressed the notion of project</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The host settings dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.filepath">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.filepath" title="Permalink to this definition"></a></dt>
-<dd><p>Return the filepath for the rotation dictionary.
-&#64;return The filepath for the rotation dictionary.</p>
+<dd><p>Return the filepath for the config dictionary.
+:returns: The dictionary path.
+:rtype: str</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_config">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_config" title="Permalink to this definition"></a></dt>
-<dd><p>Read the config file and return a dictionary of the values.
-&#64;returns the config dictionary</p>
+<dd><p>Read the config file and return a dictionary of the values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The config dictionary.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="playblast_plus.lib.settings.get_doclink">
+<span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_doclink</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_doclink" title="Permalink to this definition"></a></dt>
+<dd><p>Get the github documentation url.
+:returns: the url string.
+:rtype: str</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_ffmpeg_burnin_text">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_ffmpeg_burnin_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_ffmpeg_burnin_text" title="Permalink to this definition"></a></dt>
-<dd><p>Generate the text to be burned into the video. This is a function that returns a string.
-&#64;returns the text to be burned into the video.</p>
+<dd><p>Retrieve the text preset to be added into the video.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the text for the video burnin.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_ffmpeg_download_url">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_ffmpeg_download_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_ffmpeg_download_url" title="Permalink to this definition"></a></dt>
-<dd><p>Get the ffmpeg download url for the current system.
-&#64;returns the ffmpeg download url for the current system.</p>
+<dd><p>Get the ffmpeg download location for the fro FFMpeg.
+:returns: the url string.
+:rtype: str</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_ffmpeg_input_args">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_ffmpeg_input_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_ffmpeg_input_args" title="Permalink to this definition"></a></dt>
-<dd><p>Get the input arguments for ffmpeg. This is used to get the input arguments for the video.
-&#64;returns the input arguments for ffmpeg.</p>
+<dd><p>Get the input arguments for ffmpeg. This is used to get the input arguments for the video.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The input arguments for ffmpeg.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_ffmpeg_output_args">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_ffmpeg_output_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_ffmpeg_output_args" title="Permalink to this definition"></a></dt>
-<dd><p>Get the ffmpeg output arguments for the video writer.
-&#64;returns the ffmpeg output arguments for the video writer.</p>
+<dd><p>Get the ffmpeg output arguments for the video writer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The ffmpeg output arguments for the video writer.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_ffmpeg_path">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_ffmpeg_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_ffmpeg_path" title="Permalink to this definition"></a></dt>
-<dd><p>Get the path to the ffmpeg executable. This is used to convert the video files to images.
-&#64;returns the path to the ffmpeg executable</p>
+<dd><p>Get the path to the ffmpeg executable. This is used to convert the video files to images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the path to the ffmpeg executable</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_ffprobe_path">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_ffprobe_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_ffprobe_path" title="Permalink to this definition"></a></dt>
 <dd><p>Get the path to the ffprobe executable. This is used to get the duration of each video.
-&#64;returns the path to the ffprobe executable</p>
+:returns: the path to the ffprobe executable
+:rtype: str</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_host_settings">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_host_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_host_settings" title="Permalink to this definition"></a></dt>
-<dd><p>Given a path to a file, return the host settings dictionary.
-&#64;param path - the path to the file containing the host settings dictionary.
-&#64;returns the host settings dictionary.</p>
+<dd><blockquote>
+<div><p>Gives a path to a file, return the host settings dictionary.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – The path to the file containing the host settings dictionary.</p></li>
+<li><p><strong>templates</strong> (<em>Can be added globally now as I've regressed the notion of project</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the host settings dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_project_template_subpath">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_project_template_subpath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_project_template_subpath" title="Permalink to this definition"></a></dt>
 <dd><p>Get the project template subpath. This is the subpath of the project template directory.
-&#64;return The subpath of the project template directory.</p>
+Returns</p>
+<blockquote>
+<div><p>str: The subpath of the project template directory.</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.get_resources_directory">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">get_resources_directory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.get_resources_directory" title="Permalink to this definition"></a></dt>
-<dd><p>Get the resources directory for the project. This is used to find the data files.
-&#64;returns the resources directory</p>
+<dd><p>Get the resources directory for the project. This is used to find the data files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The resources directory</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.is_FFMpeg_installed">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">is_FFMpeg_installed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ffmpeg'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.settings.is_FFMpeg_installed" title="Permalink to this definition"></a></dt>
-<dd><p>Check if the FFMPEG is installed on the system.
-&#64;param exe - the name of the executable file.
-&#64;returns True if the executable is found, False otherwise.</p>
+<dd><p>Check if the FFMPEG is installed on the system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>exe</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the executable is found, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.resolve_ffmpeg_paths">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">resolve_ffmpeg_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.resolve_ffmpeg_paths" title="Permalink to this definition"></a></dt>
 <dd><p>Resolve the paths to the ffmpeg executables. This is necessary because the paths are stored as relative paths.
-&#64;returns the list of paths to the ffmpeg executables</p>
+:returns: the list of paths to the ffmpeg executables
+:rtype: list</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.save_config">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">save_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.save_config" title="Permalink to this definition"></a></dt>
-<dd><p>Save the configuration dictionary to a file.
-&#64;param data - the configuration dictionary
-&#64;returns True if the file was saved successfully, False otherwise.</p>
+<dd><p>Save the configuration dictionary to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – the configuration dictionary</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the file was saved successfully, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.settings.save_host_settings">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.settings.</span></span><span class="sig-name descname"><span class="pre">save_host_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#playblast_plus.lib.settings.save_host_settings" title="Permalink to this definition"></a></dt>
-<dd><p>Save the host settings to a file.
-&#64;param path - the path to the file we are saving to.
-&#64;param data - the data we are saving.
-&#64;returns True if the save was successful, False otherwise.</p>
+<dd><p>Save the host settings to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – the path to the file we are saving to.</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – the data we are saving.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the save was successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
 <section id="module-playblast_plus.lib.tokens">
-<span id="lib-tokens-module"></span><h2><a class="toc-backref" href="#id10">lib.tokens Module</a><a class="headerlink" href="#module-playblast_plus.lib.tokens" title="Permalink to this headline"></a></h2>
+<span id="lib-tokens-module"></span><h2><a class="toc-backref" href="#id8">lib.tokens Module</a><a class="headerlink" href="#module-playblast_plus.lib.tokens" title="Permalink to this headline"></a></h2>
 <p>Token system</p>
 <p>The capture gui application will format tokens in the filename.
 The tokens can be registered using <cite>register_token</cite></p>
@@ -380,7 +585,7 @@ The tokens can be registered using <cite>register_token</cite></p>
 
 </section>
 <section id="module-playblast_plus.lib.utils">
-<span id="lib-utils-module"></span><h2><a class="toc-backref" href="#id11">lib.utils Module</a><a class="headerlink" href="#module-playblast_plus.lib.utils" title="Permalink to this headline"></a></h2>
+<span id="lib-utils-module"></span><h2><a class="toc-backref" href="#id9">lib.utils Module</a><a class="headerlink" href="#module-playblast_plus.lib.utils" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="playblast_plus.lib.utils.FolderOps">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.utils.</span></span><span class="sig-name descname"><span class="pre">FolderOps</span></span><a class="headerlink" href="#playblast_plus.lib.utils.FolderOps" title="Permalink to this definition"></a></dt>
@@ -632,7 +837,7 @@ before calling this function.</p>
 
 </section>
 <section id="lib-widgets-module">
-<h2><a class="toc-backref" href="#id12">lib.widgets Module</a><a class="headerlink" href="#lib-widgets-module" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id10">lib.widgets Module</a><a class="headerlink" href="#lib-widgets-module" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

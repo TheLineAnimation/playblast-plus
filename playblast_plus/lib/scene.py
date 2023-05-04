@@ -5,18 +5,26 @@ class Scene():
     """
     @staticmethod
     def main_window():
+        """Retrieves the main_window handle of the DCC.
+
+        Returns:
+            Ptr: A pointer to the window object
+        """
         pass
 
     @staticmethod
     def get_name():
         """
-        Returns the scene file name
+        Returns:
+            (str) The scene file name
         """
         pass
 
     @staticmethod
     def get_scene_cameras():
-        """Returns the scene cameras, surprisingly
+        """
+        Returns:
+            (str) Returns the scene cameras, surprisingly
         """
         pass
     

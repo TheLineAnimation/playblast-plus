@@ -1,10 +1,3 @@
-import subprocess
-
-from . import settings
-from pathlib import Path
-
-from .logger import Logger
-
 """
 Full credit goes to Chris Zurbrigg for this code, updated to use f-strings 
 for FFMPEG process command. 
@@ -13,13 +6,31 @@ Ensure -pix_fmt yuv420p is present to create playable media.
 Otherwise there will be issues with black frames
 """
 
+import subprocess
+
+from . import settings
+from pathlib import Path
+
+from .logger import Logger
+
+
+
 FFMPEG_PATH = settings.get_ffmpeg_path()
 FFPROBE_PATH = settings.get_ffprobe_path()
 
 def open_media_file(filepath:str, viewer:str='start'):
+    """Opens the supplied mp4 or image file in the OS prefered viewer, 
+    or a supplied custom viewer.
+
+    Args:
+        filepath (str): Path to the media that needs to be viewed
+        viewer (str, optional): A path to a viewer executable. Can be specified 
+        per user in the local settings.json _. Defaults to 'start'.
+    """
+
     # open the file (video or jpg)
     # this should open the OS defined executable for the file type
-    # possible feature upgrade - specify a custom viewer in host local settings
+
     check_viewer = Path(viewer)
 
     if viewer != 'start':
@@ -36,11 +47,16 @@ def open_media_file(filepath:str, viewer:str='start'):
         # subprocess.Popen(['start', filepath ],shell=True)
 
 def extract_middle_image(source_path: str, output_path: str):
-    """_summary_
+    """
+    Takes a sequence and locates the middle image. This is useful for preview
+    thumbnails when the start image might not indicate the contents. 
 
     Args:
-        source_path (str): _description_
-        output_path (str): _description_
+        source_path (str): The path to the sequence
+        output_path (str): The output image
+
+    Full credit goes to Chris Zurbrigg for this code, updated to use f-strings 
+    for FFMPEG process command. 
     """
 
     ffprobe_cmd = (
@@ -65,7 +81,6 @@ def extract_middle_image(source_path: str, output_path: str):
     subprocess.call(ffmpeg_cmd)
 
 def mp4_from_image_sequence(image_seq_path: str, 
-
                             output_path: str, 
                             framerate: int = 24,
                             start_frame: int = 0, 
@@ -76,18 +91,26 @@ def mp4_from_image_sequence(image_seq_path: str,
                             add_burnin: bool = False,
                             burnin_text: str = "",
                             burnin_font_size: int = 24
-                        ):
+                            ):
+    
     """
-    Create a video from a sequence of images. 
-    @param image_seq_path - the path to the image sequence folders.
-    @param output_path - the path to the output video.
-    @param framerate - the framerate of the output video.
-    @param start_frame - the first frame to include in the video.
-    @param end_frame - the last frame to include in the video.
-    @param audio_path - the path to the audio file to include in the video.
-    @param post_open - whether to open the video after creation.
-    @param viewer_arg - the viewer argument to pass to ffmpeg.
-    @param
+    Create a video from a sequence of images.  
+
+    Args:
+        image_seq_path (str): the path to the image sequence folders.
+        output_path (str): the path to the output video.
+        framerate (int): the framerate of the output video.
+        start_frame (int): the first frame to include in the video.
+        end_frame (int): the last frame to include in the video.
+        audio_path (str): the path to the audio file to include in the video.
+        post_open (bool): whether to open the video after creation.
+        viewer_arg (str): the viewer argument to pass to ffmpeg.
+
+    Full credit goes to Chris Zurbrigg for this code, updated to use f-strings 
+    for FFMPEG process command, and some additional arguments. 
+
+    Enabled log level quiet as a default now it seems to be working nicely, but 
+    perhaps this could be exposed as a local setting. 
     """
 
     if add_burnin:
@@ -111,12 +134,11 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'-framerate {framerate} '
         f'-y ' # overwrite
         f'-start_number {start_frame} '
-        # f'-loglevel quiet ' 
+        f'-loglevel quiet ' 
         f'-i "{image_seq_path}" '
         f'{burnin} '
         f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
-        # f'-pix_fmt yuv420p '
         f'{audio_params}'
         f'-frames:v {end_frame} '
         f'"{output_path}"'

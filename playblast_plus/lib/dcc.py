@@ -1,7 +1,21 @@
+"""
+    A class that encapsulates the host environment. 
+    This binds the specific classes and functions that will be called in the
+    specific DCC so the tool can function in multiple environments. 
+
+    It detects the executable from sys.executable and uses the name to yield the 
+    DCC.
+
+"""
+
 import sys
 from pathlib import Path
 
 class HostEnv():
+    """
+        HostEnv should perhaps be underscored as we don't want to call it directly,
+        as it's instantiated by the Host class.
+    """
 
     def __init__(self) -> None:
         self.name = self.get_name()
@@ -9,21 +23,26 @@ class HostEnv():
 
     @classmethod
     def get_name(cls) -> str:
-        """_summary_
+        """ gets the name of the host
         Returns:
-            str: _description_
+            str: the host name, eg. Maya, 3dsmax. 
         """
         host_exe = cls.get_executable()
         return ( str( host_exe.stem ).lower())
     @classmethod
     def get_executable(cls) -> Path:
-        """_summary_
+        """Gets the current running executable 
         Returns:
-            Path: _description_
+            Path: The exe file as a pathlib.Path
         """
         return Path(sys.executable)
 
 class Host():
+    """
+        Class to hold the DDC Environment. Each host subclasses the scene, 
+        tokens and preview classes to provide common methods applicable to 
+        each host.
+    """
     def __init__(self) -> None:
         self._HOST_ENV = HostEnv()
 
@@ -37,9 +56,7 @@ class Host():
         self.UITEXT_image_plane = "Image Plane"
         self.UITEXT_preview = "Playblast"
         self.UIBASECLASS = None
-        """
-        should I make setters and getters for this? 
-        """
+
         if self._HOST_ENV:
             if self._HOST_ENV.name == 'maya':
                 from ..hosts.maya import maya_preview
