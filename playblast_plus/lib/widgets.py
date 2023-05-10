@@ -17,6 +17,8 @@ class Icons():
         method to get svg icon from the resources folder as a pixel map.
 
         For Maya - run this code to see internal icons
+
+        .. code-block:: python
         
         import maya.app.general.resourceBrowser as resourceBrowser
         resBrowser = resourceBrowser.resourceBrowser()
@@ -118,7 +120,7 @@ class ToolHeader(QtWidgets.QWidget):
         text (str): The title text to be shown on the header 
     
     Returns:
-        A QWdidget control item.
+        A QWidget control item.
     
     **Useful code:**
     
@@ -225,7 +227,6 @@ class ClickableLabel(QtWidgets.QLabel):
 class Downloader(QtCore.QThread):
     """
     A thread that downloads the data from the server. This is done in a separate thread so that the GUI can remain responsive.
-    @param parent - the parent object, which is the GUI itself.
     """
 
     # Signal for the window to establish the maximum value
@@ -274,7 +275,7 @@ class Downloader(QtCore.QThread):
 
 class DownloadWindow(QtWidgets.QDialog):
     """
-    The window that allows the user to download ffmpeg executable specfied 
+    The window that allows the user to download ffmpeg executable specified 
     in the config file.
     """
 

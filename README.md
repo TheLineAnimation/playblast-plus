@@ -32,6 +32,9 @@ Playblast Plus is in debt to the great coding work from the following sources -
 - [Jerome Dresse](http://www.nodilus.lu) 
     Jerome's Smear Deformer script has a great UI that I was able to re-task as the basis of the qt ui. 
 
+- [mGear](https://www.mgear-framework.com/) 
+    Used some resource icons from mGear as they have some nice menu layouts, and learnt much from the codebase. Thanks Miguel. 
+
 So this is more of a Dr.Frankenstein script, made from parts created by people who can actually code. Thanks to everyone listed here for sharing their knowledge.  
 
 ### Documentation

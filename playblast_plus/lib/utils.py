@@ -48,7 +48,7 @@ class Parsing:
 
     @staticmethod
     def get_templates(dir: str) -> list:
-        """Scans a driectory for JSON files
+        """Scans a directory for JSON files
 
         Args:
             dir (str): Root folder location to search for files. Not recursive.
@@ -66,7 +66,11 @@ class Parsing:
 
     @staticmethod
     def create_ffmpeg_input(img_start: str) -> str:
-        """_summary_
+        """
+            Takes an image input path, and calculates the padding via regex. 
+            Then replaces this file numbering with an ffmpeg compliant string
+
+            e.g. - preview_0001.png will become preview_%4d.png
 
         Args:
             img_start (Path): Path object to the first image sequence
@@ -74,7 +78,7 @@ class Parsing:
             of a sequence)
 
         Returns:
-            str: A new, formated path string containing the 
+            str: A new, formatted path string containing the 
                 ffmpeg padding characters.
         """
         if img_start:
@@ -91,7 +95,12 @@ class Parsing:
 
     @staticmethod
     def playblast_output_to_ffmpeg_input(img: str) -> str:
-        """_summary_
+        """
+            Takes an image input path, and calculates the padding via regex. 
+            Then replaces this file numbering with an ffmpeg compliant string. 
+
+            Similar to above, I wanted a method that handled maya playblasts 
+            specifically.
 
         Args:
             img (str): Str object of a hashed file sequence
@@ -120,11 +129,15 @@ class Parsing:
                                    ) -> str:
         """
         Create a filename for ffmpeg still frame output.
-        @param input_file - the input file to create the filename for.
-        @param filename - the filename to use.
-        @param padding - the padding to use.
-        @param ext - the extension to use.
-        @return the filename for ffmpeg still frame output.
+
+        Args: 
+            input_file (str): the input file to create the filename for.
+            filename (str): the filename to use.
+            padding (int):the padding to use.
+            ext (str): the extension to use. Defaults to ".png"
+        
+        returns:
+            str: the filename for ffmpeg still frame output.
         """
         image_root = Path(input_file)
 
@@ -149,8 +162,11 @@ class FolderOps:
         """
         `explore` takes a directory name as a string and returns a boolean
         
-        :param dir: The directory to explore
-        :type dir: str
+        Args:
+          dir (str): The directory to explore
+
+        Returns:
+            bool: if successful
         """
         
         subprocess.Popen(f'explorer  "{dir}"')
@@ -182,7 +198,8 @@ class FolderOps:
     def get_version_folders(cls, rootDir: str, 
                             latest: bool = True
                             ) -> Union[str,None]:
-        """_summary_
+        """Gets the last version folder in a directory, or a list of versions if 
+        latest is set to false.
 
         Args:
             rootDir (str): The root directory as a string
@@ -223,7 +240,7 @@ class FolderOps:
             vStr (str): The version number (from a folder name)
 
         Returns:
-            str: _description_
+            str: the next incremental version string
         """
         if vStr!= None:
             vNumber =  vStr.lstrip('v')
@@ -239,7 +256,7 @@ class FolderOps:
         """
         Looked into being able to glob multiple filetpyes, then decided after 
         the code looked confusing as you'll always set the format in the Maya 
-        playblast. This is a simple globcall via Pathlib. 
+        playblast. This is a simple glob call via Pathlib. 
 
         Args:
             dir (str): Root directory of the file sequence 
@@ -247,6 +264,8 @@ class FolderOps:
 
         Returns:
             Path: The first image in the found sequence
+
+        This function is depreciated and will be removed
         """
         if not ext:
             ext = cls.EXTENSION_DEFAULT
@@ -262,7 +281,7 @@ class FolderOps:
         """
         Looked into being able to glob multiple filetpyes, then decided after 
         the code looked confusing as you'll always set the format in the Maya 
-        playblast. This is a simple globcall via Pathlib. 
+        playblast. This is a simple glob call via Pathlib. 
 
         Args:
             dir (str): Root directory of the file sequence 
@@ -270,6 +289,8 @@ class FolderOps:
 
         Returns:
             Path: The first image in the found sequence
+
+        This function is depreciated and will be removed
         """
         if not ext:
             ext = cls.EXTENSION_DEFAULT

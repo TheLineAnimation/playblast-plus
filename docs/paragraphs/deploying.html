@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deploying Playblast Plus &mdash; Playblast Plus 1.4 documentation</title>
+  <title>Deploying Playblast Plus &mdash; Playblast Plus 1.4:1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
@@ -30,7 +30,7 @@
             <img src="../_static/thelinelogo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                v1.4
+                v1.4.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +49,10 @@
 <li><a class="reference internal" href="#understanding-the-config-json">Understanding the config.json</a></li>
 <li><a class="reference internal" href="#adding-this-to-a-shelf-in-maya">Adding this to a shelf in Maya</a></li>
 <li><a class="reference internal" href="#adding-this-to-a-menu-quad-in-3dsmax">Adding this to a menu/quad in 3dsMax</a></li>
+<li><a class="reference internal" href="#running-playblast-plus-inside-different-hosts">Running Playblast Plus Inside Different Hosts</a><ul>
+<li><a class="reference internal" href="#how-does-this-work">How does this work?</a></li>
+</ul>
+</li>
 </ul>
 </div>
         </div>
@@ -139,6 +143,19 @@ You could keep the <cite>playblast plus</cite> folder marked with the version re
 </section>
 <section id="adding-this-to-a-menu-quad-in-3dsmax">
 <h1>Adding this to a menu/quad in 3dsMax<a class="headerlink" href="#adding-this-to-a-menu-quad-in-3dsmax" title="Permalink to this headline"></a></h1>
+</section>
+<section id="running-playblast-plus-inside-different-hosts">
+<h1>Running Playblast Plus Inside Different Hosts<a class="headerlink" href="#running-playblast-plus-inside-different-hosts" title="Permalink to this headline"></a></h1>
+<p>The codebase of Playblast plus has been engineered to be as flexible as possible across different packages.</p>
+<section id="how-does-this-work">
+<h2>How does this work?<a class="headerlink" href="#how-does-this-work" title="Permalink to this headline"></a></h2>
+<p>If you have coded in a DCC before, the way python is implemented is different for each. Standard python library operations all function the same, like folder operations. but when it comes to calling specific functions like create preview in 3ds max and Playblast in Maya, the imports and methods are completely different.</p>
+<p>Plastblast Plus does this as we can assign functions and classes to other variables. The glue for all this is the DCC module. This module contains the HOST class that is called when the script is run.</p>
+<p>There are two other classes that contain a set of common methods that HOST can call. These are <cite>SCENE</cite> and <cite>PREVIEW</cite>. Each host subclasses these and overrides the methods contained, so whilst the imports are specific to the host, there is a common interface between them.</p>
+<p>So the Maya host will subclass SCENE as MAYA_SCENE, and 3dsMax will also subclass SCENE as MAX_SCENE.</p>
+<p>The HOST class determines what DCC has called it and assigns the correct subclass to the methods called by the user interface.</p>
+<p>So in 3dsmax, <cite>Host.scene.getCamera()</cite> will be calling <cite>Max_scene.getCameras()</cite>, and in Maya the same call will result in <cite>maya_scene.getCameras()</cite></p>
+</section>
 </section>
 
 

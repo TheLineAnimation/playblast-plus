@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Playblast Plus Lib Module &mdash; Playblast Plus 1.4 documentation</title>
+  <title>Playblast Plus Lib Module &mdash; Playblast Plus 1.4:1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
@@ -30,7 +30,7 @@
             <img src="../_static/thelinelogo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                v1.4
+                v1.4.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -147,7 +147,7 @@ perhaps this could be exposed as a local setting.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="playblast_plus.lib.encode.open_media_file">
 <span class="sig-prename descclassname"><span class="pre">playblast_plus.lib.encode.</span></span><span class="sig-name descname"><span class="pre">open_media_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'start'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.encode.open_media_file" title="Permalink to this definition"></a></dt>
-<dd><p>Opens the supplied mp4 or image file in the OS prefered viewer,
+<dd><p>Opens the supplied mp4 or image file in the OS preferred viewer,
 or a supplied custom viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -262,7 +262,10 @@ as it’s instantiated by the Host class.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.scene.Scene.get_name" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(str) The scene file name</p>
+<dd class="field-odd"><p>The scene file name</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -282,7 +285,7 @@ as it’s instantiated by the Host class.</p>
 <dd class="field-even"><p>A folder location string</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>string</p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -292,7 +295,10 @@ as it’s instantiated by the Host class.</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_scene_cameras</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#playblast_plus.lib.scene.Scene.get_scene_cameras" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(str) Returns the scene cameras, surprisingly</p>
+<dd class="field-odd"><p>Returns the scene cameras, surprisingly</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -306,7 +312,7 @@ as it’s instantiated by the Host class.</p>
 <dd class="field-odd"><p>A pointer to the window object</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Ptr</p>
+<dd class="field-even"><p>ptr</p>
 </dd>
 </dl>
 </dd></dl>
@@ -598,6 +604,12 @@ The tokens can be registered using <cite>register_token</cite></p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dir</strong> (<em>str</em>) – The directory to explore</p>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if successful</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -606,7 +618,7 @@ The tokens can be registered using <cite>register_token</cite></p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getImageSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#playblast_plus.lib.utils.FolderOps.getImageSequence" title="Permalink to this definition"></a></dt>
 <dd><p>Looked into being able to glob multiple filetpyes, then decided after
 the code looked confusing as you’ll always set the format in the Maya
-playblast. This is a simple globcall via Pathlib.</p>
+playblast. This is a simple glob call via Pathlib.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -621,6 +633,7 @@ playblast. This is a simple globcall via Pathlib.</p>
 <dd class="field-odd"><p>Path</p>
 </dd>
 </dl>
+<p>This function is depreciated and will be removed</p>
 </dd></dl>
 
 <dl class="py method">
@@ -628,7 +641,7 @@ playblast. This is a simple globcall via Pathlib.</p>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_first_frame_from_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#playblast_plus.lib.utils.FolderOps.get_first_frame_from_filename" title="Permalink to this definition"></a></dt>
 <dd><p>Looked into being able to glob multiple filetpyes, then decided after
 the code looked confusing as you’ll always set the format in the Maya
-playblast. This is a simple globcall via Pathlib.</p>
+playblast. This is a simple glob call via Pathlib.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -643,12 +656,14 @@ playblast. This is a simple globcall via Pathlib.</p>
 <dd class="field-odd"><p>Path</p>
 </dd>
 </dl>
+<p>This function is depreciated and will be removed</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="playblast_plus.lib.utils.FolderOps.get_version_folders">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_version_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rootDir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#playblast_plus.lib.utils.FolderOps.get_version_folders" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><p>Gets the last version folder in a directory, or a list of versions if
+latest is set to false.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -683,7 +698,7 @@ be used with FolderUtils.nextVersion()</p>
 <dd class="field-odd"><p><strong>vStr</strong> (<em>str</em>) – The version number (from a folder name)</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>_description_</p>
+<dd class="field-even"><p>the next incremental version string</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -721,7 +736,11 @@ be used with FolderUtils.nextVersion()</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="playblast_plus.lib.utils.Parsing.create_ffmpeg_input">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_ffmpeg_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.utils.Parsing.create_ffmpeg_input" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><blockquote>
+<div><p>Takes an image input path, and calculates the padding via regex.
+Then replaces this file numbering with an ffmpeg compliant string</p>
+<p>e.g. - preview_0001.png will become preview_%4d.png</p>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -732,7 +751,7 @@ be used with FolderUtils.nextVersion()</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>A new, formated path string containing the</dt><dd><p>ffmpeg padding characters.</p>
+<dt>A new, formatted path string containing the</dt><dd><p>ffmpeg padding characters.</p>
 </dd>
 </dl>
 </p>
@@ -746,18 +765,29 @@ be used with FolderUtils.nextVersion()</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="playblast_plus.lib.utils.Parsing.create_ffmpeg_still_frame_output">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_ffmpeg_still_frame_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.png'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.utils.Parsing.create_ffmpeg_still_frame_output" title="Permalink to this definition"></a></dt>
-<dd><p>Create a filename for ffmpeg still frame output.
-&#64;param input_file - the input file to create the filename for.
-&#64;param filename - the filename to use.
-&#64;param padding - the padding to use.
-&#64;param ext - the extension to use.
-&#64;return the filename for ffmpeg still frame output.</p>
+<dd><p>Create a filename for ffmpeg still frame output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_file</strong> (<em>str</em>) – the input file to create the filename for.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – the filename to use.</p></li>
+<li><p><strong>padding</strong> (<em>int</em>) – the padding to use.</p></li>
+<li><p><strong>ext</strong> (<em>str</em>) – the extension to use. Defaults to “.png”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the filename for ffmpeg still frame output.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="playblast_plus.lib.utils.Parsing.get_templates">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#playblast_plus.lib.utils.Parsing.get_templates" title="Permalink to this definition"></a></dt>
-<dd><p>Scans a driectory for JSON files</p>
+<dd><p>Scans a directory for JSON files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dir</strong> (<em>str</em>) – Root folder location to search for files. Not recursive.</p>
@@ -792,7 +822,12 @@ before calling this function.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="playblast_plus.lib.utils.Parsing.playblast_output_to_ffmpeg_input">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">playblast_output_to_ffmpeg_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#playblast_plus.lib.utils.Parsing.playblast_output_to_ffmpeg_input" title="Permalink to this definition"></a></dt>
-<dd><p>_summary_</p>
+<dd><blockquote>
+<div><p>Takes an image input path, and calculates the padding via regex.
+Then replaces this file numbering with an ffmpeg compliant string.</p>
+<p>Similar to above, I wanted a method that handled maya playblasts
+specifically.</p>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

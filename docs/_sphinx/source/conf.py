@@ -37,8 +37,8 @@ copyright = '2023, Pete Addington'
 author = 'Pete Addington'
 
 # The full version, including alpha/beta/rc tags
-version = 'v1.4'
-release = '1.4'
+version = 'v1.4.1'
+release = '1.4:1'
 
 # -- General configuration ---------------------------------------------------
 

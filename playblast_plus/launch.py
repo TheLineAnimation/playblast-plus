@@ -1,7 +1,4 @@
-
-
 from .lib.dcc import Host
-
 from .lib import settings
 from pathlib import Path
 
@@ -12,7 +9,7 @@ def download_window(url, locations, main_window):
 
 def run():
     """
-    settings.get_ffmpeg_path checks the list of executables in the config.json
+    settings.get_ffmpeg_path() checks the list of executables in the config.json
     """
     ffmpeg_path = settings.get_ffmpeg_path()
     if ffmpeg_path and Path(ffmpeg_path).exists():

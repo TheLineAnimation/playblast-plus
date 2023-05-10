@@ -8,7 +8,7 @@ class Scene():
         """Retrieves the main_window handle of the DCC.
 
         Returns:
-            Ptr: A pointer to the window object
+            ptr: A pointer to the window object
         """
         pass
 
@@ -16,7 +16,7 @@ class Scene():
     def get_name():
         """
         Returns:
-            (str) The scene file name
+            str: The scene file name
         """
         pass
 
@@ -24,7 +24,7 @@ class Scene():
     def get_scene_cameras():
         """
         Returns:
-            (str) Returns the scene cameras, surprisingly
+            str: Returns the scene cameras, surprisingly
         """
         pass
     
@@ -48,7 +48,7 @@ class Scene():
             Host install or the workspace location. Defaults to False.
 
         Returns:
-            string: A folder location string
+            str: A folder location string
         """
 
         pass

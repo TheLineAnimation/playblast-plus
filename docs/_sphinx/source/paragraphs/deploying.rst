@@ -103,3 +103,23 @@ Adding this to a shelf in Maya
 
 Adding this to a menu/quad in 3dsMax
 --------------------------------------
+
+Running Playblast Plus Inside Different Hosts
+--------------------------------------------------
+
+The codebase of Playblast plus has been engineered to be as flexible as possible across different packages. 
+
+How does this work? 
+======================
+
+If you have coded in a DCC before, the way python is implemented is different for each. Standard python library operations all function the same, like folder operations. but when it comes to calling specific functions like create preview in 3ds max and Playblast in Maya, the imports and methods are completely different. 
+
+Plastblast Plus does this as we can assign functions and classes to other variables. The glue for all this is the DCC module. This module contains the HOST class that is called when the script is run. 
+
+There are two other classes that contain a set of common methods that HOST can call. These are `SCENE` and `PREVIEW`. Each host subclasses these and overrides the methods contained, so whilst the imports are specific to the host, there is a common interface between them. 
+
+So the Maya host will subclass SCENE as MAYA_SCENE, and 3dsMax will also subclass SCENE as MAX_SCENE. 
+
+The HOST class determines what DCC has called it and assigns the correct subclass to the methods called by the user interface. 
+
+So in 3dsmax, `Host.scene.getCamera()` will be calling `Max_scene.getCameras()`, and in Maya the same call will result in `maya_scene.getCameras()`

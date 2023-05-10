@@ -2,8 +2,6 @@
 Playblast Plus Lib Module
 ==========================
 
-
-
 .. contents:: :local:
 
 lib.encode Module

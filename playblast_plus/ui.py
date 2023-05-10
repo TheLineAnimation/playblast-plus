@@ -1,8 +1,9 @@
-"""Playblast Plus
+"""
+Playblast Plus
 
 A huge thanks to Jerome Dresse for his UI code from SmearDeform.
 I used this (and some other snippets from mGear) to help speed up development
-www.nodilus.com
+www.nodilus.lu
 
 """
 
@@ -13,10 +14,23 @@ from playblast_plus.lib.dcc import Host
 from playblast_plus.lib import logger
 
 # custom imports
-from playblast_plus.vendor.Qt import QtWidgets, QtGui, QtCore
+from playblast_plus.vendor.Qt import (
+    QtWidgets, 
+    QtGui, 
+    QtCore
+    )
 
-from playblast_plus.lib import utils as utils, widgets, settings, preset, encode
-from playblast_plus import PLAYBLAST_PLUS_MODULE_ROOT as module_root, version
+from playblast_plus.lib import (
+    utils as utils, 
+    widgets, 
+    settings, 
+    preset, 
+    encode
+    )
+from playblast_plus import (
+    PLAYBLAST_PLUS_MODULE_ROOT as module_root, 
+    version
+    )
 
 # standard lib imports
 from pathlib import Path
@@ -112,7 +126,8 @@ class PlayblastPlusUI(UI_BASECLASS):
         event.accept()
         
     def _connect_signals(self):
-        """ Connects widget signals to functionalities
+        """
+        Connects widget signals to functionalities
         """
         self.playblast_button.clicked.connect(self.create_playblast)
         self.capture_button.clicked.connect(self.capture_viewport)
@@ -489,7 +504,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         """
         We want to clone the template as we might want to override the keys 
         each time we make playblast. This means the defaults are not modified 
-        direectly and are collected only when init is called
+        directly and are collected only when init is called
         """
         selected_template = self._TEMPLATES[self.template_list.currentIndex()]
         capture_template = selected_template[self.template_list.currentText()]

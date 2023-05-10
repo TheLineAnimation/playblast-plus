@@ -19,7 +19,7 @@ FFMPEG_PATH = settings.get_ffmpeg_path()
 FFPROBE_PATH = settings.get_ffprobe_path()
 
 def open_media_file(filepath:str, viewer:str='start'):
-    """Opens the supplied mp4 or image file in the OS prefered viewer, 
+    """Opens the supplied mp4 or image file in the OS preferred viewer, 
     or a supplied custom viewer.
 
     Args:
