@@ -7,7 +7,7 @@
 * Point the `PYTHONPATH` to this new version folder
 
 ### Bug Fixes
-* Noticed an issue with a new maya install if the `gpuCache` plugin wasn't enabled. Seems reasonable to ask to switch it on and then do this so it an work correctly. The issue was that `capture.py` wouldn't filter the `gpucachedisplayfilter` from the template if the plugin wasn't loaded. 
+* Noticed an issue with a new maya install if the `gpuCache` plugin wasn't enabled. Seems reasonable to ask to switch it on and then do this so it can work correctly. The issue was that `capture.py` wouldn't filter the `gpucachedisplayfilter` from the template if the plugin wasn't loaded. 
 
 ```python
 # capture.py line 715 
