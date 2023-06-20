@@ -104,6 +104,19 @@ Adding this to a shelf in Maya
 Adding this to a menu/quad in 3dsMax
 --------------------------------------
 
+Add the following code as a Macroscript. 
+
+.. code-block:: 
+    macroScript PreviewPlus
+    category:"PreviewPlus"
+    toolTip:"Launch the Preview Plus Interface"
+    (
+        python.Execute "import playblast_plus.launch"
+        python.Execute "playblast_plus.launch.run()"
+    )
+
+If you don't know how to do this in 3dsMax, see `here <https://www.youtube.com/watch?v=kvaAY8TCRdo>`_ 
+
 Running Playblast Plus Inside Different Hosts
 --------------------------------------------------
 
