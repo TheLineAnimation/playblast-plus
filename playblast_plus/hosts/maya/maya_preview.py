@@ -35,6 +35,24 @@ class Playblast(preview.PreviewRender):
         if not cmds.ls(isolate_set_name, sets=True):
             cmds.sets(name=isolate_set_name, empty=True)
 
+        # add a check for the gpucache plugin, as this can create an 
+        # issue with the plugin filter not being detected and the tempate 
+        # throwing an error
+        if not cmds.pluginInfo('gpuCache',q=True,l=True):    
+            result = cmds.confirmDialog( title='Playblast Plus',
+                                message='Playblast Plus has detected that the GPUCache is disabled. Click Ok to enable it and use without issues.', 
+                                button=['Ok','Nope'], 
+                                defaultButton='Yes', 
+                                cancelButton='Nope', 
+                                dismissString='Nope' )
+            if result == 'Ok':                    
+                try: 
+                    cmds.loadPlugin('gpuCache')
+                except: 
+                    raise Exception('Unable to load gpuCache plugin!')
+            elif result == 'Nope':
+                self.notify_user("You need to enable the GPU Cache for this script to work correctly.")
+ 
     def post_process(self,**kwargs):
         wireframe_option = kwargs['wireframe_option'] 
         override_layer_name = kwargs['override_layer_name'] 
