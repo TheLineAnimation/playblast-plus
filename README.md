@@ -1,6 +1,10 @@
+<img width=260 src=https://raw.githubusercontent.com/mottosso/Qt.py/master/logo.svg>
+
 ### Playblasting in 3d DCCs so it doesn't completely suck
 
-<img align="center" src="https://theline.imgix.net/Toban_still_16-9_000010.png"/>
+
+
+<img align="center" src="https://www.datocms-assets.com/136821/1724333166-stillframe_thelineanimation_overwatch-2_transformers_16.jpg?dpr=0.75&fit=crop&fm=webp&w=3424"/>
 
 </br>
 </br>
@@ -18,13 +22,13 @@ ready to let those keyframes fly, like little tweened starlings flocking in an a
 Playblast Plus is in debt to the great coding work from the following sources - 
 
 - [maya-capture](https://github.com/abstractfactory/maya-capture). 
-    The core module is being used as is, and contains pretty much all the playblasting functionality you'd need. Current version - 2.1.0
+    The core module is being used as is, and contains pretty much all the playblasting functionality you'd need. Current version - 2.6.1
 
 - [maya-capture-gui](https://github.com/BigRoy/maya-capture-gui) by Roy Nieterau
     Used the tokenized string parsing from this repo, as this is a very nice way of performing function based string substitution. 
 
 - [Qt.py](https://github.com/mottosso/Qt.py)
-    Minimal Python 2 & 3 shim around all Qt bindings - PySide, PySide2, PyQt4 and PyQt5.
+    Minimal Python 2 & 3 shim around all Qt bindings - updated to PySide6.
 
 - [Chris-Zurbrig](https://zurbrigg.com) 
     Chris's FFMPEG in production course was the starting point for the FFMPEG encoding part of the script. Maya's codec support is woeful and this wouldn't be possible without it. Updated the examples to utilise the new f-string formatting in Python 3

@@ -1,41 +1,27 @@
+"""Maya Capture
 
-"""
-    Maya Capture
+Playblasting with independent viewport, camera and display options
 
-    Playblasting with independent viewport, camera and display options
-
-
-    Raises:
-        RuntimeError: _description_
-        RuntimeError: _description_
-        TypeError: _description_
-        RuntimeError: _description_
-        Exception: _description_
-
-    Returns:
-        _type_: _description_
-
-    Yields:
-        _type_: _description_
 """
 
 import re
 import sys
 import contextlib
+from collections import defaultdict
 
 from maya import cmds
 from maya import mel
 
-# TO=DO adjust for vendor qy.py instead
 try:
-    # from PySide2 import QtGui, QtWidgets
-    from ...vendor.Qt import QtGui, QtWidgets
-
+    from PySide6 import QtGui, QtWidgets
 except ImportError:
-    from PySide import QtGui
-    QtWidgets = QtGui
+    try:
+        from PySide2 import QtGui, QtWidgets
+    except ImportError:
+        from PySide import QtGui
+        QtWidgets = QtGui
 
-version_info = (2, 4, 0)
+version_info = (2, 6, 1)
 
 __version__ = "%s.%s.%s" % version_info
 __license__ = "MIT"
@@ -60,6 +46,7 @@ def capture(camera=None,
             overwrite=False,
             frame_padding=4,
             raw_frame_numbers=False,
+            use_camera_sequencer=False,
             camera_options=None,
             display_options=None,
             viewport_options=None,
@@ -99,6 +86,12 @@ def capture(camera=None,
             frame numbers from the scene or capture to a sequence starting at
             zero. Defaults to False. When set to True `viewer` can't be used
             and will be forced to False.
+        use_camera_sequencer (bool, optional): Whether or not to playblast
+            using the camera sequencer. Defaults to False. When set to True the
+            value of `camera` will be ignored and the cameras from the
+            sequencer will be used instead. Additionally, the `start_frame` and
+            `end_frame` values will be in sequence time instead of scene frame
+            numbers.
         camera_options (dict, optional): Supplied camera options,
             using `CameraOptions`
         display_options (dict, optional): Supplied display
@@ -140,10 +133,21 @@ def capture(camera=None,
         ratio = cmds.getAttr("defaultResolution.deviceAspectRatio")
         height = round(width / ratio)
 
-    if start_frame is None:
-        start_frame = cmds.playbackOptions(minTime=True, query=True)
-    if end_frame is None:
-        end_frame = cmds.playbackOptions(maxTime=True, query=True)
+    # Set frame range if no custom frame range specified
+    if use_camera_sequencer:
+        # Get frames from the Camera Sequencer
+        sequencer = cmds.sequenceManager(query=True, writableSequencer=True)
+
+        if start_frame is None:
+            start_frame = cmds.getAttr(sequencer + ".minFrame")
+        if end_frame is None:
+            end_frame = cmds.getAttr(sequencer + ".maxFrame")
+    else:
+        # Get frames from the timeline
+        if start_frame is None:
+            start_frame = cmds.playbackOptions(minTime=True, query=True)
+        if end_frame is None:
+            end_frame = cmds.playbackOptions(maxTime=True, query=True)
 
     # (#74) Bugfix: `maya.cmds.playblast` will raise an error when playblasting
     # with `rawFrameNumbers` set to True but no explicit `frames` provided.
@@ -168,7 +172,7 @@ def capture(camera=None,
     # in a minimal integer frame number : filename.-2147483648.png for any
     # negative rendered frame
     if frame and raw_frame_numbers:
-        check = frame if isinstance(frame, (list, tuple)) else [frame]
+        check = frame if isinstance(frame, (list, tuple, range)) else [frame]
         if any(f < 0 for f in check):
             raise RuntimeError("Negative frames are not supported with "
                                "raw frame numbers and explicit frame numbers")
@@ -186,8 +190,10 @@ def capture(camera=None,
 
         with _disabled_inview_messages(),\
              _maintain_camera(panel, camera),\
+             _maintain_pan_zoom(camera),\
+             _maintain_sequence_time_panel(),\
              _applied_viewport_options(viewport_options, panel),\
-             _applied_camera_options(camera_options, panel),\
+             _applied_camera_options(camera_options, panel, use_camera_sequencer),\
              _applied_display_options(display_options),\
              _applied_viewport2_options(viewport2_options),\
              _isolated_nodes(isolate, panel),\
@@ -208,9 +214,8 @@ def capture(camera=None,
                     widthHeight=[width, height],
                     rawFrameNumbers=raw_frame_numbers,
                     framePadding=frame_padding,
+                    sequenceTime=use_camera_sequencer,
                     **playblast_kwargs)
-
-                print (f'output fp - {frame_padding}')
 
         return output
 
@@ -312,6 +317,11 @@ ViewportOptions = {
     "displayAppearance": 'smoothShaded',
     "selectionHiliteDisplay": False,
     "headsUpDisplay": True,
+
+    # Since Maya 2024, this setting applies to Viewport 2.0
+    # in place of `singleSidedLighting` below.
+    "twoSidedLighting": False,
+
     # object display
     "imagePlane": True,
     "nurbsCurves": False,
@@ -361,7 +371,10 @@ Viewport2Options = {
     "motionBlurType": 0,
     "multiSampleCount": 8,
     "multiSampleEnable": False,
+
+    # Since Maya 2024, this setting only applies to the Maya Hardware renderer
     "singleSidedLighting": False,
+
     "ssaoEnable": False,
     "ssaoAmount": 1.0,
     "ssaoFilterRadius": 16,
@@ -633,30 +646,41 @@ def _independent_panel(width, height, off_screen=False):
 
 
 @contextlib.contextmanager
-def _applied_camera_options(options, panel):
-    """Context manager for applying `options` to `camera`"""
+def _applied_camera_options(options, panel, use_camera_sequencer=False):
+    """Context manager for applying `options` to the cameras used"""
 
-    camera = cmds.modelPanel(panel, query=True, camera=True)
+    if use_camera_sequencer:
+        cameras = [
+            cmds.shot(shot, query=True, currentCamera=True)
+            for shot in cmds.sequenceManager(listShots=True)
+            if not cmds.shot(shot, query=True, mute=True)
+        ]
+    else:
+        cameras = [cmds.modelPanel(panel, query=True, camera=True)]
+    
     options = dict(CameraOptions, **(options or {}))
 
-    old_options = dict()
-    for opt in options.copy():
-        try:
-            old_options[opt] = cmds.getAttr(camera + "." + opt)
-        except:
-            sys.stderr.write("Could not get camera attribute "
-                             "for capture: %s" % opt)
-            options.pop(opt)
+    old_options = defaultdict(dict)
+    for camera in cameras:
+        cam_options = options.copy()
+        for opt in cam_options:
+            try:
+                old_options[camera][opt] = cmds.getAttr(camera + "." + opt)
+            except:
+                sys.stderr.write("Could not get camera attribute "
+                                "for capture: %s.%s" % (camera, opt))
+                cam_options.pop(opt)
 
-    for opt, value in options.items():
-        cmds.setAttr(camera + "." + opt, value)
+        for opt, value in cam_options.items():
+            cmds.setAttr(camera + "." + opt, value)
 
     try:
         yield
     finally:
-        if old_options:
-            for opt, value in old_options.items():
-                cmds.setAttr(camera + "." + opt, value)
+        for camera, orig_options in old_options.items():
+            if orig_options:
+                for opt, value in orig_options.items():
+                    cmds.setAttr(camera + "." + opt, value)
 
 
 @contextlib.contextmanager
@@ -793,6 +817,18 @@ def _maintain_camera(panel, camera):
 
 
 @contextlib.contextmanager
+def _maintain_pan_zoom(camera):
+    state = cmds.camera(camera, query=True, panZoomEnabled=True)
+    if not cmds.camera(camera, query=True, renderPanZoom=True):
+        cmds.camera(camera, edit=True, panZoomEnabled=False)
+
+    try:
+        yield
+    finally:
+        cmds.camera(camera, edit=True, panZoomEnabled=state)
+
+
+@contextlib.contextmanager
 def _disabled_inview_messages():
     """Disable in-view help messages during the context"""
     original = cmds.optionVar(q="inViewMessageEnable")
@@ -801,6 +837,26 @@ def _disabled_inview_messages():
         yield
     finally:
         cmds.optionVar(iv=("inViewMessageEnable", original))
+
+
+@contextlib.contextmanager
+def _maintain_sequence_time_panel():
+    # Ensure a sequencer node exists. Without this, Maya may crash when running
+    # sequencer-related commands.
+    cmds.sequenceManager(query=True, writableSequencer=True)
+
+    # If a panel is set to sequence time, it will grab focus from the 
+    # independent panel during the playblast. There's no way to unset it, so we
+    # create a dummy panel, set it to sequence time, then delete it.
+    original_st_panel = cmds.sequenceManager(query=True, modelPanel=True)
+    dummy_panel = cmds.modelPanel(label="dummy_panel")
+    cmds.sequenceManager(modelPanel=dummy_panel)
+    cmds.deleteUI(dummy_panel, panel=True)
+
+    try:
+        yield
+    finally:
+        cmds.sequenceManager(modelPanel=original_st_panel)
 
 
 def _image_to_clipboard(path):
@@ -818,7 +874,12 @@ def _get_screen_size():
     if _in_standalone():
         return [0, 0]
 
-    rect = QtWidgets.QDesktopWidget().screenGeometry(-1)
+    try:
+        rect = QtWidgets.QDesktopWidget().screenGeometry(-1)
+    except AttributeError:
+        # in Qt6 it is a different call
+        rect = QtWidgets.QApplication.primaryScreen().availableGeometry()
+
     return [rect.width(), rect.height()]
 
 
@@ -831,24 +892,22 @@ def _in_standalone():
 # Apply version specific settings
 #
 # --------------------------------
-try:
-    version = mel.eval("getApplicationVersionAsFloat")
-    if version > 2015:
-        Viewport2Options.update({
-            "hwFogAlpha": 1.0,
-            "hwFogFalloff": 0,
-            "hwFogDensity": 0.1,
-            "hwFogEnable": False,
-            "holdOutDetailMode": 1,
-            "hwFogEnd": 100.0,
-            "holdOutMode": True,
-            "hwFogColorR": 0.5,
-            "hwFogColorG": 0.5,
-            "hwFogColorB": 0.5,
-            "hwFogStart": 0.0,
-        })
-        ViewportOptions.update({
-            "motionTrails": False
-        })
-except:
-    pass
+
+version = mel.eval("getApplicationVersionAsFloat")
+if version > 2015:
+    Viewport2Options.update({
+        "hwFogAlpha": 1.0,
+        "hwFogFalloff": 0,
+        "hwFogDensity": 0.1,
+        "hwFogEnable": False,
+        "holdOutDetailMode": 1,
+        "hwFogEnd": 100.0,
+        "holdOutMode": True,
+        "hwFogColorR": 0.5,
+        "hwFogColorG": 0.5,
+        "hwFogColorB": 0.5,
+        "hwFogStart": 0.0,
+    })
+    ViewportOptions.update({
+        "motionTrails": False
+    })

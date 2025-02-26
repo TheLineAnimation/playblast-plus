@@ -3,7 +3,15 @@ from ...lib import utils
 
 import maya.cmds as cmds
 from maya import OpenMaya, OpenMayaUI
-from shiboken2 import wrapInstance
+
+# Import Shiboken with fallback
+try:
+    from shiboken6 import wrapInstance
+except ImportError:
+    try:
+        from shiboken2 import wrapInstance
+    except ImportError:
+        raise ImportError("Neither shiboken6 nor shiboken2 could be imported. Please install one of them.")
 
 from ...hosts.maya import capture
 from ...hosts.maya import register_tokens

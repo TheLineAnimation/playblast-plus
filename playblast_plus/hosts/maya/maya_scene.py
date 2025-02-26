@@ -1,7 +1,15 @@
 from pathlib import Path
 import sys
 from playblast_plus.vendor.Qt import QtWidgets, QtCore
-from shiboken2 import wrapInstance
+
+# Import Shiboken with fallback
+try:
+    from shiboken6 import wrapInstance
+except ImportError:
+    try:
+        from shiboken2 import wrapInstance
+    except ImportError:
+        raise ImportError("Neither shiboken6 nor shiboken2 could be imported. Please install one of them.")
 
 import maya.cmds as cmds
 # import maya.OpenMayaUI as omui
@@ -136,8 +144,12 @@ class Maya_Scene(scene.Scene):
 
     def error_message(text):
         OpenMaya.MGlobal.displayError(text)
+
+    def set_viewport_camera(cam):
+        if cam:
+            cmds.lookThru(cam)
   
-    def get_current_camera(name=None):
+    def get_current_camera():
         """
         Returns the currently active camera.
 
@@ -150,50 +162,20 @@ class Maya_Scene(scene.Scene):
             str: name of active camera transform
 
             This doesn't work very well!! 
-            need a beeter way to get the current camera from view
+            need a better way to get the current camera from view
         """
-        if name:
-            import maya.OpenMaya as om
-            import maya.OpenMayaUI as omui
-            view = omui.M3dView.active3dView()
-            camera = om.MDagPath()
-            view.getCamera(camera)
-            return om.MFnDagNode(camera.transform()).name()
+        # Get the active model panel
+        model_panels = cmds.getPanel(type="modelPanel")
         
-        # (check if the set has a camera defined)
-        else:
-            # Get camera from active modelPanel  (if any)
-            panel = cmds.getPanel(withFocus=True)
-            if cmds.getPanel(typeOf=panel) == "modelPanel":
-                cam = cmds.modelEditor(panel, query=True, camera=True)
-                # In some cases above returns the shape, but most often it returns 
-                # the transform. Still we need to make sure we return the transform.
-                if cam:
-                    if cmds.nodeType(cam) == "transform":
-                        return cam
-                    # camera shape is a shape type
-                    elif cmds.objectType(cam, isAType="shape"):
-                        parent = cmds.listRelatives(cam, parent=True, fullPath=True)
-                        if parent:
-                            return parent[0]
+        for panel in model_panels:
+            if cmds.modelEditor(panel, query=True, activeView=True):
+                camera = cmds.modelEditor(panel, query=True, camera=True)
+                # Get just the short name
+                # clean_camera = cmds.ls(camera, shortNames=True)[0]
+                # return clean_camera
+                return camera
 
-            # Check if a camShape is selected (if so use that)
-            cam_shapes = cmds.ls(selection=True, type="camera")
-            if cam_shapes:
-                return cmds.listRelatives(cam_shapes,
-                                        parent=True,
-                                        fullPath=True)[0]
-
-            # Check if a transform of a camShape is selected
-            # (return cam transform if any)
-            transforms = cmds.ls(selection=True, type="transform")
-            if transforms:
-                cam_shapes = cmds.listRelatives(transforms, 
-                                                shapes=True, type="camera")
-                if cam_shapes:
-                    return cmds.listRelatives(cam_shapes,
-                                            parent=True,
-                                            fullPath=True)[0] 
+        return None  # Fallback if no active panel is found
 
     def get_user_directory() -> str:
         # perhaps this should be the host class, it's not scene related
@@ -201,7 +183,6 @@ class Maya_Scene(scene.Scene):
         maya_version = cmds.about(version=True)
         return str (Path (maya_root , maya_version ))
 
-    # maybe use args here for different hosts
     @classmethod             
     def get_output_dir(cls, workspace:bool = False) -> str:
         """Returns the playblast directory so that a filename can be specified.
