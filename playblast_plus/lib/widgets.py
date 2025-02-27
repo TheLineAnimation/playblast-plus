@@ -97,7 +97,7 @@ class Styles():
     
     PROGRESSBAR = (
                 "QProgressBar {"
-                "background-color: #C0C6CA;"
+                "background-color: #0c0c0c;"
                 "border: 0px;"
                 "padding: 0px;"
                 "height: 5px; // To change the progress bar height"
@@ -329,7 +329,12 @@ class DownloadWindow(QtWidgets.QDialog):
         main_layout = QtWidgets.QVBoxLayout(self)
         main_layout.setAlignment(QtCore.Qt.AlignTop)
 
-        main_layout.setMargin(8)
+        # PySide2 depreciated the setMargin call
+        if hasattr(main_layout, "setMargin"):
+            main_layout.setMargin(8)
+        else:
+            main_layout.setContentsMargins(8, 8, 8, 8)
+
         main_layout.setSpacing(8)
 
         main_layout.addWidget(self.header)
