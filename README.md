@@ -1,4 +1,4 @@
-<img width=260 src=https://raw.githubusercontent.com/mottosso/Qt.py/master/logo.svg>
+<img width=260 src=https://raw.githubusercontent.com/TheLineAnimation/playblast-plus/refs/heads/PySide6/docs/_static/thelinelogo.png>
 
 ### Playblasting in 3d DCCs so it doesn't completely suck
 
