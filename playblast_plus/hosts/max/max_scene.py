@@ -55,7 +55,6 @@ class Max_Scene(scene.Scene):
     def _is_empty_scene():
         return len(mxs.rootNode.Children) == 0
 
-
     def get_scene_cameras():
         """Returns the scene cameras, surprisingly
 
@@ -100,6 +99,9 @@ class Max_Scene(scene.Scene):
             tuple : the height and width of the render output
         """
         return (mxs.renderWidth, mxs.renderHeight)
+    
+    def set_current_camera(name):
+        return "not implemented"
 
     def get_current_camera(**kwargs):
         """

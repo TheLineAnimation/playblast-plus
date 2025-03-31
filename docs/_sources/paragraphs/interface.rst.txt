@@ -22,7 +22,8 @@ Using Playblast Plus
   A text box to specify the output name (See Tokenised Output)
 **5. Camera Dropdown** 
   A list of the cameras in the scene. In the Maya host, it won't list any startup cameras (The 4 main views)
-  Picking an item fro this list will decide what camera is previewed, irrespective of the active view.
+  Picking an item from this list will decide what camera is previewed, irrespective of the active view. 
+  The refresh button to the right of the list will scan for new scene cameras and add them to the list. 
 **6. Capture Buttons**
   There are two options and the button text will vary depending on the host (Playblast in Maya, Preview in 3dsmax)
   Playblast executes a playblast to the current time slider range, and Snap will snapshot the selected view. Any template overrides will be applied to the playblast and the view snapshot. 

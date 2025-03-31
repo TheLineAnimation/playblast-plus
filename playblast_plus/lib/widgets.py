@@ -51,10 +51,9 @@ class Styles():
     BUTTON_HERO = (
                 "QPushButton{"
                 "font: bold 12px;"
-                "color: rgb(220, 250, 250);"
+                "color: #f8f8f8;"
                 "height: 40px;"
-                "background-color: rgb(103, 163, 217);"
-                "border:1px solid black;"
+                "border:1px solid #0c0c0c;"
                 "border-radius:4px;}"
                 "QPushButton:pressed"
                 "{"
@@ -65,10 +64,9 @@ class Styles():
     BUTTON_SIDEKICK = (
                 "QPushButton{"
                 "font: bold 12px;"
-                "color: rgb(220, 250, 250);"
+                "color: #f8f8f8;"
                 "height: 40px;"
-                "background-color: rgb(197, 104, 141);"
-                "border:1px solid black;"
+                "border:1px solid #0c0c0c;"
                 "border-radius:4px;}"
                 "}"
                 "QPushButton:pressed"
@@ -80,8 +78,8 @@ class Styles():
     TEXTFIELD = (
                 "QLineEdit{"
                 "font: bold 12px;"
-                "color: rgb(103, 163, 217);"
-                "height: 12px;"
+                "color: #fa391f;"
+                "height: 16px;"
                 "}"
                 )
     
@@ -99,13 +97,13 @@ class Styles():
     
     PROGRESSBAR = (
                 "QProgressBar {"
-                "background-color: #C0C6CA;"
+                "background-color: #0c0c0c;"
                 "border: 0px;"
                 "padding: 0px;"
                 "height: 5px; // To change the progress bar height"
                 "}"
                 "QProgressBar::chunk {"
-                "background: #7D94B0;"
+                "background: #fa391f;"
                 "width:5px"
                 "}"
                 )
@@ -135,12 +133,20 @@ class ToolHeader(QtWidgets.QWidget):
     """
 
     LINE_LOGO = 'tl_logo_white.png'
+    # STYLE_SHEET = (
+    #             "font: bold 12px;"
+    #             "color: rgb(205, 205, 205);"
+    #             "background-color: rgb(30,30,30);"
+    #             "padding:6px"
+    #              )
+
+    # conform to the Line's re-brand
     STYLE_SHEET = (
-                "font: bold 12px;"
-                "color: rgb(205, 205, 205);"
-                "background-color: rgb(30,30,30);"
-                "padding:6px"
-                 )
+            "font: bold 14px;"
+            "color: #f8f8f8;"
+            "background-color: #fa391f;"
+            "padding:2px"
+                )
 
     def __init__(self, name='', text= '', parent=None):
             super(ToolHeader, self).__init__(parent)
@@ -323,7 +329,12 @@ class DownloadWindow(QtWidgets.QDialog):
         main_layout = QtWidgets.QVBoxLayout(self)
         main_layout.setAlignment(QtCore.Qt.AlignTop)
 
-        main_layout.setMargin(8)
+        # PySide2 depreciated the setMargin call
+        if hasattr(main_layout, "setMargin"):
+            main_layout.setMargin(8)
+        else:
+            main_layout.setContentsMargins(8, 8, 8, 8)
+
         main_layout.setSpacing(8)
 
         main_layout.addWidget(self.header)
