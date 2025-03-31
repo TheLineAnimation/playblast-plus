@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deploying Playblast Plus &mdash; Playblast Plus 1.4:2 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Deploying Playblast Plus &mdash; Playblast Plus 1.5:0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme_overrides.css?v=860c0e09" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=52a10e10"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -26,15 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> Playblast Plus
-            <img src="../_static/thelinelogo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Playblast Plus
+              <img src="../_static/thelinelogo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                v1.4.2
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -68,8 +70,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Deploying Playblast Plus</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Deploying Playblast Plus</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/paragraphs/deploying.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -80,22 +82,23 @@
            <div itemprop="articleBody">
              
   <section id="deploying-playblast-plus">
-<h1>Deploying Playblast Plus<a class="headerlink" href="#deploying-playblast-plus" title="Permalink to this headline"></a></h1>
+<h1>Deploying Playblast Plus<a class="headerlink" href="#deploying-playblast-plus" title="Link to this heading"></a></h1>
 <p>Playblast Plus can run in two different ways :</p>
 <ul class="simple">
 <li><p>Completely localised on an artist’s workstation.</p></li>
 <li><p>From a network location to allow Pipeline TDs to specify versions and allow for easy updates in a studio setting</p></li>
 </ul>
 <figure class="align-center" id="id1">
-<span id="module-setup"></span><a class="reference internal image-reference" href="../_images/pbp_structure.png"><img alt="../_images/pbp_structure.png" src="../_images/pbp_structure.png" style="width: 40em;" /></a>
+<span id="module-setup"></span><a class="reference internal image-reference" href="../_images/pbp_structure.png"><img alt="../_images/pbp_structure.png" src="../_images/pbp_structure.png" style="width: 40em;" />
+</a>
 <figcaption>
-<p><span class="caption-text">How the module is structured</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+<p><span class="caption-text">How the module is structured</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>This is because it only runs the core code from the library and offloads any transcoding to a local install of ffMpeg.</p>
 </section>
 <section id="setting-up-the-module-environment">
-<h1>Setting up the Module Environment<a class="headerlink" href="#setting-up-the-module-environment" title="Permalink to this headline"></a></h1>
+<h1>Setting up the Module Environment<a class="headerlink" href="#setting-up-the-module-environment" title="Link to this heading"></a></h1>
 <p>Playblast Plus requires the directory to be visible on the PYTHONPATH, and this can be set identically for multiple hosts.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -109,21 +112,22 @@
 You could keep the <cite>playblast plus</cite> folder marked with the version release. This way, you would have a flexxible way to update and test new versions, as you can point the python path at the specific version for each DCC version</p>
 </section>
 <section id="launching-the-ui">
-<h1>Launching the UI<a class="headerlink" href="#launching-the-ui" title="Permalink to this headline"></a></h1>
+<h1>Launching the UI<a class="headerlink" href="#launching-the-ui" title="Link to this heading"></a></h1>
 <p>This should be an identical call regardless of host. Playblast Plus is executed via a launch.py script, which detects the host executable and imports the relevant DCC-centric modules.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">playblast_plus</span> <span class="kn">import</span> <span class="n">launch</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">playblast_plus</span><span class="w"> </span><span class="kn">import</span> <span class="n">launch</span>
 <span class="n">launch</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="setting-up-ffmpeg">
-<h1>Setting up ffMpeg<a class="headerlink" href="#setting-up-ffmpeg" title="Permalink to this headline"></a></h1>
+<h1>Setting up ffMpeg<a class="headerlink" href="#setting-up-ffmpeg" title="Link to this heading"></a></h1>
 <p>Playblast plus uses ffMpeg to transcode the preview image sequences into a H264 encoded MP4. It does this seamlessly after the preview stage, but you need to have the executable located somewhere on your local system.</p>
 <p>I don’t bundle the executable with the code base for a number of reasons, but the main one is so that the encoding step is offloaded to the local machine, while the main codebase can be run from a network. Whilst Playblast Plus will work fine when installed locally, run from a network means the studio template default is applied across the board, and any changes to this will be adopted studio-wide automatically.</p>
 <figure class="align-center" id="id2">
-<span id="download-picture"></span><a class="reference internal image-reference" href="../_images/downloader.gif"><img alt="../_images/downloader.gif" src="../_images/downloader.gif" style="width: 24em;" /></a>
+<span id="download-picture"></span><a class="reference internal image-reference" href="../_images/downloader.gif"><img alt="../_images/downloader.gif" src="../_images/downloader.gif" style="width: 24em;" />
+</a>
 <figcaption>
-<p><span class="caption-text">The downloader interface</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+<p><span class="caption-text">The downloader interface</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>Playblast Plus will search any locations that are present in the <cite>config.json</cite> and look for <cite>ffMpeg.exe</cite>. If it doesn’t find any, it will present you with a downloader to do this.</p>
@@ -135,22 +139,22 @@ You could keep the <cite>playblast plus</cite> folder marked with the version re
 <p>I don’t unpack and move this automatically, I decided it’s ok for someone to decide where they run this from.</p>
 </section>
 <section id="understanding-the-config-json">
-<h1>Understanding the config.json<a class="headerlink" href="#understanding-the-config-json" title="Permalink to this headline"></a></h1>
+<h1>Understanding the config.json<a class="headerlink" href="#understanding-the-config-json" title="Link to this heading"></a></h1>
 <p>Playblast Plus will take core settings from the <cite>config.json</cite> located in the root folder of the module. This contains data that informs the main operation of the module.</p>
 </section>
 <section id="adding-this-to-a-shelf-in-maya">
-<h1>Adding this to a shelf in Maya<a class="headerlink" href="#adding-this-to-a-shelf-in-maya" title="Permalink to this headline"></a></h1>
+<h1>Adding this to a shelf in Maya<a class="headerlink" href="#adding-this-to-a-shelf-in-maya" title="Link to this heading"></a></h1>
 </section>
 <section id="adding-this-to-a-menu-quad-in-3dsmax">
-<h1>Adding this to a menu/quad in 3dsMax<a class="headerlink" href="#adding-this-to-a-menu-quad-in-3dsmax" title="Permalink to this headline"></a></h1>
+<h1>Adding this to a menu/quad in 3dsMax<a class="headerlink" href="#adding-this-to-a-menu-quad-in-3dsmax" title="Link to this heading"></a></h1>
 <p>Add the following code as a Macroscript.</p>
 <p>If you don’t know how to do this in 3dsMax, see <a class="reference external" href="https://www.youtube.com/watch?v=kvaAY8TCRdo">here</a></p>
 </section>
 <section id="running-playblast-plus-inside-different-hosts">
-<h1>Running Playblast Plus Inside Different Hosts<a class="headerlink" href="#running-playblast-plus-inside-different-hosts" title="Permalink to this headline"></a></h1>
+<h1>Running Playblast Plus Inside Different Hosts<a class="headerlink" href="#running-playblast-plus-inside-different-hosts" title="Link to this heading"></a></h1>
 <p>The codebase of Playblast plus has been engineered to be as flexible as possible across different packages.</p>
 <section id="how-does-this-work">
-<h2>How does this work?<a class="headerlink" href="#how-does-this-work" title="Permalink to this headline"></a></h2>
+<h2>How does this work?<a class="headerlink" href="#how-does-this-work" title="Link to this heading"></a></h2>
 <p>If you have coded in a DCC before, the way python is implemented is different for each. Standard python library operations all function the same, like folder operations. but when it comes to calling specific functions like create preview in 3ds max and Playblast in Maya, the imports and methods are completely different.</p>
 <p>Plastblast Plus does this as we can assign functions and classes to other variables. The glue for all this is the DCC module. This module contains the HOST class that is called when the script is run.</p>
 <p>There are two other classes that contain a set of common methods that HOST can call. These are <cite>SCENE</cite> and <cite>PREVIEW</cite>. Each host subclasses these and overrides the methods contained, so whilst the imports are specific to the host, there is a common interface between them.</p>

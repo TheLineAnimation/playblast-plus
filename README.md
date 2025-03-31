@@ -1,13 +1,13 @@
-<img width=260 src=https://raw.githubusercontent.com/mottosso/Qt.py/master/logo.svg>
+
 
 ### Playblasting in 3d DCCs so it doesn't completely suck
-
-
 
 <img align="center" src="https://www.datocms-assets.com/136821/1724333166-stillframe_thelineanimation_overwatch-2_transformers_16.jpg?dpr=0.75&fit=crop&fm=webp&w=3424"/>
 
 </br>
-</br>
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![FFmpeg](https://shields.io/badge/FFmpeg-%23171717.svg?logo=ffmpeg&style=for-the-badge&labelColor=171717&logoColor=5cb85c)
 
 Let's face it, Maya's playblast isn't the best. (And that's saying something as a long-time 3dsmax user)
 This script standardizes the playblast output to allow animators an easy way to create a rolling,

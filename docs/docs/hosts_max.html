@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Playblast Plus 3dsMax Host &mdash; Playblast Plus 1.4:2 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Playblast Plus 3dsMax Host &mdash; Playblast Plus 1.5:0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme_overrides.css?v=860c0e09" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=52a10e10"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -26,15 +27,16 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> Playblast Plus
-            <img src="../_static/thelinelogo.png" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Playblast Plus
+              <img src="../_static/thelinelogo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                v1.4.2
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -45,7 +47,10 @@
 <li><a class="reference internal" href="#">Playblast Plus 3dsMax Host</a><ul>
 <li><a class="reference internal" href="#hosts-max-ui-module">hosts.max.ui module</a></li>
 <li><a class="reference internal" href="#hosts-max-capture-module">hosts.max.capture module</a></li>
-<li><a class="reference internal" href="#module-playblast_plus.hosts.max.max_logger">hosts.max.logger module</a></li>
+<li><a class="reference internal" href="#module-playblast_plus.hosts.max.max_logger">hosts.max.logger module</a><ul>
+<li><a class="reference internal" href="#playblast_plus.hosts.max.max_logger.MaxLogger"><code class="docutils literal notranslate"><span class="pre">MaxLogger</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#hosts-max-preview-module">hosts.max.preview module</a></li>
 <li><a class="reference internal" href="#hosts-max-scene-module">hosts.max.scene module</a></li>
 <li><a class="reference internal" href="#hosts-max-register-tokens-module">hosts.max.register_tokens module</a></li>
@@ -66,8 +71,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Playblast Plus 3dsMax Host</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Playblast Plus 3dsMax Host</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/docs/hosts_max.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -78,8 +83,8 @@
            <div itemprop="articleBody">
              
   <section id="playblast-plus-3dsmax-host">
-<h1>Playblast Plus 3dsMax Host<a class="headerlink" href="#playblast-plus-3dsmax-host" title="Permalink to this headline"></a></h1>
-<div class="contents local topic" id="contents">
+<h1>Playblast Plus 3dsMax Host<a class="headerlink" href="#playblast-plus-3dsmax-host" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#hosts-max-ui-module" id="id1">hosts.max.ui module</a></p></li>
 <li><p><a class="reference internal" href="#hosts-max-capture-module" id="id2">hosts.max.capture module</a></p></li>
@@ -88,29 +93,29 @@
 <li><p><a class="reference internal" href="#hosts-max-scene-module" id="id5">hosts.max.scene module</a></p></li>
 <li><p><a class="reference internal" href="#hosts-max-register-tokens-module" id="id6">hosts.max.register_tokens module</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="hosts-max-ui-module">
-<h2><a class="toc-backref" href="#id1">hosts.max.ui module</a><a class="headerlink" href="#hosts-max-ui-module" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">hosts.max.ui module</a><a class="headerlink" href="#hosts-max-ui-module" title="Link to this heading"></a></h2>
 </section>
 <section id="hosts-max-capture-module">
-<h2><a class="toc-backref" href="#id2">hosts.max.capture module</a><a class="headerlink" href="#hosts-max-capture-module" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">hosts.max.capture module</a><a class="headerlink" href="#hosts-max-capture-module" title="Link to this heading"></a></h2>
 </section>
 <section id="module-playblast_plus.hosts.max.max_logger">
-<span id="hosts-max-logger-module"></span><h2><a class="toc-backref" href="#id3">hosts.max.logger module</a><a class="headerlink" href="#module-playblast_plus.hosts.max.max_logger" title="Permalink to this headline"></a></h2>
+<span id="hosts-max-logger-module"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">hosts.max.logger module</a><a class="headerlink" href="#module-playblast_plus.hosts.max.max_logger" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="playblast_plus.hosts.max.max_logger.MaxLogger">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">playblast_plus.hosts.max.max_logger.</span></span><span class="sig-name descname"><span class="pre">MaxLogger</span></span><a class="headerlink" href="#playblast_plus.hosts.max.max_logger.MaxLogger" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">playblast_plus.hosts.max.max_logger.</span></span><span class="sig-name descname"><span class="pre">MaxLogger</span></span><a class="headerlink" href="#playblast_plus.hosts.max.max_logger.MaxLogger" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="hosts-max-preview-module">
-<h2><a class="toc-backref" href="#id4">hosts.max.preview module</a><a class="headerlink" href="#hosts-max-preview-module" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">hosts.max.preview module</a><a class="headerlink" href="#hosts-max-preview-module" title="Link to this heading"></a></h2>
 </section>
 <section id="hosts-max-scene-module">
-<h2><a class="toc-backref" href="#id5">hosts.max.scene module</a><a class="headerlink" href="#hosts-max-scene-module" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">hosts.max.scene module</a><a class="headerlink" href="#hosts-max-scene-module" title="Link to this heading"></a></h2>
 </section>
 <section id="hosts-max-register-tokens-module">
-<h2><a class="toc-backref" href="#id6">hosts.max.register_tokens module</a><a class="headerlink" href="#hosts-max-register-tokens-module" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">hosts.max.register_tokens module</a><a class="headerlink" href="#hosts-max-register-tokens-module" title="Link to this heading"></a></h2>
 </section>
 </section>
 

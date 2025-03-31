@@ -10,6 +10,16 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
+
+# BUILD INSTRUCTIONS
+#
+#
+#
+#
+
+
+
+
 import os
 import sys
 
@@ -37,8 +47,8 @@ copyright = '2023, Pete Addington'
 author = 'Pete Addington'
 
 # The full version, including alpha/beta/rc tags
-version = 'v1.4.2'
-release = '1.4:2'
+version = 'v1.5.0'
+release = '1.5:0'
 
 # -- General configuration ---------------------------------------------------
 
@@ -58,7 +68,6 @@ extensions = [
             ]
 
 napoleon_google_docstring = True
-
 
 # IMPORTANT!!!!
 # you need to create exceptions for specific classes, otherwise the build will grumble and fail
