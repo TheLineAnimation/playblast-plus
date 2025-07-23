@@ -140,7 +140,8 @@ class PlayblastPlusUI(UI_BASECLASS):
         Connects widget signals to functionalities
         """
         self.playblast_button.clicked.connect(self.create_playblast)
-        self.camera_refresh.clicked.connect(self.refresh_camera_list)
+        self.camera_refresh.clicked.connect(self.refresh_camera_list)     
+        self.camera_cycle.clicked.connect(self.cycle_cameras)
         self.capture_button.clicked.connect(self.capture_viewport)
         self.open_playblast_dir.triggered.connect(
             self.open_playblast_directory)
@@ -163,7 +164,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.add_burnin_setting.setChecked(False)
 
         self.keep_images_setting = QtWidgets.QAction(
-            "Keep Intermediate Images", self)
+            f"Keep {self.host.UITEXT_preview} Sequence Images", self)
         self.keep_images_setting.setCheckable(True)
         self.keep_images_setting.setChecked(False)
 
@@ -171,9 +172,9 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.template_override_setting.setCheckable(True)
         self.template_override_setting.setChecked(False)
 
-        self.use_workspace_setting = QtWidgets.QAction("Use Workspace", self)
-        self.use_workspace_setting.setCheckable(True)
-        self.use_workspace_setting.setChecked(False)
+        # self.use_workspace_setting = QtWidgets.QAction("Use Workspace", self)
+        # self.use_workspace_setting.setCheckable(True)
+        # self.use_workspace_setting.setChecked(False)
 
     def _create_widgets(self):
         """ Creates the widget elements the user will interact with
@@ -197,7 +198,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.open_playblast_dir.setIcon(widgets.Icons.get("folder"))
 
         self.display_menu.addAction(self.open_playblast_dir)
-        self.display_menu.addAction(self.use_workspace_setting)
+        # self.display_menu.addAction(self.use_workspace_setting)
 
         self.purge_playblast_dir = QtWidgets.QAction(
             f"Empty {self.host.UITEXT_preview} Folder", self)
@@ -209,7 +210,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.display_menu.addAction(folder_separator_action)
         self.display_menu.addAction(self.template_override_setting)
 
-        folder_separator = QtWidgets.QLabel("<b>File Options</b>")
+        folder_separator = QtWidgets.QLabel("<b>Output Options</b>")
         folder_separator_action = QtWidgets.QWidgetAction(self)
         folder_separator_action.setDefaultWidget(folder_separator)
         self.display_menu.addAction(folder_separator_action)
@@ -271,23 +272,23 @@ class PlayblastPlusUI(UI_BASECLASS):
 
         self.folder_icon = QtWidgets.QLabel()
         self.folder_icon.setPixmap(QtGui.QPixmap(":/folder-open.png"))
-        self.folder_icon.setMaximumWidth(16)
+        self.folder_icon.setMaximumWidth(18)
 
         self.imageplane_icon = QtWidgets.QLabel()
         self.imageplane_icon.setPixmap(QtGui.QPixmap(":/ImagePlane.png"))
-        self.imageplane_icon.setMaximumWidth(16)
+        self.imageplane_icon.setMaximumWidth(18)
 
         self.half_res_icon = QtWidgets.QLabel()
         self.half_res_icon.setPixmap(QtGui.QPixmap(":/imageDisplay.png"))
-        self.half_res_icon.setMaximumWidth(16)
+        self.half_res_icon.setMaximumWidth(18)
 
         self.isolate_icon = QtWidgets.QLabel()
         self.isolate_icon.setPixmap(QtGui.QPixmap(":/IsolateSelected.png"))
-        self.isolate_icon.setMaximumWidth(16)
+        self.isolate_icon.setMaximumWidth(18)
 
         self.wireframe_icon = QtWidgets.QLabel()
         self.wireframe_icon.setPixmap(QtGui.QPixmap(":/WireFrameOnShaded.png"))
-        self.wireframe_icon.setMaximumWidth(16)
+        self.wireframe_icon.setMaximumWidth(18)
 
         self.tokens_field = QtWidgets.QLineEdit()
 
@@ -303,10 +304,12 @@ class PlayblastPlusUI(UI_BASECLASS):
                                      )
 
         # create
-        style = widgets.Styles.BUTTON_HERO
+        
         self.playblast_button = QtWidgets.QPushButton(
             self.host.UITEXT_preview.upper())
-        self.playblast_button.setStyleSheet(style)
+        hero_style = widgets.Styles.BUTTON_HERO
+        self.playblast_button.setStyleSheet(hero_style)
+        self.playblast_button.setToolTip(f"{self.host.UITEXT_preview}s the current camera")
 
         # edit frame border and layout
         edit_frame = QtWidgets.QFrame()
@@ -321,10 +324,9 @@ class PlayblastPlusUI(UI_BASECLASS):
         
         locations_layout.setSpacing(4)
 
-        # reset
-        style = widgets.Styles.BUTTON_SIDEKICK
         self.capture_button = QtWidgets.QPushButton("SNAP")
-        self.capture_button.setStyleSheet(style)
+        self.capture_button.setStyleSheet(widgets.Styles.BUTTON_SIDEKICK)
+        self.capture_button.setToolTip(f"Capture a still image of the current camera, according to the scene render resolution")   
 
         # Overides
         overrides_frame = QtWidgets.QFrame()
@@ -374,11 +376,23 @@ class PlayblastPlusUI(UI_BASECLASS):
 
 
         # camera refresh
-        self.camera_refresh = QtWidgets.QPushButton("Refresh")
+        tool_style = widgets.Styles.BUTTON_TOOL
+        self.camera_refresh = QtWidgets.QPushButton()
+        self.camera_refresh.setIcon(QtGui.QIcon(":/refresh.png"))
+        self.camera_refresh.setIconSize(QtCore.QSize(18,18))  # Use QtCore.QSize instead
+        self.camera_refresh.setStyleSheet(tool_style)       
+                
+        self.camera_refresh.setToolTip("Refreshes the list of scene cameras")
+        self.camera_cycle = QtWidgets.QPushButton()
+        self.camera_cycle.setIcon(QtGui.QIcon(":/cameraAim.png"))
+        self.camera_cycle.setIconSize(QtCore.QSize(18,18))  # Use QtCore.QSize
+        self.camera_cycle.setToolTip("Cycles through scene cameras")        
+        self.camera_cycle.setStyleSheet(tool_style)
+        
 
         capture_layout = QtWidgets.QGridLayout(capture_frame)
 
-        camera_label = QtWidgets.QLabel("Camera")
+        camera_label = QtWidgets.QLabel("Current Camera")
         camera_label.setFont(custom_font)
 
         # PySide2 depreciated the setMargin call
@@ -388,19 +402,18 @@ class PlayblastPlusUI(UI_BASECLASS):
             capture_layout.setContentsMargins(4, 4, 4, 4)
 
         capture_layout.setSpacing(4)
-
-        capture_layout.addWidget(camera_label, 0, 0, 1, 1)
-
+        
+        capture_layout.addWidget(camera_label, 0, 0, 1, 5)                 
         capture_layout.addWidget(self.camera_list, 1, 0, 1, 3)
-        capture_layout.addWidget(self.camera_refresh, 1, 3, 1, 1)
-       
-        capture_layout.addWidget(self.playblast_button, 2, 0, 1, 3)
-        capture_layout.addWidget(self.capture_button, 2, 3, 1, 1)
+        capture_layout.addWidget(self.camera_refresh, 1, 3, 1, 1)       
+        capture_layout.addWidget(self.camera_cycle, 1, 4, 1, 1)
+ 
+        capture_layout.addWidget(self.playblast_button, 2, 0, 1, 4)
+        capture_layout.addWidget(self.capture_button, 2, 4, 1, 1)
 
         # add widgets to layouts
         self.main_layout.addWidget(header)
         self.main_layout.setMenuBar(self.menu_bar)
-
         self.main_layout.addWidget(frame)
         frame_layout.addLayout(cam_formlayout)
         frame_layout.addWidget(overrides_frame)
@@ -419,7 +432,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         ui_dict['output_token'] = self.tokens_field.text()
         ui_dict['last_camera'] = self.camera_list.currentText()
         ui_dict['last_template'] = self.template_list.currentText()
-        ui_dict['use_workspace'] = self.use_workspace_setting.isChecked()
+        # ui_dict['use_workspace'] = self.use_workspace_setting.isChecked()
         ui_dict['add_burnin'] = self.add_burnin_setting.isChecked()
 
         settings.save_host_settings(path, self._SETTINGS)
@@ -440,7 +453,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.wireframe_box.setChecked(settings_dict['set_wire'])
         self.half_res_box.setChecked(settings_dict['set_half'])
         self.tokens_field.setText(settings_dict['output_token'])
-        self.use_workspace_setting.setChecked(settings_dict['use_workspace'])
+        # self.use_workspace_setting.setChecked(settings_dict['use_workspace'])
         self.add_burnin_setting.setChecked(settings_dict['add_burnin'])
         self.isolate_box.setChecked(settings_dict['isolate'])
 
@@ -581,13 +594,10 @@ class PlayblastPlusUI(UI_BASECLASS):
         return QtWidgets.QApplication.clipboard().setMimeData(data)
 
     def capture_viewport(self):
-        pass
-        # self.host.preview.create()
+
 
         output_path = Path(self.current_playblast_directory, 'captures')
-        # output_name = self.get_output_name(self.tokens_field.text())
-        # output_path = self.current_playblast_directory
-        #
+
         if self.validate_output_path(output_path):
             snap_image_filename = (self.host.tokens.format_tokens(
                 f'{output_path}\{self.tokens_field.text()}_capture', None))
@@ -635,6 +645,16 @@ class PlayblastPlusUI(UI_BASECLASS):
         else:
             index = 0 
         self.camera_list.setCurrentIndex(index)
+        
+    def cycle_cameras(self):
+        """Cycle to the next camera in the list, looping back if necessary."""
+        count = self.camera_list.count()
+        if count == 0:
+            return
+
+        current_index = self.camera_list.currentIndex()
+        new_index = (current_index + 1) % count  
+        self.camera_list.setCurrentIndex(new_index)
 
     def camera_list_changed(self):
         PlayBlastPlusLogger.info(
@@ -688,7 +708,6 @@ class PlayblastPlusUI(UI_BASECLASS):
                     if self.validate_output(mp4_output):
                         self.set_clipboard_data(mp4_output)
 
-                # if not self.images_box.isChecked():
                 if not self.keep_images_setting.isChecked():
                     utils.FolderOps.purge_contents(output_path,
                                                    ext='.png',
