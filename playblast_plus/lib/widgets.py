@@ -53,11 +53,10 @@ class Styles():
                 "font: bold 12px;"
                 "color: #f8f8f8;"
                 "height: 40px;"
-                "border:1px solid #0c0c0c;"
-                "border-radius:4px;}"
+                "}"
                 "QPushButton:pressed"
                 "{"
-                "background-color: rgb(44, 189, 218);"
+                "background-color: #fa391f;"
                 "}"
                 )
     
@@ -66,12 +65,24 @@ class Styles():
                 "font: bold 12px;"
                 "color: #f8f8f8;"
                 "height: 40px;"
-                "border:1px solid #0c0c0c;"
-                "border-radius:4px;}"
+                "}"
                 "}"
                 "QPushButton:pressed"
                 "{"
-                "background-color: rgb(197, 104, 141);"
+                "background-color: #fa391f;"
+                "}"
+                )
+    
+    BUTTON_TOOL = (
+                "QPushButton{"
+                "font: bold 12px;"
+                "color: #f8f8f8;"
+                "height: 16px;"
+                "}"
+                "}"
+                "QPushButton:pressed"
+                "{"
+                "background-color: #fa391f;"
                 "}"
                 )
     
@@ -91,7 +102,6 @@ class Styles():
                 "border-style: solid;"
                 "border-width: 1px;"
                 "border-color: rgb(125, 125, 125);;"
-                "border-radius: 1px"
                 "}"
                  )
     
@@ -108,97 +118,52 @@ class Styles():
                 "}"
                 )
 
-    
 class ToolHeader(QtWidgets.QWidget):
-    """A standardised Tool Header widget, with line Logo and a 
-        setter for the script name field.
-
-    Args:
-        name (str): the control name (not needed)
-        text (str): The title text to be shown on the header 
-    
-    Returns:
-        A QWidget control item.
-    
-    **Useful code:**
-    
-    To get a visual representation of all icons loaded in Maya
-
-    .. code-block:: python
-
-        import maya.app.general.resourceBrowser as resourceBrowser
-        resBrowser = resourceBrowser.resourceBrowser()
-        path = resBrowser.run()
- 
-    """
+    """A standardized Tool Header widget with a scalable logo."""
 
     LINE_LOGO = 'tl_logo_white.png'
-    # STYLE_SHEET = (
-    #             "font: bold 12px;"
-    #             "color: rgb(205, 205, 205);"
-    #             "background-color: rgb(30,30,30);"
-    #             "padding:6px"
-    #              )
-
-    # conform to the Line's re-brand
     STYLE_SHEET = (
-            "font: bold 14px;"
-            "color: #f8f8f8;"
-            "background-color: #fa391f;"
-            "padding:2px"
-                )
+        "font: bold 12px;"
+        "color: #f8f8f8;"
+        "background-color: #fa391f;"
+        "padding:2px"
+    )
 
-    def __init__(self, name='', text= '', parent=None):
-            super(ToolHeader, self).__init__(parent)
-            self.name = name
-            self.headerTitle = text
-            self.registerUserData = ""            
-            self.setMinimumSize(QtCore.QSize(180, 40))
-            # self.setMaximumSize(QtCore.QSize(500, 40))
-            self.setStyleSheet(self.STYLE_SHEET)             
-            self.create_widgets()
-            self.create_layout()
-            self.create_actions()
-        
+    MIN_ICON_WIDTH = 24  
+    max_icon_width = None
+
+    def __init__(self, name='', text='', parent=None):
+        super(ToolHeader, self).__init__(parent)
+        self.name = name
+        self.headerTitle = text
+        self.registerUserData = ""
+        self.setMinimumSize(QtCore.QSize(180, 40))
+        self.setStyleSheet(self.STYLE_SHEET)
+        self.icon_pixmap = None  # Store original image
+
+        self.create_widgets()
+        self.create_layout()
+        self.create_actions()
+        self.loadHeaderIcon()  # Load the initial icon
+
     def create_widgets(self):
-            
         self.labelIcon = ClickableLabel()
-        self.labelIcon.setStyleSheet(self.STYLE_SHEET)          
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, 
-                                           QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.labelIcon.sizePolicy().hasHeightForWidth())
-        self.labelIcon.setMaximumSize(QtCore.QSize(1600, 40))
-        self.labelIcon.setSizePolicy(sizePolicy) 
+        self.labelIcon.setStyleSheet(self.STYLE_SHEET)
+        self.labelIcon.setMaximumHeight(40)  # Keep height fixed
 
         self.labelText = ClickableLabel()
         self.labelText.setStyleSheet(self.STYLE_SHEET)
         self.labelText.setText(self.headerTitle)
-        # self.labelText.setMaximumSize(QtCore.QSize(10000, 40)) 
+        self.labelText.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-                                           QtWidgets.QSizePolicy.Fixed)
-
-        # self.labelText.setSizePolicy(sizePolicy) 
-        self.labelText.setAlignment(
-            QtCore.Qt.AlignRight|QtCore.Qt.AlignLeading|QtCore.Qt.AlignVCenter)
-
-
-    def create_layout(self): 
-        
+    def create_layout(self):
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout.setVerticalSpacing(0)
-        self.gridLayout.setHorizontalSpacing(0)
-        self.gridLayout.setObjectName('gridLayout') 
+        self.gridLayout.setSpacing(0)
 
-        self.addHeaderIcon(self.labelIcon)
-        
-        self.gridLayout.addWidget(self.labelIcon,1,0)
-        self.gridLayout.addWidget(self.labelText,1,1)
-        self.setLayout(self.gridLayout) 
+        self.gridLayout.addWidget(self.labelIcon, 1, 0)
+        self.gridLayout.addWidget(self.labelText, 1, 1)
+        self.setLayout(self.gridLayout)
 
     def create_actions(self):
         self.labelIcon.clicked.connect(self.iconClicked)
@@ -207,29 +172,56 @@ class ToolHeader(QtWidgets.QWidget):
     def iconClicked(self):
         import webbrowser
         webbrowser.open(settings.get_doclink())
-        
-    def setTitleText(self,text):
-        self.headerTitle = text 
+
+    def setTitleText(self, text):
+        self.headerTitle = text
         self.labelText.setText(self.headerTitle)
 
-            
-    def addHeaderIcon(self, widget):
+    def resizeEvent(self, event):
+        """Resize the icon dynamically when the widget resizes."""
+        super(ToolHeader, self).resizeEvent(event)
+        self.updateHeaderIcon()
+
+    def loadHeaderIcon(self):
+        """Load the header icon and determine the max size."""
         icon_root = settings.get_resources_directory()
-            
-        if icon_root:
-            # image_path = os.path.join (icon_root,self.LINE_LOGO)
-            image_path = Path(icon_root , self.LINE_LOGO )
-            image = QtGui.QImage(str(image_path))
-            pixmap = QtGui.QPixmap()
-            pixmap.convertFromImage(image)
-            widget.setPixmap(pixmap)
+        if not icon_root:
+            return
+
+        image_path = Path(icon_root, self.LINE_LOGO)
+        image = QtGui.QImage(str(image_path))
+
+        if image.isNull():
+            return  # Prevent errors if image loading fails
+
+        pixmap = QtGui.QPixmap.fromImage(image)
+
+        # Store original pixmap and set max width
+        self.icon_pixmap = pixmap
+        self.max_icon_width = pixmap.width()
+
+        self.updateHeaderIcon()  # Apply the initial size
+
+    def updateHeaderIcon(self):
+        """Resize the icon down but never scale up or below the minimum width."""
+        if not self.icon_pixmap or self.max_icon_width is None:
+            return
+
+        # Determine new width within min/max range
+        new_width = max(self.MIN_ICON_WIDTH, min(self.labelIcon.width(), self.max_icon_width))
+
+        # Scale while maintaining aspect ratio
+        scaled_pixmap = self.icon_pixmap.scaled(
+            new_width, 40, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation
+        )
+
+        self.labelIcon.setPixmap(scaled_pixmap)
 
 class ClickableLabel(QtWidgets.QLabel):
-    clicked= QtCore.Signal()
+    clicked = QtCore.Signal()
 
     def mouseReleaseEvent(self, ev):
         self.clicked.emit()
-
 class Downloader(QtCore.QThread):
     """
     A thread that downloads the data from the server. This is done in a separate thread so that the GUI can remain responsive.

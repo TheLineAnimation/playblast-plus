@@ -44,7 +44,7 @@ class Parsing:
         """       
         with open(file, 'w',encoding='utf-8') as f:
             json.dump( data , f, ensure_ascii=False, indent=4)
-        print (f'creating settings file {file}')  
+        # print (f'creating settings file {file}')  
 
     @staticmethod
     def get_templates(dir: str) -> list:
