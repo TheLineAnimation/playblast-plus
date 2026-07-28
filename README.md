@@ -47,7 +47,7 @@ So this is more of a Dr.Frankenstein script, made from parts created by people w
 
 You can also click the header in the UI to launch this help inside your DCC. 
 
-<img align="center" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/ui.png?raw=true"/>
+<img align="center" src="https://github.com/TheLineAnimation/playblast-plus/blob/41b35c05e000d1eedfb188b9034e6b2f3cc11551/docs/img/ui.png"/>
 
 ### Features
 
@@ -61,7 +61,7 @@ You can also click the header in the UI to launch this help inside your DCC.
 - playblasts/previews and captures reside on the artist's machine
 - requires FFMpeg to be installed locally. The location isn't important and can be configured to multiple folders globally to allow different setups. 
 
-<img align="center" src="https://github.com/TheLineAnimation/playblast-plus/blob/main/docs/_images/pbp_structure.png?raw=true"/>
+<img align="center" src="https://github.com/TheLineAnimation/playblast-plus/blob/41b35c05e000d1eedfb188b9034e6b2f3cc11551/docs/img/pbp_structure.png"/>
 
 ### Installation
 
