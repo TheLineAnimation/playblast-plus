@@ -80,18 +80,26 @@ def extract_middle_image(source_path: str, output_path: str):
     Logger.info(f'FFMPEG COMMAND (extract_middle_image) : {ffmpeg_cmd}')
     subprocess.call(ffmpeg_cmd)
 
-def get_audio_seek_args(start_frame: int, audio_offset_frame: float, 
-                        framerate: int) -> str:
+def get_audio_sync_args(start_frame: int, audio_offset_frame: float, 
+                        framerate: int) -> tuple:
     """
-    Works out the FFMPEG seek arguments needed to sync an audio track 
-    to a given start frame, based on the frame the audio was offset to 
-    start playing from in the host's timeline.
+    Works out how FFMPEG should sync an audio track to a given start frame, 
+    based on the frame the audio was offset to start playing from in the 
+    host's timeline.
 
     If the video starts after the audio (audio_offset_frame is before 
     start_frame), the audio is trimmed with -ss so it lines up with the 
     first rendered frame. If the video starts before the audio 
-    (audio_offset_frame is after start_frame), -itsoffset is used to 
-    delay/silence the audio until it should start playing.
+    (audio_offset_frame is after start_frame), an "adelay" audio filter is 
+    used to insert real silence ahead of the audio until it should start 
+    playing.
+
+    Note: -itsoffset is deliberately avoided for the delay case. It only 
+    shifts container timestamps, which is unreliable when muxed against an 
+    image sequence input (the silence is often dropped entirely instead of 
+    being inserted) - "adelay" writes actual silent samples so playback is 
+    genuinely in sync, and is compatible with the "apad" filter already used 
+    to pad the end of a shorter audio track.
 
     Args:
         start_frame (int): the first frame included in the video.
@@ -99,15 +107,20 @@ def get_audio_seek_args(start_frame: int, audio_offset_frame: float,
         framerate (int): the framerate of the scene/output video.
 
     Returns:
-        str: the FFMPEG seek argument to place before the audio input.
+        tuple: (seek_args (str), filter_args (str))
+            seek_args is an FFMPEG input option to place before the audio 
+            "-i", used for the trim case.
+            filter_args is an audio filter chain fragment to prepend inside 
+            the audio "-filter_complex", used for the delay case.
     """
 
     seconds_offset = (start_frame - audio_offset_frame) / float(framerate)
 
     if seconds_offset >= 0:
-        return f'-ss {seconds_offset} '
+        return (f'-ss {seconds_offset} ', '')
     else:
-        return f'-itsoffset {abs(seconds_offset)} '
+        delay_ms = round(abs(seconds_offset) * 1000)
+        return ('', f'adelay={delay_ms}:all=1,')
 
 def mp4_from_image_sequence(image_seq_path: str, 
                             output_path: str, 
@@ -156,15 +169,17 @@ def mp4_from_image_sequence(image_seq_path: str,
     else:
         burnin = ''        
 
+    audio_delay_filter = ''
+
     if audio_path:
-        audio_seek = get_audio_seek_args(
+        audio_seek, audio_delay_filter = get_audio_sync_args(
             start_frame, audio_offset_frame, framerate)
         audio_input = f' {audio_seek}-i "{audio_path}" '
     else:
         audio_input = f''
 
     audio_params = (
-        f' -c:a aac -filter_complex "[1:0] apad" -shortest ' 
+        f' -c:a aac -filter_complex "[1:0] {audio_delay_filter}apad" -shortest ' 
         if audio_path else f''
     )
 

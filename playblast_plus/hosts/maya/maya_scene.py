@@ -203,11 +203,7 @@ class Maya_Scene(scene.Scene):
         if not path:
             return None
 
-        # Maya's sound node offset is inverted from what the Time Slider UI
-        # implies - increasing the offset actually shifts the audio earlier,
-        # not later. Negate it here so downstream sync math (which expects a
-        # positive offset to mean "starts later") lines up with what's heard.
-        return (path, -offset)
+        return (path, offset)
 
     def get_user_directory() -> str:
         # perhaps this should be the host class, it's not scene related
