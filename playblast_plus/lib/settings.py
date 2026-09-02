@@ -39,6 +39,7 @@ def create_host_settings(path:Path):
         "isolate":False,
         "use_workspace": False,
         "add_burnin": False,
+        "add_audio": False,
         "output_token": "",
         "last_camera": "",
         "last_template": "",

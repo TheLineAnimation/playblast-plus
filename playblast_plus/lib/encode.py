@@ -80,12 +80,42 @@ def extract_middle_image(source_path: str, output_path: str):
     Logger.info(f'FFMPEG COMMAND (extract_middle_image) : {ffmpeg_cmd}')
     subprocess.call(ffmpeg_cmd)
 
+def get_audio_seek_args(start_frame: int, audio_offset_frame: float, 
+                        framerate: int) -> str:
+    """
+    Works out the FFMPEG seek arguments needed to sync an audio track 
+    to a given start frame, based on the frame the audio was offset to 
+    start playing from in the host's timeline.
+
+    If the video starts after the audio (audio_offset_frame is before 
+    start_frame), the audio is trimmed with -ss so it lines up with the 
+    first rendered frame. If the video starts before the audio 
+    (audio_offset_frame is after start_frame), -itsoffset is used to 
+    delay/silence the audio until it should start playing.
+
+    Args:
+        start_frame (int): the first frame included in the video.
+        audio_offset_frame (float): the frame the audio starts playing from.
+        framerate (int): the framerate of the scene/output video.
+
+    Returns:
+        str: the FFMPEG seek argument to place before the audio input.
+    """
+
+    seconds_offset = (start_frame - audio_offset_frame) / float(framerate)
+
+    if seconds_offset >= 0:
+        return f'-ss {seconds_offset} '
+    else:
+        return f'-itsoffset {abs(seconds_offset)} '
+
 def mp4_from_image_sequence(image_seq_path: str, 
                             output_path: str, 
                             framerate: int = 24,
                             start_frame: int = 0, 
                             end_frame: int = 0,
                             audio_path: str = None,
+                            audio_offset_frame: float = 0,
                             post_open: bool = False,
                             viewer_arg='start',
                             add_burnin: bool = False,
@@ -103,6 +133,9 @@ def mp4_from_image_sequence(image_seq_path: str,
         start_frame (int): the first frame to include in the video.
         end_frame (int): the last frame to include in the video.
         audio_path (str): the path to the audio file to include in the video.
+        audio_offset_frame (float): the frame the audio starts playing from
+            in the host's timeline. Used to keep the audio in sync with the
+            rendered frame range.
         post_open (bool): whether to open the video after creation.
         viewer_arg (str): the viewer argument to pass to ffmpeg.
 
@@ -123,7 +156,13 @@ def mp4_from_image_sequence(image_seq_path: str,
     else:
         burnin = ''        
 
-    audio_input = f' -i "{audio_path}" ' if audio_path else f''
+    if audio_path:
+        audio_seek = get_audio_seek_args(
+            start_frame, audio_offset_frame, framerate)
+        audio_input = f' {audio_seek}-i "{audio_path}" '
+    else:
+        audio_input = f''
+
     audio_params = (
         f' -c:a aac -filter_complex "[1:0] apad" -shortest ' 
         if audio_path else f''
