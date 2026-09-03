@@ -348,6 +348,13 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.isolate_box = QtWidgets.QCheckBox("Only show pbp_isolate set")
         self.isolate_box.setChecked(False)
 
+        self.audio_box = QtWidgets.QCheckBox("Add Audio Track")
+        self.audio_box.setChecked(False)
+        self.audio_box.setToolTip(
+            "Overlays the scene's timeline audio track onto the output "
+            "video when transcoding."
+        )
+
         overrides_label = QtWidgets.QLabel("Template Overrides")
         overrides_label.setFont(custom_font)
 
@@ -370,6 +377,7 @@ class PlayblastPlusUI(UI_BASECLASS):
 
         locations_layout.addWidget(locations_label, 0, 0, 1, 1)
         locations_layout.addWidget(self.tokens_field, 1, 0, 1, 4)
+        locations_layout.addWidget(self.audio_box, 2, 0, 1, 4)
 
         capture_frame = QtWidgets.QFrame()
         capture_frame.setFrameStyle(6)
@@ -434,6 +442,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         ui_dict['last_template'] = self.template_list.currentText()
         # ui_dict['use_workspace'] = self.use_workspace_setting.isChecked()
         ui_dict['add_burnin'] = self.add_burnin_setting.isChecked()
+        ui_dict['add_audio'] = self.audio_box.isChecked()
 
         settings.save_host_settings(path, self._SETTINGS)
 
@@ -456,6 +465,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         # self.use_workspace_setting.setChecked(settings_dict['use_workspace'])
         self.add_burnin_setting.setChecked(settings_dict['add_burnin'])
         self.isolate_box.setChecked(settings_dict['isolate'])
+        self.audio_box.setChecked(settings_dict.get('add_audio', False))
 
         index = self.camera_list.findText(
             settings_dict['last_camera'], QtCore.Qt.MatchFixedString)
@@ -531,12 +541,25 @@ class PlayblastPlusUI(UI_BASECLASS):
         else:
             viewer_start_path = 'start'
 
+        audio_path = None
+        audio_offset_frame = 0
+
+        if self.audio_box.isChecked():
+            audio_track = self.host.scene.get_audio_path()
+            if audio_track:
+                audio_path, audio_offset_frame = audio_track
+            else:
+                self.host.preview.notify_user(
+                    "No audio track was found on the current timeline.")
+
         encode.mp4_from_image_sequence(ffmpeg_input_string,
                                        output_path,
                                        framerate=current_fr,
                                        start_frame=int(framerange[0]),
                                        end_frame=int(
                                            framerange[1]-framerange[0]+1),
+                                       audio_path=audio_path,
+                                       audio_offset_frame=audio_offset_frame,
                                        add_burnin=self.add_burnin_setting.isChecked(),
                                        burnin_text=burnin_str,
                                        post_open=post_open,
@@ -595,6 +618,7 @@ class PlayblastPlusUI(UI_BASECLASS):
 
     def capture_viewport(self):
 
+        self.refresh_camera_list()
 
         output_path = Path(self.current_playblast_directory, 'captures')
 
@@ -665,6 +689,8 @@ class PlayblastPlusUI(UI_BASECLASS):
         )
 
     def create_playblast(self):
+
+        self.refresh_camera_list()
 
         output_name = self.get_output_name(self.tokens_field.text())
         output_path = self.current_playblast_directory

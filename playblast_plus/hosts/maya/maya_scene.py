@@ -177,6 +177,34 @@ class Maya_Scene(scene.Scene):
 
         return None  # Fallback if no active panel is found
 
+    def get_audio_path():
+        """Returns the audio track attached to the scene's timeline, if any.
+
+        Uses the audio node connected to the main time slider so that the
+        audio matches the track that's played back and heard by the artist.
+
+        Returns:
+            tuple: (path (str), offset (float)) where offset is the frame
+            the audio starts playing from, or None if there is no audio
+            attached to the timeline.
+        """
+
+        from maya import mel
+
+        time_control = mel.eval('$tmpVar=$gPlayBackSlider')
+        sound_node = cmds.timeControl(time_control, query=True, sound=True)
+
+        if not sound_node:
+            return None
+
+        path = cmds.getAttr(f'{sound_node}.filename')
+        offset = cmds.getAttr(f'{sound_node}.offset')
+
+        if not path:
+            return None
+
+        return (path, offset)
+
     def get_user_directory() -> str:
         # perhaps this should be the host class, it's not scene related
         maya_root = cmds.internalVar(uad=True)

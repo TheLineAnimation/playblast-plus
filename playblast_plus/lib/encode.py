@@ -80,12 +80,55 @@ def extract_middle_image(source_path: str, output_path: str):
     Logger.info(f'FFMPEG COMMAND (extract_middle_image) : {ffmpeg_cmd}')
     subprocess.call(ffmpeg_cmd)
 
+def get_audio_sync_args(start_frame: int, audio_offset_frame: float, 
+                        framerate: int) -> tuple:
+    """
+    Works out how FFMPEG should sync an audio track to a given start frame, 
+    based on the frame the audio was offset to start playing from in the 
+    host's timeline.
+
+    If the video starts after the audio (audio_offset_frame is before 
+    start_frame), the audio is trimmed with -ss so it lines up with the 
+    first rendered frame. If the video starts before the audio 
+    (audio_offset_frame is after start_frame), an "adelay" audio filter is 
+    used to insert real silence ahead of the audio until it should start 
+    playing.
+
+    Note: -itsoffset is deliberately avoided for the delay case. It only 
+    shifts container timestamps, which is unreliable when muxed against an 
+    image sequence input (the silence is often dropped entirely instead of 
+    being inserted) - "adelay" writes actual silent samples so playback is 
+    genuinely in sync, and is compatible with the "apad" filter already used 
+    to pad the end of a shorter audio track.
+
+    Args:
+        start_frame (int): the first frame included in the video.
+        audio_offset_frame (float): the frame the audio starts playing from.
+        framerate (int): the framerate of the scene/output video.
+
+    Returns:
+        tuple: (seek_args (str), filter_args (str))
+            seek_args is an FFMPEG input option to place before the audio 
+            "-i", used for the trim case.
+            filter_args is an audio filter chain fragment to prepend inside 
+            the audio "-filter_complex", used for the delay case.
+    """
+
+    seconds_offset = (start_frame - audio_offset_frame) / float(framerate)
+
+    if seconds_offset >= 0:
+        return (f'-ss {seconds_offset} ', '')
+    else:
+        delay_ms = round(abs(seconds_offset) * 1000)
+        return ('', f'adelay={delay_ms}:all=1,')
+
 def mp4_from_image_sequence(image_seq_path: str, 
                             output_path: str, 
                             framerate: int = 24,
                             start_frame: int = 0, 
                             end_frame: int = 0,
                             audio_path: str = None,
+                            audio_offset_frame: float = 0,
                             post_open: bool = False,
                             viewer_arg='start',
                             add_burnin: bool = False,
@@ -103,6 +146,9 @@ def mp4_from_image_sequence(image_seq_path: str,
         start_frame (int): the first frame to include in the video.
         end_frame (int): the last frame to include in the video.
         audio_path (str): the path to the audio file to include in the video.
+        audio_offset_frame (float): the frame the audio starts playing from
+            in the host's timeline. Used to keep the audio in sync with the
+            rendered frame range.
         post_open (bool): whether to open the video after creation.
         viewer_arg (str): the viewer argument to pass to ffmpeg.
 
@@ -123,12 +169,28 @@ def mp4_from_image_sequence(image_seq_path: str,
     else:
         burnin = ''        
 
-    audio_input = f' -i "{audio_path}" ' if audio_path else f''
+    audio_delay_filter = ''
+
+    if audio_path:
+        audio_seek, audio_delay_filter = get_audio_sync_args(
+            start_frame, audio_offset_frame, framerate)
+        audio_input = f' {audio_seek}-i "{audio_path}" '
+    else:
+        audio_input = f''
+
     audio_params = (
-        f' -c:a aac -filter_complex "[1:0] apad" -shortest ' 
+        f' -c:a aac -filter_complex "[1:0] {audio_delay_filter}apad" -shortest ' 
         if audio_path else f''
     )
 
+    # Note: "burnin" (-vf) is placed after the audio input rather than
+    # between the image sequence input and the audio "-i". FFMPEG parses
+    # options positionally, so a -vf placed directly before another -i is
+    # misread as belonging to that next input, which errors out entirely
+    # (no output file at all) when both burnin and audio are enabled
+    # together. Keeping -vf as an output-scoped option (after all inputs)
+    # avoids that ambiguity and lets -frames:v remain authoritative for the
+    # output duration.
     ffmpeg_cmd = (
         f'"{FFMPEG_PATH}" '
         f'-framerate {framerate} '
@@ -136,9 +198,9 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'-start_number {start_frame} '
         f'-loglevel quiet ' 
         f'-i "{image_seq_path}" '
-        f'{burnin} '
         f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
+        f'{burnin} '
         f'{audio_params}'
         f'-frames:v {end_frame} '
         f'"{output_path}"'
