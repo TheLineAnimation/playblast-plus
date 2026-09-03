@@ -183,6 +183,14 @@ def mp4_from_image_sequence(image_seq_path: str,
         if audio_path else f''
     )
 
+    # Note: "burnin" (-vf) is placed after the audio input rather than
+    # between the image sequence input and the audio "-i". FFMPEG parses
+    # options positionally, so a -vf placed directly before another -i is
+    # misread as belonging to that next input, which errors out entirely
+    # (no output file at all) when both burnin and audio are enabled
+    # together. Keeping -vf as an output-scoped option (after all inputs)
+    # avoids that ambiguity and lets -frames:v remain authoritative for the
+    # output duration.
     ffmpeg_cmd = (
         f'"{FFMPEG_PATH}" '
         f'-framerate {framerate} '
@@ -190,9 +198,9 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'-start_number {start_frame} '
         f'-loglevel quiet ' 
         f'-i "{image_seq_path}" '
-        f'{burnin} '
         f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
+        f'{burnin} '
         f'{audio_params}'
         f'-frames:v {end_frame} '
         f'"{output_path}"'
