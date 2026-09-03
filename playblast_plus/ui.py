@@ -618,6 +618,7 @@ class PlayblastPlusUI(UI_BASECLASS):
 
     def capture_viewport(self):
 
+        self.refresh_camera_list()
 
         output_path = Path(self.current_playblast_directory, 'captures')
 
@@ -688,6 +689,8 @@ class PlayblastPlusUI(UI_BASECLASS):
         )
 
     def create_playblast(self):
+
+        self.refresh_camera_list()
 
         output_name = self.get_output_name(self.tokens_field.text())
         output_path = self.current_playblast_directory
