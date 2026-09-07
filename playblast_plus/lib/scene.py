@@ -53,3 +53,15 @@ class Scene():
 
         pass
 
+    @staticmethod
+    def get_audio_path():
+        """Returns the audio track attached to the scene's timeline, if any.
+
+        Returns:
+            tuple: (path (str), offset (float)) where offset is the frame
+            the audio starts playing from, or None if no audio is found or
+            the host doesn't support audio tracks.
+        """
+
+        pass
+
