@@ -183,6 +183,21 @@ def mp4_from_image_sequence(image_seq_path: str,
         if audio_path else f''
     )
 
+    # "-shortest" alone is not reliable for pinning the container's overall
+    # duration to the video length: it depends on the muxer noticing the
+    # video stream (capped by -frames:v) ending before the "apad"-extended
+    # audio stream, which is timing-sensitive and has been observed to leave
+    # the muxed duration metadata reflecting the longer, untrimmed audio
+    # track instead. Some players (e.g. DJV, Nuke, Premiere) read the actual
+    # encoded video frame count and are unaffected, but QuickTime relies more
+    # on the container duration and can show extra trailing/white frames as
+    # a result. Explicitly pinning "-t" to the exact video duration makes the
+    # output duration authoritative regardless of audio track length.
+    duration_arg = ''
+    if audio_path and framerate:
+        duration_seconds = end_frame / float(framerate)
+        duration_arg = f'-t {duration_seconds:.6f} '
+
     # Note: "burnin" (-vf) is placed after the audio input rather than
     # between the image sequence input and the audio "-i". FFMPEG parses
     # options positionally, so a -vf placed directly before another -i is
@@ -202,7 +217,7 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'{settings.get_ffmpeg_input_args()} '
         f'{burnin} '
         f'{audio_params}'
-        f'{burnin} '
+        f'{duration_arg}'
         f'-frames:v {end_frame} '
         f'"{output_path}"'
     )
