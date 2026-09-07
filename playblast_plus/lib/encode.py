@@ -136,10 +136,10 @@ def mp4_from_image_sequence(image_seq_path: str,
         f'-start_number {start_frame} '
         f'-loglevel quiet ' 
         f'-i "{image_seq_path}" '
-        f'{burnin} '
         f'{audio_input}'
         f'{settings.get_ffmpeg_input_args()} '
         f'{audio_params}'
+        f'{burnin} '
         f'-frames:v {end_frame} '
         f'"{output_path}"'
     )
