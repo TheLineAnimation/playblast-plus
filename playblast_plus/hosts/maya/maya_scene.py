@@ -110,6 +110,88 @@ class Maya_Scene(scene.Scene):
 
         return 1
     
+    @staticmethod
+    def get_active_sound(start_frame: float = 0.0):
+        """Find the sound to include in the preview.
+
+        Uses the sound shown on the time slider (same as Maya's playblast).
+        If none is set there and the scene has exactly one audio node, that
+        one is used instead.
+
+        Args:
+            start_frame (float): the first frame of the playblast.
+
+        Returns:
+            tuple|None: (audio_file_path, audio_seconds_at_start_frame).
+            The seconds value is negative when the sound starts after
+            start_frame (silence is padded in front).
+        """
+        sound_node = None
+        try:
+            import maya.mel as mel
+            slider = mel.eval('$tmpVar=$gPlayBackSlider')
+            if slider and cmds.timeControl(slider, q=True, displaySound=True):
+                sound_node = cmds.timeControl(slider, q=True, sound=True)
+        except Exception:
+            sound_node = None
+
+        if not sound_node:
+            audio_nodes = cmds.ls(type='audio') or []
+            if len(audio_nodes) == 1:
+                sound_node = audio_nodes[0]
+
+        if not sound_node or not cmds.objExists(sound_node):
+            return None
+
+        audio_path = cmds.getAttr(f'{sound_node}.filename')
+        if not audio_path or not Path(audio_path).is_file():
+            return None
+
+        # time attributes are returned in the current UI time unit (frames)
+        offset = cmds.getAttr(f'{sound_node}.offset')
+        source_start = cmds.getAttr(f'{sound_node}.sourceStart')
+        fps = Maya_Scene.getFrameRate() or 24
+
+        audio_seconds = (source_start + (start_frame - offset)) / float(fps)
+        return audio_path, audio_seconds
+
+    @staticmethod
+    def get_focal_lengths(camera: str, start_frame: int, end_frame: int):
+        """Return the camera focal length (mm) for every frame in the range.
+
+        Returns:
+            list|None: one float per frame, or None if it can't be read.
+        """
+        if not camera or not cmds.objExists(camera):
+            return None
+        shape = camera
+        if cmds.nodeType(camera) != 'camera':
+            shapes = cmds.listRelatives(camera, shapes=True, type='camera',
+                                        fullPath=True) or []
+            if not shapes:
+                return None
+            shape = shapes[0]
+        return [cmds.getAttr(f'{shape}.focalLength', time=f)
+                for f in range(int(start_frame), int(end_frame) + 1)]
+
+    @staticmethod
+    def get_burnin_context() -> dict:
+        """Context values used by the AYON style burnin.
+
+        folder  - AYON folder (shot/asset) name from the launch context
+        version - workfile version from the scene name, e.g. 'v012'
+        """
+        import os
+        import re
+        folder_path = os.environ.get('AYON_FOLDER_PATH', '')
+        folder = folder_path.rstrip('/').split('/')[-1] if folder_path else ''
+
+        scene_path = cmds.file(q=True, sceneName=True) or ''
+        matches = re.findall(r'[vV](\d+)', Path(scene_path).stem) \
+            if scene_path else []
+        version = f'v{matches[-1]}' if matches else ''
+        return {'folder': folder, 'version': version}
+
     def getFrameRange():
         start = cmds.playbackOptions(q=True, min=True)
         end = cmds.playbackOptions(q=True, max=True)

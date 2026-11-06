@@ -7,3 +7,5 @@ __pycache__/
 *.exe
 docs/sphinx
 .doctrees
+# Windows thumbnail cache
+Thumbs.db

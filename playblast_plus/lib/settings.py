@@ -39,6 +39,7 @@ def create_host_settings(path:Path):
         "isolate":False,
         "use_workspace": False,
         "add_burnin": False,
+        "add_audio": False,
         "output_token": "",
         "last_camera": "",
         "last_template": "",
@@ -195,6 +196,19 @@ def get_ffmpeg_input_args() -> str :
         str: The input arguments for ffmpeg.
     """
     return f"{get_config()['ffmpeg']['input_args']}"
+
+def get_ffmpeg_fast_input_args() -> str :
+    """
+    Get the ffmpeg video arguments used by the PLAYBLAST (FAST) button.
+    Falls back to a fast x264 preset when the config has no entry.
+
+    Returns:
+        str: The fast ffmpeg video arguments.
+    """
+    return get_config()['ffmpeg'].get(
+        'fast_input_args',
+        '-c:v libx264 -crf 28 -preset ultrafast -tune fastdecode '
+        '-pix_fmt yuv420p')
 
 def get_ffmpeg_output_args() -> str :
     """

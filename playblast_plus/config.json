@@ -13,6 +13,7 @@
             "C:/Program Files/ffmpeg/bin"
             ],
         "input_args": "-c:v libx264 -crf 21 -preset ultrafast -pix_fmt yuv420p",
+        "fast_input_args": "-c:v libx264 -crf 28 -preset ultrafast -tune fastdecode -pix_fmt yuv420p",
         "output_args": "",
         "burnin": {
             "enabled":true,

@@ -139,7 +139,10 @@ class PlayblastPlusUI(UI_BASECLASS):
         """
         Connects widget signals to functionalities
         """
-        self.playblast_button.clicked.connect(self.create_playblast)
+        self.playblast_button.clicked.connect(
+            lambda: self.create_playblast(fast=False))
+        self.playblast_fast_button.clicked.connect(
+            lambda: self.create_playblast(fast=True))
         self.camera_refresh.clicked.connect(self.refresh_camera_list)     
         self.camera_cycle.clicked.connect(self.cycle_cameras)
         self.capture_button.clicked.connect(self.capture_viewport)
@@ -159,9 +162,19 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.copy_to_clipboard_setting.setCheckable(True)
         self.copy_to_clipboard_setting.setChecked(True)
 
-        self.add_burnin_setting = QtWidgets.QAction("Add Burnin", self)
-        self.add_burnin_setting.setCheckable(True)
+        # Burnin lives in the Output Options panel (checkbox, not a menu
+        # action).
+        self.add_burnin_setting = QtWidgets.QCheckBox("Add Burnin")
+        self.add_burnin_setting.setToolTip(
+            "AYON style burnin: date, focal length, workfile version, "
+            "shot name (AYON) and frame numbers")
         self.add_burnin_setting.setChecked(False)
+
+        # Include the time slider sound in the mp4.
+        self.add_audio_setting = QtWidgets.QCheckBox("Include Audio")
+        self.add_audio_setting.setToolTip(
+            "Adds the time slider sound to the playblast mp4")
+        self.add_audio_setting.setChecked(False)
 
         self.keep_images_setting = QtWidgets.QAction(
             f"Keep {self.host.UITEXT_preview} Sequence Images", self)
@@ -215,7 +228,6 @@ class PlayblastPlusUI(UI_BASECLASS):
         folder_separator_action.setDefaultWidget(folder_separator)
         self.display_menu.addAction(folder_separator_action)
 
-        self.display_menu.addAction(self.add_burnin_setting)
         self.display_menu.addAction(self.copy_to_clipboard_setting)
 
         folder_separator = QtWidgets.QLabel("<b>Housekeeping</b>")
@@ -309,7 +321,18 @@ class PlayblastPlusUI(UI_BASECLASS):
             self.host.UITEXT_preview.upper())
         hero_style = widgets.Styles.BUTTON_HERO
         self.playblast_button.setStyleSheet(hero_style)
-        self.playblast_button.setToolTip(f"{self.host.UITEXT_preview}s the current camera")
+        self.playblast_button.setToolTip(
+            f"{self.host.UITEXT_preview}s the current camera.\n"
+            "Full quality: captures PNG frames, then encodes the mp4.")
+
+        # Fast version: quick JPG frames and a lighter, faster mp4 encode
+        self.playblast_fast_button = QtWidgets.QPushButton(
+            f"{self.host.UITEXT_preview.upper()} (FAST)")
+        self.playblast_fast_button.setStyleSheet(widgets.Styles.BUTTON_FAST)
+        self.playblast_fast_button.setToolTip(
+            f"Fast {self.host.UITEXT_preview.lower()} of the current camera.\n"
+            "Speed over quality: captures JPG frames (quality 70) and encodes "
+            "a lighter mp4.")
 
         # edit frame border and layout
         edit_frame = QtWidgets.QFrame()
@@ -325,7 +348,8 @@ class PlayblastPlusUI(UI_BASECLASS):
         locations_layout.setSpacing(4)
 
         self.capture_button = QtWidgets.QPushButton("SNAP")
-        self.capture_button.setStyleSheet(widgets.Styles.BUTTON_SIDEKICK)
+        # small, sits next to the camera refresh / cycle buttons
+        self.capture_button.setStyleSheet(widgets.Styles.BUTTON_TOOL)
         self.capture_button.setToolTip(f"Capture a still image of the current camera, according to the scene render resolution")   
 
         # Overides
@@ -365,6 +389,35 @@ class PlayblastPlusUI(UI_BASECLASS):
         overrides_layout.addWidget(self.half_res_icon, 4, 0, 1, 1)
         overrides_layout.addWidget(self.half_res_box, 4, 1, 1, 1)
 
+        self.burnin_icon = QtWidgets.QLabel()
+        self.burnin_icon.setPixmap(widgets.Icons.get("pen", 18))
+        self.burnin_icon.setMaximumWidth(18)
+
+        # Output options (mp4 encode) - separate from the template overrides,
+        # as they are not affected by the overrides Enable toggle
+        output_frame = QtWidgets.QFrame()
+        output_frame.setFrameStyle(6)
+
+        output_layout = QtWidgets.QGridLayout(output_frame)
+        output_layout.setColumnStretch(1, 4)
+
+        output_label = QtWidgets.QLabel("Output Options")
+        output_label.setFont(custom_font)
+        output_layout.addWidget(output_label, 0, 0, 1, 5)
+
+        output_layout.addWidget(self.burnin_icon, 1, 0, 1, 1)
+        output_layout.addWidget(self.add_burnin_setting, 1, 1, 1, 1)
+
+        self.audio_icon = QtWidgets.QLabel()
+        self.audio_icon.setPixmap(
+            QtGui.QPixmap(":/out_audio.png").scaled(
+                18, 18, QtCore.Qt.KeepAspectRatio,
+                QtCore.Qt.SmoothTransformation))
+        self.audio_icon.setMaximumWidth(18)
+
+        output_layout.addWidget(self.audio_icon, 2, 0, 1, 1)
+        output_layout.addWidget(self.add_audio_setting, 2, 1, 1, 1)
+
         locations_label = QtWidgets.QLabel("Output Name")
         locations_label.setFont(custom_font)
 
@@ -403,13 +456,15 @@ class PlayblastPlusUI(UI_BASECLASS):
 
         capture_layout.setSpacing(4)
         
-        capture_layout.addWidget(camera_label, 0, 0, 1, 5)                 
+        capture_layout.addWidget(camera_label, 0, 0, 1, 6)
         capture_layout.addWidget(self.camera_list, 1, 0, 1, 3)
-        capture_layout.addWidget(self.camera_refresh, 1, 3, 1, 1)       
+        capture_layout.addWidget(self.camera_refresh, 1, 3, 1, 1)
         capture_layout.addWidget(self.camera_cycle, 1, 4, 1, 1)
- 
-        capture_layout.addWidget(self.playblast_button, 2, 0, 1, 4)
-        capture_layout.addWidget(self.capture_button, 2, 4, 1, 1)
+        capture_layout.addWidget(self.capture_button, 1, 5, 1, 1)
+
+        # both playblast buttons take the full width
+        capture_layout.addWidget(self.playblast_button, 2, 0, 1, 6)
+        capture_layout.addWidget(self.playblast_fast_button, 3, 0, 1, 6)
 
         # add widgets to layouts
         self.main_layout.addWidget(header)
@@ -417,6 +472,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.main_layout.addWidget(frame)
         frame_layout.addLayout(cam_formlayout)
         frame_layout.addWidget(overrides_frame)
+        frame_layout.addWidget(output_frame)
         frame_layout.addWidget(edit_frame)
         frame_layout.addWidget(capture_frame)
 
@@ -434,6 +490,7 @@ class PlayblastPlusUI(UI_BASECLASS):
         ui_dict['last_template'] = self.template_list.currentText()
         # ui_dict['use_workspace'] = self.use_workspace_setting.isChecked()
         ui_dict['add_burnin'] = self.add_burnin_setting.isChecked()
+        ui_dict['add_audio'] = self.add_audio_setting.isChecked()
 
         settings.save_host_settings(path, self._SETTINGS)
 
@@ -455,12 +512,17 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.tokens_field.setText(settings_dict['output_token'])
         # self.use_workspace_setting.setChecked(settings_dict['use_workspace'])
         self.add_burnin_setting.setChecked(settings_dict['add_burnin'])
+        self.add_audio_setting.setChecked(
+            settings_dict.get('add_audio', False))
         self.isolate_box.setChecked(settings_dict['isolate'])
 
-        index = self.camera_list.findText(
-            settings_dict['last_camera'], QtCore.Qt.MatchFixedString)
-        if index >= 0:
-            self.camera_list.setCurrentIndex(index)
+        # Prefer the camera the viewport is already looking through,
+        # otherwise fall back to the last used camera.
+        if not self.select_viewport_camera():
+            index = self.camera_list.findText(
+                settings_dict['last_camera'], QtCore.Qt.MatchFixedString)
+            if index >= 0:
+                self.camera_list.setCurrentIndex(index)
 
         if 'last_template' in settings_dict:
             index = self.template_list.findText(
@@ -476,7 +538,8 @@ class PlayblastPlusUI(UI_BASECLASS):
 
     def set_template_overrides(self, template) -> dict:
 
-        height, width = self.host.scene.get_render_resolution(0.5)
+        # get_render_resolution returns (width, height)
+        width, height = self.host.scene.get_render_resolution(0.5)
 
         self.host.preview.set_override_properties(
             template_override_setting=self.template_override_setting.isChecked(),
@@ -516,14 +579,13 @@ class PlayblastPlusUI(UI_BASECLASS):
 
     def create_movie(self, ffmpeg_input_string,
                      output_filename,
-                     post_open=True
+                     post_open=True,
+                     fast=False
                      ) -> str:
 
         output_path = f'{output_filename}.mp4'
         current_fr = self.host.scene.getFrameRate()
         framerange = self.host.scene.getFrameRange()
-        burnin_str = self.get_output_name(self.tokens_field.text())
-
         PlayBlastPlusLogger.info(f'output_path {output_path}')
 
         if self._SETTINGS['custom_viewer']:
@@ -531,19 +593,61 @@ class PlayblastPlusUI(UI_BASECLASS):
         else:
             viewer_start_path = 'start'
 
+        # include the scene sound (time slider sound) if there is one
+        audio_path, audio_offset = None, 0.0
+        sound = None
+        if self.add_audio_setting.isChecked():
+            try:
+                sound = self.host.scene.get_active_sound(framerange[0])
+            except Exception as e:
+                PlayBlastPlusLogger.warning(
+                    f'Could not query scene audio : {e}')
+        if sound:
+            audio_path, audio_offset = sound
+            PlayBlastPlusLogger.info(
+                f'Audio : {audio_path} (offset {audio_offset:.3f}s)')
+
+        burnin_data = None
+        if self.add_burnin_setting.isChecked():
+            burnin_data = self.get_burnin_data(int(framerange[0]),
+                                               int(framerange[1]))
+
         encode.mp4_from_image_sequence(ffmpeg_input_string,
                                        output_path,
                                        framerate=current_fr,
                                        start_frame=int(framerange[0]),
                                        end_frame=int(
                                            framerange[1]-framerange[0]+1),
+                                       audio_path=audio_path,
+                                       audio_offset=audio_offset,
                                        add_burnin=self.add_burnin_setting.isChecked(),
-                                       burnin_text=burnin_str,
+                                       burnin_data=burnin_data,
                                        post_open=post_open,
                                        viewer_arg=viewer_start_path,
+                                       fast=fast,
                                        )
 
         return output_path
+
+    def get_burnin_data(self, start_frame: int, end_frame: int) -> dict:
+        """Collect the values for the AYON style burnin."""
+        from datetime import datetime
+        data = {'date': datetime.now().strftime('%y-%m-%d')}
+        try:
+            data.update(self.host.scene.get_burnin_context())
+        except Exception as e:
+            PlayBlastPlusLogger.warning(f'Could not get burnin context : {e}')
+        try:
+            camera = self._CAMERAS[self.camera_list.currentIndex()] \
+                if self._CAMERAS else None
+            data['focal_lengths'] = self.host.scene.get_focal_lengths(
+                camera, start_frame, end_frame)
+        except Exception as e:
+            PlayBlastPlusLogger.warning(f'Could not get focal length : {e}')
+        PlayBlastPlusLogger.info(
+            f"Burnin : {data.get('date')} | {data.get('version')} | "
+            f"{data.get('folder')}")
+        return data
 
     def clear_playblast_directory(self):
         utils.FolderOps.purge_contents(self.current_playblast_directory)
@@ -657,14 +761,44 @@ class PlayblastPlusUI(UI_BASECLASS):
         self.camera_list.setCurrentIndex(new_index)
 
     def camera_list_changed(self):
-        PlayBlastPlusLogger.info(
-            f"Set Camera {self._CAMERAS[self.camera_list.currentIndex()]}")   
+        if self._CAMERAS and 0 <= self.camera_list.currentIndex() < len(self._CAMERAS):
+            PlayBlastPlusLogger.info(
+                f"Set Camera {self._CAMERAS[self.camera_list.currentIndex()]}")
 
-        self.host.scene.set_viewport_camera(
-            self._CAMERAS[self.camera_list.currentIndex()]
-        )
+            self.host.scene.set_viewport_camera(
+                self._CAMERAS[self.camera_list.currentIndex()]
+            )
 
-    def create_playblast(self):
+    def select_viewport_camera(self) -> bool:
+        """Select the camera the active viewport is looking through."""
+        try:
+            camera = self.host.scene.get_current_camera()
+        except Exception:
+            camera = None
+        if not camera or not self._CAMERAS:
+            return False
+        candidates = {camera, camera.split('|')[-1]}
+        try:
+            import maya.cmds as cmds
+            shapes = cmds.listRelatives(camera, shapes=True, type='camera') or []
+            candidates.update(shapes)
+            parents = cmds.listRelatives(camera, parent=True) or []
+            candidates.update(parents)
+        except Exception:
+            pass
+        for index, cam in enumerate(self._CAMERAS):
+            if cam in candidates or cam.split('|')[-1] in candidates:
+                self.camera_list.setCurrentIndex(index)
+                return True
+        return False
+
+    def create_playblast(self, fast=False):
+        """Playblast the current camera to mp4.
+
+        Args:
+            fast (bool): speed over quality - JPG frames and a lighter encode
+                instead of full quality PNG frames.
+        """
 
         output_name = self.get_output_name(self.tokens_field.text())
         output_path = self.current_playblast_directory
@@ -688,6 +822,12 @@ class PlayblastPlusUI(UI_BASECLASS):
                 if self.template_override_setting.isChecked():
                     self.set_template_overrides(capture_template)
 
+                if fast:
+                    # JPG writes far faster than full quality PNG
+                    capture_template["format"] = "image"
+                    capture_template["compression"] = "jpg"
+                    capture_template["quality"] = 70
+
                 filename = self.host.preview.create(template=capture_template,
                                                     host_options=self._SETTINGS
                                                     )
@@ -697,7 +837,8 @@ class PlayblastPlusUI(UI_BASECLASS):
                 mp4_output = self.create_movie(
                     filename,
                     capture_template["filename"],
-                    post_open=True
+                    post_open=True,
+                    fast=fast
                 )
 
                 if self.validate_output(mp4_output):
@@ -709,9 +850,10 @@ class PlayblastPlusUI(UI_BASECLASS):
                         self.set_clipboard_data(mp4_output)
 
                 if not self.keep_images_setting.isChecked():
-                    utils.FolderOps.purge_contents(output_path,
-                                                   ext='.png',
-                                                   skip_folder='captures')
+                    for ext in ('.png', '.jpg'):
+                        utils.FolderOps.purge_contents(output_path,
+                                                       ext=ext,
+                                                       skip_folder='captures')
 
                 if self.template_override_setting.isChecked():
                     self.host.preview.post_process(
