@@ -60,6 +60,25 @@ class Styles():
                 "}"
                 )
     
+    BUTTON_FAST = (
+                "QPushButton{"
+                "font: bold 11px;"
+                "color: #f8f8f8;"
+                "height: 20px;"
+                "background-color: #b3261e;"
+                "border: 1px solid #7a1a14;"
+                "border-radius: 2px;"
+                "}"
+                "QPushButton:hover"
+                "{"
+                "background-color: #d0342a;"
+                "}"
+                "QPushButton:pressed"
+                "{"
+                "background-color: #fa391f;"
+                "}"
+                )
+
     BUTTON_SIDEKICK = (
                 "QPushButton{"
                 "font: bold 12px;"

@@ -39,7 +39,26 @@ class Scene():
         pass
 
     @staticmethod
-    # maybe use *args here for different hosts             
+    def get_active_sound(start_frame: float = 0.0):
+        """Returns the scene sound to include in the preview, if any.
+
+        Returns:
+            tuple|None: (audio_file_path, audio_seconds_at_start_frame) or None
+        """
+        return None
+
+    @staticmethod
+    def get_focal_lengths(camera, start_frame, end_frame):
+        """Per-frame camera focal length in mm, or None if not supported."""
+        return None
+
+    @staticmethod
+    def get_burnin_context() -> dict:
+        """Context values for the burnin (folder name, workfile version)."""
+        return {'folder': '', 'version': ''}
+
+    @staticmethod
+    # maybe use *args here for different hosts
     def get_output_dir(*args) -> str:
         """Returns the playblast directory so that a filename can be specified.
 
